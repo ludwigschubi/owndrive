@@ -41,7 +41,6 @@ class App extends React.Component {
         this.setState({
           webId: session.webId
         });
-        console.log(this.state.webId);
       }
     });
   }
@@ -58,7 +57,7 @@ class App extends React.Component {
           <Route
             exact
             path="/"
-            component={this.state.webId ? Home : LoginScreen}
+            component={this.state.webId ? () => <Home webId={this.state.webId}/> : LoginScreen}
           />
         </Switch>
       </BrowserRouter>

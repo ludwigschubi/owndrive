@@ -1,9 +1,6 @@
 import React from "react";
 import Navbar from "react-bootstrap/Navbar";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import { NavLink } from "react-router-dom";
 import styles from "./Navbar.module.css";
 
 const Navigation = props => {
