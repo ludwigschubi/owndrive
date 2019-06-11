@@ -3,6 +3,7 @@ import ns from "solid-namespace";
 import rdf from "rdflib";
 import styles from "./Home.module.css";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
+import Breadcrumbs from "../../functional_components/Breadcrumbs/Breadcrumbs";
 
 class Home extends React.Component {
   constructor(props) {
@@ -105,39 +106,9 @@ class Home extends React.Component {
       undefined
     );
 
-    const breadcrumbMarkup = this.state.breadcrumbs
-      ? this.state.breadcrumbs.map((currentBreadcrumb, currentIndex) => {
-          if (currentIndex !== 0) {
-            const breadcrumbsSoFar = [];
-            this.state.breadcrumbs.forEach((breadcrumb, index) => {
-                if (index <= currentIndex){
-                    breadcrumbsSoFar.push(breadcrumb);
-                }
-            })
-            const currentBreadcrumbs = breadcrumbsSoFar.join("");
-            const root = "https://" + this.state.webId.split("/")[2];
-
-            return (
-              <Breadcrumb.Item
-                key={currentIndex}
-                onClick={() =>
-                  {this.loadCurrentPath(root + currentBreadcrumbs, breadcrumbsSoFar)}
-                }
-              >
-                {currentBreadcrumb.replace("/", "")}
-              </Breadcrumb.Item>
-            );
-          } else {
-            return <Breadcrumb.Item key={0} onClick={() => this.loadCurrentPath("https://" + this.state.webId.split("/")[2] + "/")}>Home</Breadcrumb.Item>;
-          }
-        })
-      : undefined;
-
     return (
       <div>
-        <Breadcrumb>
-          {breadcrumbMarkup}
-        </Breadcrumb>
+          <Breadcrumbs onClick={this.loadCurrentPath.bind(this)} breadcrumbs={this.state.breadcrumbs} webId={this.state.webId}></Breadcrumbs>
         {fileMarkup}
       </div>
     );
