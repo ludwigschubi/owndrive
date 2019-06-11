@@ -4,6 +4,8 @@ import rdf from "rdflib";
 import styles from "./Home.module.css";
 import Breadcrumb from "react-bootstrap/Breadcrumb";
 import Breadcrumbs from "../../functional_components/Breadcrumbs/Breadcrumbs";
+import Folders from "../../functional_components/Folders/Folders";
+import Files from "../../functional_components/Files/Files";
 
 class Home extends React.Component {
   constructor(props) {
@@ -47,7 +49,7 @@ class Home extends React.Component {
   }
 
   loadCurrentPath(path, newBreadcrumbs) {
-      console.log(path, newBreadcrumbs);
+    console.log(path, newBreadcrumbs);
     const currPath = path
       ? path
       : "https://" + this.state.webId.split("/")[2] + "/";
@@ -57,7 +59,7 @@ class Home extends React.Component {
           folders: sortedContainments[1],
           files: sortedContainments[0],
           currPath: currPath,
-          breadcrumbs: newBreadcrumbs ? newBreadcrumbs : [this.currPath] 
+          breadcrumbs: newBreadcrumbs ? newBreadcrumbs : [this.currPath]
         });
       }
     );
@@ -66,13 +68,13 @@ class Home extends React.Component {
   followPath(path) {
     const breadcrumbs = path.replace("https://", "").split("/");
     breadcrumbs.shift();
-    const newBreadcrumbs = ["/"]
-    breadcrumbs.forEach((breadcrumb) => {
-        newBreadcrumbs.push(breadcrumb + "/")    
-    })
+    const newBreadcrumbs = ["/"];
+    breadcrumbs.forEach(breadcrumb => {
+      newBreadcrumbs.push(breadcrumb + "/");
+    });
     newBreadcrumbs.pop();
     this.loadCurrentPath(path, newBreadcrumbs);
-    return
+    return;
   }
 
   componentDidMount() {
@@ -80,36 +82,19 @@ class Home extends React.Component {
   }
 
   render() {
-
-    const files = this.state.files
-      ? this.state.files.map((file, index) => {
-          return <li key={"file" + index}>{file}</li>;
-        })
-      : undefined;
-
-    const folders = this.state.folders
-      ? this.state.folders.map((folder, index) => {
-          return (
-            <li key={"folder" + index}>
-              <button onClick={() => this.followPath(this.state.currPath + folder + "/")}>{folder}</button>
-            </li>
-          );
-        })
-      : undefined;
-
-    const fileList =
-      folders && files ? folders.concat(files) : folders ? folders : files;
-
-    const fileMarkup = fileList ? (
-      <ul className={styles.fileMarkup}>{fileList}</ul>
-    ) : (
-      undefined
-    );
-
     return (
       <div>
-          <Breadcrumbs onClick={this.loadCurrentPath.bind(this)} breadcrumbs={this.state.breadcrumbs} webId={this.state.webId}></Breadcrumbs>
-        {fileMarkup}
+        <Breadcrumbs
+          onClick={this.loadCurrentPath.bind(this)}
+          breadcrumbs={this.state.breadcrumbs}
+          webId={this.state.webId}
+        />
+        <Folders
+          folders={this.state.folders}
+          currPath={this.state.currPath}
+          onClick={this.followPath.bind(this)}
+        />
+        <Files files={this.state.files} />
       </div>
     );
   }
