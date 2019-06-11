@@ -105,8 +105,6 @@ class Home extends React.Component {
       undefined
     );
 
-    console.log(this.state);
-
     const breadcrumbMarkup = this.state.breadcrumbs
       ? this.state.breadcrumbs.map((currentBreadcrumb, currentIndex) => {
           if (currentIndex !== 0) {
@@ -116,7 +114,6 @@ class Home extends React.Component {
                     breadcrumbsSoFar.push(breadcrumb);
                 }
             })
-            console.log(breadcrumbsSoFar);
             const currentBreadcrumbs = breadcrumbsSoFar.join("");
             const root = "https://" + this.state.webId.split("/")[2];
 
@@ -127,11 +124,11 @@ class Home extends React.Component {
                   {this.loadCurrentPath(root + currentBreadcrumbs, breadcrumbsSoFar)}
                 }
               >
-                {currentBreadcrumb}
+                {currentBreadcrumb.replace("/", "")}
               </Breadcrumb.Item>
             );
           } else {
-            return <Breadcrumb.Item key={0} href="/">Home</Breadcrumb.Item>;
+            return <Breadcrumb.Item key={0} onClick={() => this.loadCurrentPath("https://" + this.state.webId.split("/")[2] + "/")}>Home</Breadcrumb.Item>;
           }
         })
       : undefined;
