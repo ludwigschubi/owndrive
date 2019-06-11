@@ -1,5 +1,13 @@
 .folderList{
-    margin: 0;
     color: blue;
+    max-width: 100%;
     list-style-type: none;
+}
+
+.folder{
+    max-width: 15%;
+    margin: 1% 0;
+    padding: 1%;
+    border: solid #aaa 1px;
+    border-radius: 5px;
 }

@@ -8,6 +8,7 @@ const Folders = props => {
           <li
             key={"folder" + index}
             onClick={() => props.onClick(props.currPath + folder + "/")}
+            className={styles.folder}
           >
             {folder}
           </li>

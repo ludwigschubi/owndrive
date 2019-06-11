@@ -29,7 +29,7 @@ const Breadcrumbs = props => {
             <Breadcrumb.Item
               key={0}
               onClick={() =>
-                props.onClick("https://" + props.webId.split("/")[2] + "/")
+                props.onClick("https://" + props.webId.split("/")[2] + "/", ["/"])
               }
             >
               Home

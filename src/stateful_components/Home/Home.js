@@ -2,10 +2,10 @@ import React from "react";
 import ns from "solid-namespace";
 import rdf from "rdflib";
 import styles from "./Home.module.css";
-import Breadcrumb from "react-bootstrap/Breadcrumb";
 import Breadcrumbs from "../../functional_components/Breadcrumbs/Breadcrumbs";
 import Folders from "../../functional_components/Folders/Folders";
 import Files from "../../functional_components/Files/Files";
+import Container from "react-bootstrap/Container";
 
 class Home extends React.Component {
   constructor(props) {
@@ -13,7 +13,8 @@ class Home extends React.Component {
     this.state = {
       breadcrumbs: undefined,
       currPath: undefined,
-      webId: props.webId
+      webId: props.webId,
+      file: undefined
     };
   }
 
@@ -34,7 +35,7 @@ class Home extends React.Component {
     return [files, folders];
   }
 
-  loadPath(url) {
+  loadFolder(url) {
     const store = rdf.graph();
     const fetcher = new rdf.Fetcher(store);
 
@@ -48,24 +49,37 @@ class Home extends React.Component {
     });
   }
 
-  loadCurrentPath(path, newBreadcrumbs) {
+  loadCurrentFolder(path, newBreadcrumbs) {
     console.log(path, newBreadcrumbs);
     const currPath = path
       ? path
       : "https://" + this.state.webId.split("/")[2] + "/";
-    Promise.resolve(this.loadPath(currPath, newBreadcrumbs)).then(
+    Promise.resolve(this.loadFolder(currPath, newBreadcrumbs)).then(
       sortedContainments => {
         this.setState({
           folders: sortedContainments[1],
           files: sortedContainments[0],
           currPath: currPath,
-          breadcrumbs: newBreadcrumbs ? newBreadcrumbs : [this.currPath]
+          breadcrumbs: newBreadcrumbs,
+          file: undefined
         });
       }
     );
   }
 
-  followPath(path) {
+  loadFile(url) {
+    const store = rdf.graph();
+    const fetcher = new rdf.Fetcher(store);
+
+    fetcher.load(url).then(response => {
+      this.setState({
+        file: response.responseText,
+        currPath: url
+      });
+    });
+  }
+
+  followPath(path, file) {
     const breadcrumbs = path.replace("https://", "").split("/");
     breadcrumbs.shift();
     const newBreadcrumbs = ["/"];
@@ -73,28 +87,45 @@ class Home extends React.Component {
       newBreadcrumbs.push(breadcrumb + "/");
     });
     newBreadcrumbs.pop();
-    this.loadCurrentPath(path, newBreadcrumbs);
-    return;
+    this.loadCurrentFolder(path, newBreadcrumbs);
   }
 
   componentDidMount() {
-    this.loadCurrentPath(undefined, ["/"]);
+    this.loadCurrentFolder(undefined, ["/"]);
   }
 
   render() {
+    const fileMarkup = this.state.file ? (
+      <div className={styles.renderedFile}>{this.state.file}</div>
+    ) : (
+      undefined
+    );
+
     return (
       <div>
         <Breadcrumbs
-          onClick={this.loadCurrentPath.bind(this)}
+          onClick={this.loadCurrentFolder.bind(this)}
           breadcrumbs={this.state.breadcrumbs}
           webId={this.state.webId}
         />
-        <Folders
-          folders={this.state.folders}
-          currPath={this.state.currPath}
-          onClick={this.followPath.bind(this)}
-        />
-        <Files files={this.state.files} />
+        <Container>
+          {fileMarkup ? (
+            fileMarkup
+          ) : (
+            <div>
+              <Folders
+                folders={this.state.folders}
+                currPath={this.state.currPath}
+                onClick={this.followPath.bind(this)}
+              />
+              <Files
+                files={this.state.files}
+                currPath={this.state.currPath}
+                onClick={this.loadFile.bind(this)}
+              />
+            </div>
+          )}
+        </Container>
       </div>
     );
   }
