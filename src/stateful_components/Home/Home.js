@@ -108,7 +108,7 @@ class Home extends React.Component {
           breadcrumbs={this.state.breadcrumbs}
           webId={this.state.webId}
         />
-        <Container>
+        <div>
           {fileMarkup ? (
             fileMarkup
           ) : (
@@ -125,7 +125,7 @@ class Home extends React.Component {
               />
             </div>
           )}
-        </Container>
+        </div>
       </div>
     );
   }

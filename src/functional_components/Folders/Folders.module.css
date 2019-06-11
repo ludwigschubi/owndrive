@@ -1,13 +1,35 @@
-.folderList{
-    color: blue;
-    max-width: 100%;
-    list-style-type: none;
+.folderList {
+  padding: 0;
+  color: blue;
+  list-style-type: none;
 }
 
-.folder{
-    max-width: 15%;
-    margin: 1% 0;
-    padding: 1%;
-    border: solid #aaa 1px;
-    border-radius: 5px;
+.folder {
+  margin: 0 0 1% 0;
+  padding: 1%;
+  border: solid #aaa 1px;
+  border-radius: 5px;
+  z-index: 1;
+}
+
+@media (max-width: 415px){
+  .folder p {
+    font-size: 1.5em;
+    margin-left: 3%;
+    display: inline-block;
+  }
+}
+
+@media (min-width: 415px){
+  .folder p {
+    font-size: 1em;
+    margin-left: 3%;
+    display: inline-block;
+  }
+}
+
+
+.folderIcon {
+  height: auto;
+  width: 20%;
 }

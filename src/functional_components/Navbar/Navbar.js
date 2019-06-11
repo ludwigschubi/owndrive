@@ -9,12 +9,12 @@ const Navigation = props => {
   return (
       <Navbar bg="light" expand="lg" className={styles.navbar}>
         <Row style={{ width: "100%" }}>
-          <Col lg="11">
+          <Col xs="11" sm="11" md="11" lg="11">
             <Navbar.Brand href="/" className={styles.brand}>
               SOLID FILES
             </Navbar.Brand>
           </Col>
-          <Col lg="1">
+          <Col xs="1" sm="1" md="1" lg="1">
             <NavDropdown>
               {props.webId ? (
                 <div>
