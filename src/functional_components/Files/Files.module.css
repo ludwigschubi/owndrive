@@ -4,17 +4,19 @@
 }
 
 .file {
+  display: inline-block;
   font-size: 1em;
-  margin: 0 0 1% 0;
+  max-width: 20%;
+  margin: 0 0 1% 1%;
   padding: 1%;
-  border: solid #aaa 1px;
+  /* border: solid #aaa 1px; */
   border-radius: 5px;
 }
 
 .iconContainer{
   position: relative;
   display: inline;
-  width: 100%;
+  max-width: 100%;
 }
 
 .thumbnail{
@@ -28,23 +30,26 @@
 
 .fileIcon {
   height: auto;
-  width: 20%;
+  max-width: 100%;
 }
 
 .file p{
-  display: inline;
+  margin-left: 3%;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: center;
 }
 
 @media (min-width: 415px) {
   .file p{
     font-size: 1em;
-    margin-left: 3%;
   }
 }
 
 @media (max-width: 415px) {
   .file p{
     font-size: 1.5em;
-    margin-left: 3%;
   }
 }

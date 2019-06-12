@@ -6,6 +6,7 @@ import Breadcrumbs from "../../functional_components/Breadcrumbs/Breadcrumbs";
 import Folders from "../../functional_components/Folders/Folders";
 import Files from "../../functional_components/Files/Files";
 import Container from "react-bootstrap/Container";
+import FileUpload from "../../functional_components/FileUpload/FileUpload";
 
 class Home extends React.Component {
   constructor(props) {
@@ -50,7 +51,6 @@ class Home extends React.Component {
   }
 
   loadCurrentFolder(path, newBreadcrumbs) {
-    console.log(path, newBreadcrumbs);
     const currPath = path
       ? path
       : "https://" + this.state.webId.split("/")[2] + "/";
@@ -113,16 +113,19 @@ class Home extends React.Component {
             fileMarkup
           ) : (
             <div>
-              <Folders
-                folders={this.state.folders}
-                currPath={this.state.currPath}
-                onClick={this.followPath.bind(this)}
-              />
-              <Files
-                files={this.state.files}
-                currPath={this.state.currPath}
-                onClick={this.loadFile.bind(this)}
-              />
+              <div className={styles.container}>
+                <Folders
+                  folders={this.state.folders}
+                  currPath={this.state.currPath}
+                  onClick={this.followPath.bind(this)}
+                />
+                <Files
+                  files={this.state.files}
+                  currPath={this.state.currPath}
+                  onClick={this.loadFile.bind(this)}
+                />
+              </div>
+              <FileUpload />
             </div>
           )}
         </div>
