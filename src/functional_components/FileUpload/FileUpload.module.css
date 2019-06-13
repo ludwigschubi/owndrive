@@ -2,6 +2,12 @@
     position: fixed;
     height: 100px;
     width: 100px;
+    opacity: .9;
+}
+
+.icon:hover{
+    cursor: pointer;
+    opacity: 1;
 }
 
 @media (max-width: 415px){

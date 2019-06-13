@@ -4,8 +4,17 @@ import icon from "./FileUpload.png";
 
 const FileUpload = props => {
   return (
-      <img src={icon} className={styles.icon}>
-      </img>
+    <label htmlFor="fileUpload">
+            <img src={icon} className={styles.icon}/>
+        <input
+          id="fileUpload"
+          // name="fileUpload"
+          type="file"
+          style={{display: "none"}}
+          onChange={props.onChange}
+          accept="*/*"
+        />
+      </label>
   );
 };
 

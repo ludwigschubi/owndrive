@@ -14,6 +14,11 @@
   z-index: 1;
 }
 
+.folder:hover{
+  cursor: pointer;
+  opacity: 0.6;
+}
+
 .folder p {
   margin-left: 3%;
   max-width: 100%;
