@@ -1,30 +1,30 @@
-import React from "react";
-import ns from "solid-namespace";
-import rdf from "rdflib";
-import styles from "./Home.module.css";
-import Breadcrumbs from "../../functional_components/Breadcrumbs/Breadcrumbs";
-import Folders from "../../functional_components/Folders/Folders";
-import Files from "../../functional_components/Files/Files";
-import FileUpload from "../../functional_components/FileUpload/FileUpload";
-import fileUtils from "../../utils/fileUtils";
+import React from 'react';
+import ns from 'solid-namespace';
+import rdf from 'rdflib';
+import styles from './Home.module.css';
+import Breadcrumbs from '../../functional_components/Breadcrumbs/Breadcrumbs';
+import Folders from '../../functional_components/Folders/Folders';
+import Files from '../../functional_components/Files/Files';
+import FileUpload from '../../functional_components/FileUpload/FileUpload';
+import fileUtils from '../../utils/fileUtils';
 
 class Home extends React.Component {
-  constructor(props) {
-    super(props);
-    this.state = localStorage.getItem("appState")
-      ? JSON.parse(localStorage.getItem("appState"))
-      : {
-          breadcrumbs: undefined,
-          currPath: undefined,
-          webId: props.webId,
-          file: undefined
-        };
-  }
+    constructor(props) {
+        super(props);
+        this.state = localStorage.getItem('appState')
+            ? JSON.parse(localStorage.getItem('appState'))
+            : {
+                  breadcrumbs: undefined,
+                  currPath: undefined,
+                  webId: props.webId,
+                  file: undefined,
+              };
+    }
 
     sortContainments(urls) {
         const folders = [];
         const files = [];
-        urls.forEach((url) => {
+        urls.forEach(url => {
             if (url.value[url.value.length - 1] === '/') {
                 const urlFragments = url.value.split('/');
                 const folderUrl = urlFragments[urlFragments.length - 2];
@@ -42,7 +42,7 @@ class Home extends React.Component {
         const store = rdf.graph();
         const fetcher = new rdf.Fetcher(store);
 
-        return fetcher.load(url).then((response) => {
+        return fetcher.load(url).then(response => {
             const containments = store.each(
                 rdf.sym(url),
                 rdf.sym(ns().ldp('contains')),
@@ -58,7 +58,7 @@ class Home extends React.Component {
             ? path
             : 'https://' + this.state.webId.split('/')[2] + '/';
         Promise.resolve(this.loadFolder(currPath, newBreadcrumbs)).then(
-            (sortedContainments) => {
+            sortedContainments => {
                 this.setState({
                     folders: sortedContainments[1],
                     files: sortedContainments[0],
@@ -74,7 +74,7 @@ class Home extends React.Component {
         const store = rdf.graph();
         const fetcher = new rdf.Fetcher(store);
 
-        fetcher.load(url).then((response) => {
+        fetcher.load(url).then(response => {
             this.setState({
                 file: response.responseText,
                 currPath: url,
@@ -86,25 +86,25 @@ class Home extends React.Component {
         const breadcrumbs = path.replace('https://', '').split('/');
         breadcrumbs.shift();
         const newBreadcrumbs = ['/'];
-        breadcrumbs.forEach((breadcrumb) => {
+        breadcrumbs.forEach(breadcrumb => {
             newBreadcrumbs.push(breadcrumb + '/');
         });
         newBreadcrumbs.pop();
         this.loadCurrentFolder(path, newBreadcrumbs);
     }
 
-  uploadFile(e){
-    let webId = this.state.webId;
-    let currPath = this.state.currPath;
-    var filePath = e.target.files[0];
+    uploadFile(e) {
+        let webId = this.state.webId;
+        let currPath = this.state.currPath;
+        var filePath = e.target.files[0];
 
-    fileUtils.uploadFile(filePath, currPath);
-    return;
-  }
+        fileUtils.uploadFile(filePath, currPath);
+        return;
+    }
 
-  componentDidMount() {
-    this.loadCurrentFolder(this.state.currPath, ["/"]);
-  }
+    componentDidMount() {
+        this.loadCurrentFolder(this.state.currPath, ['/']);
+    }
 
     render() {
         const fileMarkup = this.state.file ? (
@@ -136,6 +136,7 @@ class Home extends React.Component {
                                 currPath={this.state.currPath}
                                 onClick={this.loadFile.bind(this)}
                             />
+                            <FileUpload onClick={this.uploadFile.bind(this)} />
                         </div>
                     )}
                 </div>
