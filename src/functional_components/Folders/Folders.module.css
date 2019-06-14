@@ -5,31 +5,42 @@
 }
 
 .folder {
-  margin: 0 0 1% 0;
+  display: inline-block;
+  max-width: 20%;
+  margin: 0 0 1% 1%;
   padding: 1%;
-  border: solid #aaa 1px;
+  /* border: solid #aaa 1px; */
   border-radius: 5px;
   z-index: 1;
 }
 
-@media (max-width: 415px){
+.folder:hover{
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.folder p {
+  margin-left: 3%;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  text-align: center;
+}
+
+@media (max-width: 415px) {
   .folder p {
     font-size: 1.5em;
-    margin-left: 3%;
-    display: inline-block;
   }
 }
 
-@media (min-width: 415px){
+@media (min-width: 415px) {
   .folder p {
     font-size: 1em;
-    margin-left: 3%;
-    display: inline-block;
   }
 }
-
 
 .folderIcon {
   height: auto;
-  width: 20%;
+  width: 100%;
 }
