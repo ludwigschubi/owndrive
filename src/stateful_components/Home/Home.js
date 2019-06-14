@@ -5,18 +5,20 @@ import styles from "./Home.module.css";
 import Breadcrumbs from "../../functional_components/Breadcrumbs/Breadcrumbs";
 import Folders from "../../functional_components/Folders/Folders";
 import Files from "../../functional_components/Files/Files";
-import Container from "react-bootstrap/Container";
 import FileUpload from "../../functional_components/FileUpload/FileUpload";
+import fileUtils from "../../utils/fileUtils";
 
 class Home extends React.Component {
   constructor(props) {
     super(props);
-    this.state = localStorage.getItem("appState") ? JSON.parse(localStorage.getItem("appState")) : {
-      breadcrumbs: undefined,
-      currPath: undefined,
-      webId: props.webId,
-      file: undefined
-    };
+    this.state = localStorage.getItem("appState")
+      ? JSON.parse(localStorage.getItem("appState"))
+      : {
+          breadcrumbs: undefined,
+          currPath: undefined,
+          webId: props.webId,
+          file: undefined
+        };
   }
 
   sortContainments(urls) {
@@ -90,60 +92,17 @@ class Home extends React.Component {
     this.loadCurrentFolder(path, newBreadcrumbs);
   }
 
-  // uploadFile = (e) => {
-  //     var filePath = e.target.files[0];
-  //     var store = rdf.graph();
-  //     var fetcher = new rdf.Fetcher(store);
-  
-  //     let webId = this.props.webId;
-  
-  //     var reader = new FileReader();
-  //     reader.onload = function() {
-  //       var data = this.result;
-  //       var filename = encodeURIComponent(filePath.name);
-  //       var contentType = "image";
-  //       let pictureURl = webId.replace("card#me", filename);
-  //       fetcher
-  //         .webOperation("PUT", pictureURl, {
-  //           data: data,
-  //           contentType: contentType
-  //         })
-  //         .then(response => {
-  //           if (response.status === 201) {
-  //             const updater = new rdf.UpdateManager(store);
-  //             let del = currentPicture
-  //               ? rdf.st(
-  //                   rdf.sym(webId),
-  //                   VCARD("hasPhoto"),
-  //                   rdf.sym(currentPicture),
-  //                   rdf.sym(webId).doc()
-  //                 )
-  //               : [];
-  //             let ins = rdf.st(
-  //               rdf.sym(webId),
-  //               VCARD("hasPhoto"),
-  //               rdf.sym(pictureURl),
-  //               rdf.sym(webId).doc()
-  //             );
-  //             updater.update(del, ins, (uri, ok, message) => {
-  //               if (ok)
-  //                 console.log(
-  //                   "Changes have been applied, reload page to see them"
-  //                 );
-  //               else alert(message);
-  //             });
-  //           }
-  //         });
-  //     };
-  //     reader.readAsArrayBuffer(filePath);
-  // }
+  uploadFile(e){
+    let webId = this.state.webId;
+    let currPath = this.state.currPath;
+    var filePath = e.target.files[0];
 
-  componentDidMount() {
-    this.loadCurrentFolder(undefined, ["/"]);
+    fileUtils.uploadFile(filePath, currPath);
+    return;
   }
 
-  componentWillUnmount(){
-    localStorage.setItem("appState", JSON.stringify(this.state));
+  componentDidMount() {
+    this.loadCurrentFolder(this.state.currPath, ["/"]);
   }
 
   render() {
@@ -177,7 +136,7 @@ class Home extends React.Component {
                   onClick={this.loadFile.bind(this)}
                 />
               </div>
-              <FileUpload />
+              <FileUpload onChange={this.uploadFile.bind(this)}/>
             </div>
           )}
         </div>
