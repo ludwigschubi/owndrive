@@ -113,6 +113,7 @@ class Home extends React.Component {
             undefined
         );
 
+        console.log(this.state.folders);
         return (
             <div>
                 <Breadcrumbs

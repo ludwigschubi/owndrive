@@ -1,0 +1,33 @@
+.dropdown a {
+    padding: inherit 0;
+    width: 10px;
+}
+
+.menuWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+}
+
+.brand {
+    font-size: 1.5em;
+}
+
+.profileIcon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: blueviolet;
+
+    /* dummytext can be deleted */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.6em;
+}
+
+@media (max-width: 380px) {
+    .brand {
+        font-size: 1em;
+    }
+}

@@ -1,46 +1,26 @@
 .folderList {
-  padding: 0;
-  color: blue;
-  list-style-type: none;
+    padding: 0;
+    color: blue;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
 }
 
 .folder {
-  display: inline-block;
-  max-width: 20%;
-  margin: 0 0 1% 1%;
-  padding: 1%;
-  /* border: solid #aaa 1px; */
-  border-radius: 5px;
-  z-index: 1;
+    margin: 0 10px;
 }
 
-.folder:hover{
-  cursor: pointer;
-  opacity: 0.6;
+.folder:hover {
+    cursor: pointer;
+    opacity: 0.6;
 }
 
 .folder p {
-  margin-left: 3%;
-  max-width: 100%;
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
-  text-align: center;
-}
-
-@media (max-width: 415px) {
-  .folder p {
-    font-size: 1.5em;
-  }
-}
-
-@media (min-width: 415px) {
-  .folder p {
-    font-size: 1em;
-  }
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+    text-align: center;
 }
 
 .folderIcon {
-  height: auto;
-  width: 100%;
+    width: 100%;
 }
