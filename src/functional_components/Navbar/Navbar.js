@@ -21,9 +21,8 @@ const Navigation = (props) => {
                             <div className={styles.profileIcon}>dummy</div>
                             <NavDropdown
                                 id="dropdown"
-                                className="float-right"
                                 alignRight
-                                className={styles.dropdown}
+                                className={[styles.dropdown, "float-right"]}
                             >
                                 {props.webId ? (
                                     <div>

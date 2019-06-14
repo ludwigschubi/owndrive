@@ -2,16 +2,16 @@ import rdf from "rdflib";
 
 function getContentType(file) {
   const mimeTypes = {
-    ".py": "application/x-python-code",
-    ".jpeg": "image",
-    ".png": "image",
-    ".ico": "image",
-    ".mp3": "audio",
-    ".html": "text/html",
-    ".xml": "text/xml",
-    ".ttl": "text/turtle",
-    ".css": "text/css",
-    ".txt": "text/plain"
+    "py": "application/x-python-code",
+    "jpeg": "image",
+    "png": "image",
+    "ico": "image",
+    "mp3": "audio",
+    "html": "text/html",
+    "xml": "text/xml",
+    "ttl": "text/turtle",
+    "css": "text/css",
+    "txt": "text/plain"
   };
 
   if (file.split(".").length > 1) {
@@ -48,4 +48,4 @@ function uploadFile(filePath, currPath) {
   reader.readAsArrayBuffer(filePath);
 }
 
-export default { uploadFile: uploadFile };
+export default { uploadFile: uploadFile, getContentType: getContentType};
