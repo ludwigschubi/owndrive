@@ -1,16 +1,16 @@
-import React from "react";
-import styles from "./LoginScreen.module.css";
+import React from 'react';
+import styles from './LoginScreen.module.css';
 
 class LoginScreen extends React.Component {
-    constructor(props){
-        super(props)
+    constructor(props) {
+        super(props);
         this.state = {
-            webId: props.webId
-        }
+            webId: props.webId,
+        };
     }
 
-    render(){
-        return <p className={styles.text}>This is the LoginScreen</p>
+    render() {
+        return <p className={styles.text}> This is the LoginScreen </p>;
     }
 }
 
