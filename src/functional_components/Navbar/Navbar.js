@@ -22,7 +22,7 @@ const Navigation = (props) => {
                             <NavDropdown
                                 id="dropdown"
                                 alignRight
-                                className={[styles.dropdown, "float-right"]}
+                                className={[styles.dropdown, 'float-right']}
                             >
                                 {props.webId ? (
                                     <div>
