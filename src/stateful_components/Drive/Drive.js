@@ -1,14 +1,15 @@
 import React from 'react';
 import ns from 'solid-namespace';
 import rdf from 'rdflib';
-import auth from 'solid-auth-client';
-import styles from './Home.module.css';
+import styles from './Drive.module.css';
 import Breadcrumbs from '../../functional_components/Breadcrumbs/Breadcrumbs';
 import Folders from '../../functional_components/Folders/Folders';
 import Files from '../../functional_components/Files/Files';
 import FileUpload from '../../functional_components/FileUpload/FileUpload';
+import FolderUpload from '../../functional_components/FolderUpload/FolderUpload';
 import fileUtils from '../../utils/fileUtils';
 import { getBreadcrumbsFromUrl } from '../../utils/url';
+import User from 'your-user';
 
 class Home extends React.Component {
     constructor(props) {
@@ -87,20 +88,6 @@ class Home extends React.Component {
             return;
         }
 
-        auth.fetch(url).then((response) => {
-            const reader = response.body.getReader();
-            let result = '';
-            reader.read().then(function processText({ done, value }) {
-                if (done) {
-                    console.log(result)
-                    return result;
-                }
-
-                result += value;
-                return reader.read().then(processText);
-            });
-        });
-
         const xhr = new XMLHttpRequest();
         xhr.onreadystatechange = () => {
             if (xhr.readyState === XMLHttpRequest.DONE) {
@@ -131,8 +118,19 @@ class Home extends React.Component {
         fileUtils.uploadFile(filePath, currPath);
     }
 
+    uploadFolder(e) {
+        const currPath = this.state.currPath;
+        const filePath = e.target.files[0];
+
+        fileUtils.uploadFolder(filePath, currPath);
+    }
+
     componentDidMount() {
         this.loadCurrentFolder(this.state.currPath, ['/']);
+        const user = new User(this.state.webId);
+        user.getName().then((name) => {
+            console.log(name);
+        });
     }
 
     render() {
@@ -171,6 +169,9 @@ class Home extends React.Component {
                                 onClick={this.loadFile.bind(this)}
                             />
                             <FileUpload onChange={this.uploadFile.bind(this)} />
+                            <FolderUpload
+                                onChange={this.uploadFolder.bind(this)}
+                            />
                         </div>
                     )}
                 </div>

@@ -16,8 +16,10 @@
 .profileIcon {
     width: 40px;
     height: 40px;
+    background-size: cover;
+    background-position: center;
     border-radius: 50%;
-    background-color: blueviolet;
+    /* background-color: blueviolet; */
 
     /* dummytext can be deleted */
     display: flex;

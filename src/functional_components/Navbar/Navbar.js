@@ -1,5 +1,5 @@
 import React from 'react';
-
+import NavLink from "react-router-dom/NavLink";
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Col from 'react-bootstrap/Col';
@@ -9,20 +9,31 @@ import styles from './Navbar.module.css';
 const Navigation = (props) => {
     return (
         <Navbar bg="light" expand="lg">
-            <div style={{width: '100%'}}>
+            <div style={{ width: '100%' }}>
                 <Row>
                     <Col xs="6" sm="6" md="6" lg="6">
                         <Navbar.Brand href="/" className={styles.brand}>
                             SOLID FILES
                         </Navbar.Brand>
+                        <NavLink to="/home">HOME</NavLink>
                     </Col>
                     <Col xs="6" sm="6" md="6" lg="6">
                         <div className={styles.menuWrapper}>
-                            <div className={styles.profileIcon}>dummy</div>
+                            {props.picture ? (
+                                <div
+                                    className={styles.profileIcon}
+                                    style={{
+                                        backgroundImage:
+                                            'url(' + props.picture + ')',
+                                    }}
+                                />
+                            ) : (
+                                ''
+                            )}
                             <NavDropdown
                                 id="dropdown"
                                 alignRight
-                                className={[styles.dropdown, "float-right"]}
+                                className={[styles.dropdown, 'float-right']}
                             >
                                 {props.webId ? (
                                     <div>
