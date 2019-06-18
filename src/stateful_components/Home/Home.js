@@ -8,7 +8,7 @@ import Folders from '../../functional_components/Folders/Folders';
 import Files from '../../functional_components/Files/Files';
 import FileUpload from '../../functional_components/FileUpload/FileUpload';
 import fileUtils from '../../utils/fileUtils';
-import { getBreadcrumbsFromUrl } from '../../utils/url';
+import {getBreadcrumbsFromUrl} from '../../utils/url';
 
 class Home extends React.Component {
     constructor(props) {
@@ -18,7 +18,6 @@ class Home extends React.Component {
             : {
                   breadcrumbs: undefined,
                   currPath: undefined,
-                  webId: props.webId,
                   file: undefined,
                   image: undefined,
               };
@@ -27,7 +26,7 @@ class Home extends React.Component {
     sortContainments(urls) {
         const folders = [];
         const files = [];
-        urls.forEach(url => {
+        urls.forEach((url) => {
             if (url.value[url.value.length - 1] === '/') {
                 const urlFragments = url.value.split('/');
                 const folderUrl = urlFragments[urlFragments.length - 2];
@@ -45,7 +44,7 @@ class Home extends React.Component {
         const store = rdf.graph();
         const fetcher = new rdf.Fetcher(store);
 
-        return fetcher.load(url).then(response => {
+        return fetcher.load(url).then((response) => {
             const containments = store.each(
                 rdf.sym(url),
                 rdf.sym(ns().ldp('contains')),
@@ -58,50 +57,50 @@ class Home extends React.Component {
     loadCurrentFolder(path, newBreadcrumbs) {
         const currPath = path
             ? path
-            : 'https://' + this.state.webId.split('/')[2] + '/';
+            : 'https://' + this.props.webId.split('/')[2] + '/';
         Promise.resolve(this.loadFolder(currPath, newBreadcrumbs)).then(
-            sortedContainments => {
+            (sortedContainments) => {
                 this.setState({
                     folders: sortedContainments[1],
                     files: sortedContainments[0],
                     currPath: currPath,
                     breadcrumbs: newBreadcrumbs,
                     file: undefined,
-                    image: undefined
+                    image: undefined,
                 });
             }
         );
     }
 
     loadFile(url) {
-        const newBreadCrumbs = getBreadcrumbsFromUrl(url)
+        const newBreadCrumbs = getBreadcrumbsFromUrl(url);
 
         const contentType = fileUtils.getContentType(url);
-        if (contentType === "image"){
+        if (contentType === 'image') {
             this.setState({
                 file: url,
                 image: url,
                 currPath: url,
-                breadcrumbs: newBreadCrumbs
-            })
+                breadcrumbs: newBreadCrumbs,
+            });
             return;
         }
 
         const xhr = new XMLHttpRequest();
         xhr.onreadystatechange = () => {
-            if(xhr.readyState === XMLHttpRequest.DONE){
-                if(xhr.status === 200){
+            if (xhr.readyState === XMLHttpRequest.DONE) {
+                if (xhr.status === 200) {
                     this.setState({
                         file: xhr.response,
                         currPath: url,
-                        breadcrumbs: newBreadCrumbs
-                    })
+                        breadcrumbs: newBreadCrumbs,
+                    });
                     return;
                 }
             }
-        }
+        };
 
-        xhr.open("GET", url);
+        xhr.open('GET', url);
         xhr.send();
     }
 
@@ -111,9 +110,9 @@ class Home extends React.Component {
     }
 
     uploadFile(e) {
-        let webId = this.state.webId;
-        let currPath = this.state.currPath;
-        var filePath = e.target.files[0];
+        const webId = this.state.webId;
+        const currPath = this.state.currPath;
+        const filePath = e.target.files[0];
 
         fileUtils.uploadFile(filePath, currPath);
     }
@@ -125,14 +124,20 @@ class Home extends React.Component {
     render() {
         const fileMarkup = this.state.file ? (
             <div className={styles.renderedFile}>
-                {this.state.image ? <img src={this.state.image}></img>: this.state.file}
+                {this.state.image ? (
+                    <img src={this.state.image}></img>
+                ) : (
+                    this.state.file
+                )}
             </div>
         ) : (
             undefined
         );
 
+        console.log(this.state.webId);
         return (
             <div>
+                <div onClick={this.loadProfile}>test</div>
                 <Breadcrumbs
                     onClick={this.loadCurrentFolder.bind(this)}
                     breadcrumbs={this.state.breadcrumbs}

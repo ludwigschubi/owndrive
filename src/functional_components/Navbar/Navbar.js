@@ -7,6 +7,7 @@ import Row from 'react-bootstrap/Row';
 import styles from './Navbar.module.css';
 
 const Navigation = (props) => {
+    console.log(props.profileImg);
     return (
         <Navbar bg="light" expand="lg">
             <div style={{width: '100%'}}>
@@ -18,7 +19,11 @@ const Navigation = (props) => {
                     </Col>
                     <Col xs="6" sm="6" md="6" lg="6">
                         <div className={styles.menuWrapper}>
-                            <div className={styles.profileIcon}>dummy</div>
+                            <img
+                                className={styles.profileIcon}
+                                src={props.profileImg}
+                            />
+                            {/* <div className={styles.profileIcon}>dummy</div> */}
                             <NavDropdown
                                 id="dropdown"
                                 alignRight
