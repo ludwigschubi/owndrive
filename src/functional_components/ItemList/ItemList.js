@@ -7,18 +7,18 @@ const ItemList = ({selectedItems, items, image, onItemClick, currPath, isFile = 
         ? items.map((item, index) => {
               return isFile ? (
                   <File
-                      selectedItem={selectedItems.includes(currPath + item) ? true : undefined}
+                      selectedItem={selectedItems.includes(currPath + encodeURIComponent(item)) ? true : undefined}
                       key={item + index}
                       image={image}
-                      onClick={() => onItemClick(currPath + item)}
+                      onClick={() => onItemClick(currPath + encodeURIComponent(item))}
                       label={item}
                   />
               ) : (
                   <Item
-                      selectedItem = {selectedItems.includes(currPath + item + "/") ? true : undefined}
+                      selectedItem = {selectedItems.includes(currPath + encodeURIComponent(item) + "/") ? true : undefined}
                       key={item + index}
                       image={image}
-                      onClick={() => onItemClick(currPath + item + '/')}
+                      onClick={() => onItemClick(currPath + encodeURIComponent(item) + '/')}
                       label={item}
                   />
               );

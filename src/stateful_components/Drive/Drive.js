@@ -1,33 +1,38 @@
 import React from 'react';
 import ns from 'solid-namespace';
 import rdf from 'rdflib';
+import auth from 'solid-auth-client';
 import styles from './Drive.module.css';
 import Breadcrumbs from '../../functional_components/Breadcrumbs/Breadcrumbs';
 import FileUpload from '../../functional_components/FileUpload/FileUpload';
-import FolderUpload from '../../functional_components/FolderUpload/FolderUpload';
-import {ItemList} from '../../functional_components/ItemList';
+import { ItemList } from '../../functional_components/ItemList';
 import fileUtils from '../../utils/fileUtils';
-import {folder} from '../../assets/icons/externalIcons';
+import { getBreadcrumbsFromUrl } from '../../utils/url';
+import ACLController from 'your-acl';
+import FileCreation from '../../functional_components/FileCreation/FileCreation';
+import { folder } from '../../assets/icons/externalIcons';
 import fileIcon from '../../assets/icons/File.png';
-import {getBreadcrumbsFromUrl} from '../../utils/url';
-import User from 'your-user';
 
-class Home extends React.Component {
+class Drive extends React.Component {
     constructor(props) {
         super(props);
-        this.state = localStorage.getItem('appState')
-            ? JSON.parse(localStorage.getItem('appState'))
-            : {
+        this.state = {
                   breadcrumbs: undefined,
                   currPath: undefined,
                   file: undefined,
                   image: undefined,
-                  isProfileExpanded: false,
+                  selectedItems: [],
+                  folders: [],
+                  files: [],
               };
+
+        this.createFolder = this.createFolder.bind(this);
+        this.createFile = this.createFile.bind(this);
         this.followPath = this.followPath.bind(this);
         this.uploadFile = this.uploadFile.bind(this);
         this.loadFile = this.loadFile.bind(this);
         this.loadCurrentFolder = this.loadCurrentFolder.bind(this);
+        this.clearSelection = this.clearSelection.bind(this);
     }
 
     sortContainments(urls) {
@@ -37,11 +42,11 @@ class Home extends React.Component {
             if (url.value[url.value.length - 1] === '/') {
                 const urlFragments = url.value.split('/');
                 const folderUrl = urlFragments[urlFragments.length - 2];
-                folders.push(folderUrl);
+                folders.push(decodeURIComponent(folderUrl));
             } else {
                 const urlFragments = url.value.split('/');
                 const fileUrl = urlFragments[urlFragments.length - 1];
-                files.push(fileUrl);
+                files.push(decodeURIComponent(fileUrl));
             }
         });
         return [files, folders];
@@ -74,46 +79,59 @@ class Home extends React.Component {
                     breadcrumbs: newBreadcrumbs,
                     file: undefined,
                     image: undefined,
+                    selectedItems: [],
                 });
             }
         );
     }
 
     loadFile(url) {
-        const newBreadCrumbs = getBreadcrumbsFromUrl(url);
-
-        const contentType = fileUtils.getContentType(url);
-        if (contentType === 'image') {
+        if (this.state.selectedItems.includes(url) === false) {
+            const newSelection = this.state.selectedItems;
+            newSelection.push(url);
             this.setState({
-                file: url,
-                image: url,
-                currPath: url,
-                breadcrumbs: newBreadCrumbs,
+                selectedItems: newSelection,
             });
-            return;
-        }
+        } else {
+            const newBreadCrumbs = getBreadcrumbsFromUrl(url);
 
-        const xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
+            const contentType = fileUtils.getContentType(url);
+            if (contentType === 'image') {
+                this.setState({
+                    file: url,
+                    image: url,
+                    currPath: url,
+                    breadcrumbs: newBreadCrumbs,
+                    selectedItems: [],
+                });
+                return;
+            }
+
+            auth.fetch(url).then((response) => {
+                response.text().then((text) => {
                     this.setState({
-                        file: xhr.response,
+                        file: text,
                         currPath: url,
                         breadcrumbs: newBreadCrumbs,
+                        selectedItems: [],
                     });
-                    return;
-                }
-            }
-        };
-
-        xhr.open('GET', url);
-        xhr.send();
+                });
+            });
+        }
     }
 
-    followPath(path, file) {
-        const newBreadcrumbs = getBreadcrumbsFromUrl(path);
-        this.loadCurrentFolder(path, newBreadcrumbs);
+    followPath(path) {
+        if (this.state.selectedItems.includes(path)) {
+            const newBreadcrumbs = getBreadcrumbsFromUrl(path);
+            this.loadCurrentFolder(path, newBreadcrumbs);
+            localStorage.setItem('appState', JSON.stringify(this.state));
+        } else {
+            const newSelection = this.state.selectedItems
+            newSelection.push(path);
+            this.setState({
+                selectedItems: newSelection,
+            });
+        }
     }
 
     uploadFile(e) {
@@ -123,50 +141,84 @@ class Home extends React.Component {
         fileUtils.uploadFile(filePath, currPath);
     }
 
-    uploadFolder(e) {
-        const currPath = this.state.currPath;
-        const filePath = e.target.files[0];
-
-        fileUtils.uploadFolder(filePath, currPath);
+    clearSelection(e) {
+        if (e.target.nodeName !== 'IMG' && e.target.nodeName !== 'P') {
+            this.setState({
+                selectedItems: [],
+            });
+        }
     }
 
-    toggleMenu(){
-        this.setState({
-            isProfileExpanded: !this.state.isProfileExpanded
-        })
-    }
+    createFolder() {
+        const folderAddress = window.prompt(
+            'Please enter the name for your new folder:',
+            'Untitled Folder'
+        );
+        const request = {
+            method: 'POST',
+            headers: {
+                slug: folderAddress,
+                link: '<http://www.w3.org/ns/ldp#BasicContainer>; rel="type"',
+                contentType: 'text-turtle',
+            },
+        };
 
-    componentDidMount() {
-        this.loadCurrentFolder(this.state.currPath, ['/']);
-        const user = new User(this.props.webId);
-        user.getName().then((name) => {
-            console.log(name);
+        auth.fetch(this.state.currPath, request).then(() => {
+            this.loadCurrentFolder(this.state.currPath, this.state.breadcrumbs);
         });
     }
 
+    createFile() {
+        const folderAddress = window.prompt(
+            'Please enter the name for your new file:',
+            'Untitled'
+        );
+        const request = {
+            method: 'POST',
+            headers: {
+                slug: folderAddress,
+                link: '<http://www.w3.org/ns/ldp#Resource>; rel="type"',
+                contentType: 'text-turtle',
+            },
+        };
+
+        auth.fetch(this.state.currPath, request).then(() => {
+            this.loadCurrentFolder(this.state.currPath, this.state.breadcrumbs);
+        });
+    }
+
+    componentDidMount() {
+        if (!JSON.parse(localStorage.getItem('appState')).folders){
+            this.loadCurrentFolder(this.state.currPath, ['/']);
+        } else {
+            console.log(localStorage.getItem('appState'));
+            this.setState(JSON.parse(localStorage.getItem('appState')))
+        }
+    }
+
+    componentWillUnmount(){
+        localStorage.setItem('appState', JSON.stringify(this.state));
+    }
+
     render() {
-        const {
-            currPath,
-            folders,
-            files,
-            breadcrumbs,
-            image,
-            file,
-        } = this.state;
-        const {webId} = this.props;
-        const fileMarkup = file ? (
+        const { currPath, folders, files, breadcrumbs } = this.state;
+        const { webId } = this.props;
+        const fileMarkup = this.state.file ? (
             <div className={styles.renderedFile}>
-                {image ? <img src={image} alt="requested file"></img> : file}
+                {this.state.image ? (
+                    <img src={this.state.image} alt="requested file"></img>
+                ) : (
+                    this.state.file
+                )}
             </div>
         ) : (
             undefined
         );
 
         return (
-            <div>
-
+            <div style={{ height: '100%' }} onClick={this.clearSelection}>
                 <Breadcrumbs
-                    onClick={this.loadCurrentFolder.bind(this)}
+                    onClick={this.loadCurrentFolder}
                     breadcrumbs={breadcrumbs}
                     webId={webId}
                 />
@@ -176,22 +228,23 @@ class Home extends React.Component {
                     ) : (
                         <div>
                             <ItemList
+                                selectedItems={this.state.selectedItems}
                                 items={folders}
                                 currPath={currPath}
                                 image={folder}
                                 onItemClick={this.followPath}
                             />
                             <ItemList
+                                selectedItems={this.state.selectedItems}
                                 isFile
                                 items={files}
                                 currPath={currPath}
                                 image={fileIcon}
                                 onItemClick={this.loadFile}
                             />
+                            <FileCreation folder onClick={this.createFolder} />
+                            <FileCreation onClick={this.createFile} />
                             <FileUpload onChange={this.uploadFile.bind(this)} />
-                            <FolderUpload
-                                onChange={this.uploadFolder.bind(this)}
-                            />
                         </div>
                     )}
                 </div>
@@ -200,4 +253,4 @@ class Home extends React.Component {
     }
 }
 
-export default Home;
+export default Drive;

@@ -187,17 +187,10 @@ class Home extends React.Component {
     }
 
     componentDidMount() {
-        const acl = new ACLController(
-            'https://ludwigschubert.solid.community/inbox/bejow'
-        );
-        acl.getAgents().then((agents) => {
-            console.log(agents);
-        });
         this.loadCurrentFolder(this.state.currPath, ['/']);
     }
 
     render() {
-        console.log(this.state);
         const { currPath, folders, files, breadcrumbs } = this.state;
         const { webId } = this.props;
         const fileMarkup = this.state.file ? (
