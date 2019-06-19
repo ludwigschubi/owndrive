@@ -191,6 +191,7 @@ class Home extends React.Component {
                                 onItemClick={this.loadFile}
                             />
                             <FileCreation onClick={this.createFolder}/>
+                            <FileCreation onClick={this.createFile}/>
                             <FileUpload onChange={this.uploadFile.bind(this)} />
                         </div>
                     )}
