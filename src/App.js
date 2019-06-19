@@ -1,10 +1,11 @@
 import React from 'react';
 import {BrowserRouter, Route, Switch} from 'react-router-dom';
-import Navigation from './functional_components/Navbar';
+import Navigation from './functional_components/Navigation';
 import Container from 'react-bootstrap/Container';
 import Home from './stateful_components/Home';
 import Drive from './stateful_components/Drive';
 import LoginScreen from './stateful_components/LoginScreen';
+import {ProfileSideBar} from './functional_components/ProfileSideBar';
 import auth from 'solid-auth-client';
 import User from 'your-user';
 
@@ -14,7 +15,11 @@ class App extends React.Component {
         this.state = {
             webId: undefined,
             user: undefined,
+            isProfileExpanded: false,
         };
+        this.login = this.login.bind(this);
+        this.logout = this.logout.bind(this);
+        this.toggleSidebar = this.toggleSidebar.bind(this);
     }
 
     async login() {
@@ -36,6 +41,12 @@ class App extends React.Component {
         });
     }
 
+    toggleSidebar() {
+        this.setState({
+            isProfileExpanded: !this.state.isProfileExpanded,
+        });
+    }
+
     componentDidMount() {
         auth.trackSession((session) => {
             if (!session) {
@@ -54,16 +65,24 @@ class App extends React.Component {
     }
 
     render() {
-        const {webId, user} = this.state;
+        const {webId, user, isProfileExpanded} = this.state;
         return (
             <Container>
                 <BrowserRouter>
                     <Navigation
-                        onLogout={this.logout.bind(this)}
-                        onLogin={this.login.bind(this)}
+                        toggleSidebar={this.toggleSidebar}
+                        onLogout={this.logout}
+                        onLogin={this.login}
                         webId={webId}
                         picture={user ? user.picture : undefined}
                     />
+                    {webId ? (
+                        <ProfileSideBar
+                            user={user}
+                            toggleSidebar={this.toggleSidebar}
+                            isExpanded={isProfileExpanded}
+                        />
+                    ) : null}
                     <Switch>
                         <Route
                             path="/"

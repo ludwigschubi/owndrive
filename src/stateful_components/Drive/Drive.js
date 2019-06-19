@@ -22,6 +22,7 @@ class Home extends React.Component {
                   currPath: undefined,
                   file: undefined,
                   image: undefined,
+                  isProfileExpanded: false,
               };
         this.followPath = this.followPath.bind(this);
         this.uploadFile = this.uploadFile.bind(this);
@@ -129,6 +130,12 @@ class Home extends React.Component {
         fileUtils.uploadFolder(filePath, currPath);
     }
 
+    toggleMenu(){
+        this.setState({
+            isProfileExpanded: !this.state.isProfileExpanded
+        })
+    }
+
     componentDidMount() {
         this.loadCurrentFolder(this.state.currPath, ['/']);
         const user = new User(this.props.webId);
@@ -157,6 +164,7 @@ class Home extends React.Component {
 
         return (
             <div>
+
                 <Breadcrumbs
                     onClick={this.loadCurrentFolder.bind(this)}
                     breadcrumbs={breadcrumbs}

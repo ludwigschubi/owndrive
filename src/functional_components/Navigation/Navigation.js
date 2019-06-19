@@ -4,9 +4,9 @@ import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import styles from './Navbar.module.css';
+import styles from './Navigation.module.css';
 
-const Navigation = (props) => {
+const Navigation = ({picture, webId, onLogin, onLogout, toggleSidebar}) => {
     return (
         <Navbar bg="light" expand="lg">
             <div style={{width: '100%'}}>
@@ -19,12 +19,12 @@ const Navigation = (props) => {
                     </Col>
                     <Col xs="6" sm="6" md="6" lg="6">
                         <div className={styles.menuWrapper}>
-                            {props.picture ? (
+                            {picture ? (
                                 <div
+                                    onClick={toggleSidebar}
                                     className={styles.profileIcon}
                                     style={{
-                                        backgroundImage:
-                                            'url(' + props.picture + ')',
+                                        backgroundImage: 'url(' + picture + ')',
                                     }}
                                 />
                             ) : (
@@ -35,19 +35,17 @@ const Navigation = (props) => {
                                 alignRight
                                 className={[styles.dropdown, 'float-right']}
                             >
-                                {props.webId ? (
+                                {webId ? (
                                     <div>
                                         <NavDropdown.Item href="home">
                                             Home
                                         </NavDropdown.Item>
-                                        <NavDropdown.Item
-                                            onClick={props.onLogout}
-                                        >
+                                        <NavDropdown.Item onClick={onLogout}>
                                             Logout
                                         </NavDropdown.Item>
                                     </div>
                                 ) : (
-                                    <NavDropdown.Item onClick={props.onLogin}>
+                                    <NavDropdown.Item onClick={onLogin}>
                                         Login
                                     </NavDropdown.Item>
                                 )}
