@@ -203,6 +203,10 @@ class Drive extends React.Component {
         }
     }
 
+    selectFolder(files) {
+        console.log(files)
+    }
+
     componentWillUnmount() {
         console.log('Caching state...');
         localStorage.setItem('appState', JSON.stringify(this.state));
@@ -252,7 +256,7 @@ class Drive extends React.Component {
                             />
                             <FileCreation folder onClick={this.createFolder} />
                             <FileCreation onClick={this.createFile} />
-                            <FileUpload onChange={this.uploadFile.bind(this)} />
+                            <FileUpload onChange={this.selectFolder} />
                         </div>
                     )}
                 </div>

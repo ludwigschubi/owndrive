@@ -21,12 +21,15 @@
     height: 110%;
 }
 
-.container:hover .label {
+.container:hover .label{
     overflow: visible;
     font-size: 110%;
 }
 
 .label {
+    z-index: 1;
+    background-color: white;
+    border-radius: 5px;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
