@@ -56,7 +56,7 @@ class App extends React.Component {
     render() {
         const {webId, user} = this.state;
         return (
-            <Container>
+            <Container style={{height: "100%"}}>
                 <BrowserRouter>
                     <Navigation
                         onLogout={this.logout.bind(this)}
