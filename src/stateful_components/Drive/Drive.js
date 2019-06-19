@@ -134,10 +134,7 @@ class Drive extends React.Component {
     }
 
     deleteFile(item) {
-        auth.fetch(
-            item,
-            { method: 'DELETE' }
-        );
+        auth.fetch(item, { method: 'DELETE' });
     }
 
     uploadFile(e) {
@@ -194,11 +191,15 @@ class Drive extends React.Component {
     }
 
     componentDidMount() {
-        if (!JSON.parse(localStorage.getItem('appState')).folders) {
-            this.loadCurrentFolder(this.state.currPath, ['/']);
-        } else {
-            console.log('Using cached state...');
-            this.setState(JSON.parse(localStorage.getItem('appState')));
+        try {
+            if (!JSON.parse(localStorage.getItem('appState')).folders) {
+                this.loadCurrentFolder(this.state.currPath, ['/']);
+            } else {
+                console.log('Using cached state...');
+                this.setState(JSON.parse(localStorage.getItem('appState')));
+            }
+        } catch (e) {
+            console.log(e);
         }
     }
 
