@@ -26,6 +26,7 @@ class Home extends React.Component {
               };
 
         this.createFolder = this.createFolder.bind(this);
+        this.createFile = this.createFile.bind(this);
         this.followPath = this.followPath.bind(this);
         this.uploadFile = this.uploadFile.bind(this);
         this.loadFile = this.loadFile.bind(this);
@@ -39,11 +40,11 @@ class Home extends React.Component {
             if (url.value[url.value.length - 1] === '/') {
                 const urlFragments = url.value.split('/');
                 const folderUrl = urlFragments[urlFragments.length - 2];
-                folders.push(folderUrl);
+                folders.push(decodeURIComponent(folderUrl));
             } else {
                 const urlFragments = url.value.split('/');
                 const fileUrl = urlFragments[urlFragments.length - 1];
-                files.push(fileUrl);
+                files.push(decodeURIComponent(fileUrl));
             }
         });
         return [files, folders];
@@ -126,7 +127,22 @@ class Home extends React.Component {
         const folderAddress = window.prompt("Please enter the name for your new folder:", "Untitled Folder");
         const request = {
             method: "POST",
-            headers: { slug: folderAddress, link: '<http://www.w3.org/ns/ldp#BasicContainer>; rel="type"'}
+            headers: { slug: folderAddress, link: '<http://www.w3.org/ns/ldp#BasicContainer>; rel="type"', contentType: "text-turtle"}
+        }
+
+        auth.fetch(this.state.currPath, request).then(() => {
+            this.loadCurrentFolder(this.state.currPath, this.state.breadcrumbs)
+        });
+    }
+
+    createFile(){
+        const store = rdf.graph();
+        const updater = new rdf.UpdateManager(store);
+
+        const folderAddress = window.prompt("Please enter the name for your new file:", "Untitled");
+        const request = {
+            method: "POST",
+            headers: { slug: folderAddress, link: '<http://www.w3.org/ns/ldp#Resource>; rel="type"', contentType: "text-turtle"}
         }
 
         auth.fetch(this.state.currPath, request).then(() => {
@@ -190,7 +206,7 @@ class Home extends React.Component {
                                 image={fileIcon}
                                 onItemClick={this.loadFile}
                             />
-                            <FileCreation onClick={this.createFolder}/>
+                            <FileCreation folder onClick={this.createFolder}/>
                             <FileCreation onClick={this.createFile}/>
                             <FileUpload onChange={this.uploadFile.bind(this)} />
                         </div>
