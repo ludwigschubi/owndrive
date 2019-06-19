@@ -1,0 +1,39 @@
+.container {
+    margin: 0 15px;
+    cursor: pointer;
+    position: relative;
+    width: 100%;
+    height: 110px;
+    display: block;
+}
+
+.container:hover img {
+    opacity: 0.6;
+}
+
+.innerContainer {
+    position: absolute;
+    width: 100%;
+}
+
+.container:hover .innerContainer {
+    width: 110%;
+    height: 110%;
+}
+
+.container:hover .label {
+    overflow: visible;
+    font-size: 110%;
+}
+
+.label {
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    text-align: center;
+    transition: all 0.2s;
+}
+
+.icon {
+    width: 100%;
+}

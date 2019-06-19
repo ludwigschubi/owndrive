@@ -4,13 +4,14 @@ import rdf from 'rdflib';
 import auth from 'solid-auth-client';
 import styles from './Home.module.css';
 import Breadcrumbs from '../../functional_components/Breadcrumbs/Breadcrumbs';
-import Folders from '../../functional_components/Folders/Folders';
-import Files from '../../functional_components/Files/Files';
 import FileUpload from '../../functional_components/FileUpload/FileUpload';
+import {ItemList} from '../../functional_components/ItemList';
 import fileUtils from '../../utils/fileUtils';
 import { getBreadcrumbsFromUrl } from '../../utils/url';
 import ACLController from 'your-acl';
 import FileCreation from '../../functional_components/FileCreation/FileCreation';
+import {folder} from '../../assets/icons/externalIcons';
+import fileIcon from '../../assets/icons/File.png';
 
 class Home extends React.Component {
     constructor(props) {
@@ -20,12 +21,15 @@ class Home extends React.Component {
             : {
                   breadcrumbs: undefined,
                   currPath: undefined,
-                  webId: props.webId,
                   file: undefined,
                   image: undefined,
               };
 
         this.createFolder = this.createFolder.bind(this);
+        this.followPath = this.followPath.bind(this);
+        this.uploadFile = this.uploadFile.bind(this);
+        this.loadFile = this.loadFile.bind(this);
+        this.loadCurrentFolder = this.loadCurrentFolder.bind(this);
     }
 
     sortContainments(urls) {
@@ -62,7 +66,7 @@ class Home extends React.Component {
     loadCurrentFolder(path, newBreadcrumbs) {
         const currPath = path
             ? path
-            : 'https://' + this.state.webId.split('/')[2] + '/';
+            : 'https://' + this.props.webId.split('/')[2] + '/';
         Promise.resolve(this.loadFolder(currPath, newBreadcrumbs)).then(
             (sortedContainments) => {
                 this.setState({
@@ -108,6 +112,7 @@ class Home extends React.Component {
     }
 
     uploadFile(e) {
+        const webId = this.state.webId;
         const currPath = this.state.currPath;
         const filePath = e.target.files[0];
 
@@ -144,6 +149,9 @@ class Home extends React.Component {
     }
 
     render() {
+        console.log(this.state);
+        const {currPath, folders, files, breadcrumbs} = this.state;
+        const {webId} = this.props;
         const fileMarkup = this.state.file ? (
             <div className={styles.renderedFile}>
                 {this.state.image ? (
@@ -158,25 +166,29 @@ class Home extends React.Component {
 
         return (
             <div>
+                <div onClick={this.loadProfile}>test</div>
                 <Breadcrumbs
-                    onClick={this.loadCurrentFolder.bind(this)}
-                    breadcrumbs={this.state.breadcrumbs}
-                    webId={this.state.webId}
+                    onClick={this.loadCurrentFolder}
+                    breadcrumbs={breadcrumbs}
+                    webId={webId}
                 />
                 <div>
                     {fileMarkup ? (
                         fileMarkup
                     ) : (
                         <div>
-                            <Folders
-                                folders={this.state.folders}
-                                currPath={this.state.currPath}
-                                onClick={this.followPath.bind(this)}
+                            <ItemList
+                                items={folders}
+                                currPath={currPath}
+                                image={folder}
+                                onItemClick={this.followPath}
                             />
-                            <Files
-                                files={this.state.files}
-                                currPath={this.state.currPath}
-                                onClick={this.loadFile.bind(this)}
+                            <ItemList
+                                isFile
+                                items={files}
+                                currPath={currPath}
+                                image={fileIcon}
+                                onItemClick={this.loadFile}
                             />
                             <FileCreation onClick={this.createFolder}/>
                             <FileUpload onChange={this.uploadFile.bind(this)} />

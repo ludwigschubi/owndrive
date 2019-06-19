@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import Navigation from './functional_components/Navbar';
 import Container from 'react-bootstrap/Container';
 import Home from './stateful_components/Home';
@@ -54,21 +54,22 @@ class App extends React.Component {
     }
 
     render() {
+        const {webId, user} = this.state;
         return (
             <Container>
                 <BrowserRouter>
                     <Navigation
                         onLogout={this.logout.bind(this)}
                         onLogin={this.login.bind(this)}
-                        webId={this.state.webId}
-                        picture={this.state.user ? this.state.user.picture : undefined}
+                        webId={webId}
+                        picture={user ? user.picture : undefined}
                     />
                     <Switch>
                         <Route
                             path="/"
                             exact
                             component={
-                                this.state.user
+                                user
                                     ? () => (window.location.href = '/home')
                                     : LoginScreen
                             }
@@ -76,8 +77,13 @@ class App extends React.Component {
                         <Route
                             path="/home"
                             component={
-                                this.state.user
-                                    ? () => <Home webId={this.state.webId} user={this.state.user}/>
+                                user
+                                    ? () => (
+                                          <Home
+                                              webId={this.state.webId}
+                                              user={this.state.user}
+                                          />
+                                      )
                                     : LoginScreen
                             }
                         />

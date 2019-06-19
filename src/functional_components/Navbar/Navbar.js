@@ -9,7 +9,7 @@ import styles from './Navbar.module.css';
 const Navigation = (props) => {
     return (
         <Navbar bg="light" expand="lg">
-            <div style={{ width: '100%' }}>
+            <div style={{width: '100%'}}>
                 <Row>
                     <Col xs="6" sm="6" md="6" lg="6">
                         <Navbar.Brand href="/" className={styles.brand}>

@@ -3,12 +3,13 @@ import ns from 'solid-namespace';
 import rdf from 'rdflib';
 import styles from './Drive.module.css';
 import Breadcrumbs from '../../functional_components/Breadcrumbs/Breadcrumbs';
-import Folders from '../../functional_components/Folders/Folders';
-import Files from '../../functional_components/Files/Files';
 import FileUpload from '../../functional_components/FileUpload/FileUpload';
 import FolderUpload from '../../functional_components/FolderUpload/FolderUpload';
+import {ItemList} from '../../functional_components/ItemList';
 import fileUtils from '../../utils/fileUtils';
-import { getBreadcrumbsFromUrl } from '../../utils/url';
+import {folder} from '../../assets/icons/externalIcons';
+import fileIcon from '../../assets/icons/File.png';
+import {getBreadcrumbsFromUrl} from '../../utils/url';
 import User from 'your-user';
 
 class Home extends React.Component {
@@ -19,10 +20,13 @@ class Home extends React.Component {
             : {
                   breadcrumbs: undefined,
                   currPath: undefined,
-                  webId: props.webId,
                   file: undefined,
                   image: undefined,
               };
+        this.followPath = this.followPath.bind(this);
+        this.uploadFile = this.uploadFile.bind(this);
+        this.loadFile = this.loadFile.bind(this);
+        this.loadCurrentFolder = this.loadCurrentFolder.bind(this);
     }
 
     sortContainments(urls) {
@@ -59,7 +63,7 @@ class Home extends React.Component {
     loadCurrentFolder(path, newBreadcrumbs) {
         const currPath = path
             ? path
-            : 'https://' + this.state.webId.split('/')[2] + '/';
+            : 'https://' + this.props.webId.split('/')[2] + '/';
         Promise.resolve(this.loadFolder(currPath, newBreadcrumbs)).then(
             (sortedContainments) => {
                 this.setState({
@@ -127,20 +131,25 @@ class Home extends React.Component {
 
     componentDidMount() {
         this.loadCurrentFolder(this.state.currPath, ['/']);
-        const user = new User(this.state.webId);
+        const user = new User(this.props.webId);
         user.getName().then((name) => {
             console.log(name);
         });
     }
 
     render() {
-        const fileMarkup = this.state.file ? (
+        const {
+            currPath,
+            folders,
+            files,
+            breadcrumbs,
+            image,
+            file,
+        } = this.state;
+        const {webId} = this.props;
+        const fileMarkup = file ? (
             <div className={styles.renderedFile}>
-                {this.state.image ? (
-                    <img src={this.state.image} alt="requested file"></img>
-                ) : (
-                    this.state.file
-                )}
+                {image ? <img src={image} alt="requested file"></img> : file}
             </div>
         ) : (
             undefined
@@ -150,23 +159,26 @@ class Home extends React.Component {
             <div>
                 <Breadcrumbs
                     onClick={this.loadCurrentFolder.bind(this)}
-                    breadcrumbs={this.state.breadcrumbs}
-                    webId={this.state.webId}
+                    breadcrumbs={breadcrumbs}
+                    webId={webId}
                 />
                 <div>
                     {fileMarkup ? (
                         fileMarkup
                     ) : (
                         <div>
-                            <Folders
-                                folders={this.state.folders}
-                                currPath={this.state.currPath}
-                                onClick={this.followPath.bind(this)}
+                            <ItemList
+                                items={folders}
+                                currPath={currPath}
+                                image={folder}
+                                onItemClick={this.followPath}
                             />
-                            <Files
-                                files={this.state.files}
-                                currPath={this.state.currPath}
-                                onClick={this.loadFile.bind(this)}
+                            <ItemList
+                                isFile
+                                items={files}
+                                currPath={currPath}
+                                image={fileIcon}
+                                onItemClick={this.loadFile}
                             />
                             <FileUpload onChange={this.uploadFile.bind(this)} />
                             <FolderUpload
