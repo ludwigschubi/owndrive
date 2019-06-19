@@ -2,11 +2,12 @@ import React from 'react';
 import {Item} from '../Item';
 import styles from './ItemList.module.css';
 import {File} from '../File';
-const ItemList = ({items, image, onItemClick, currPath, isFile = false}) => {
+const ItemList = ({selectedItems, items, image, onItemClick, currPath, isFile = false}) => {
     const itemComponents = items
         ? items.map((item, index) => {
               return isFile ? (
                   <File
+                      selectedItem={selectedItems.includes(currPath + item) ? true : undefined}
                       key={item + index}
                       image={image}
                       onClick={() => onItemClick(currPath + item)}
@@ -14,6 +15,7 @@ const ItemList = ({items, image, onItemClick, currPath, isFile = false}) => {
                   />
               ) : (
                   <Item
+                      selectedItem = {selectedItems.includes(currPath + item + "/") ? true : undefined}
                       key={item + index}
                       image={image}
                       onClick={() => onItemClick(currPath + item + '/')}

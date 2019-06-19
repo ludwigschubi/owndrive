@@ -67,7 +67,7 @@ class App extends React.Component {
     render() {
         const {webId, user, isProfileExpanded} = this.state;
         return (
-            <Container>
+            <Container style={{height: "100%"}}>
                 <BrowserRouter>
                     <Navigation
                         toggleSidebar={this.toggleSidebar}

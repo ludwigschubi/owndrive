@@ -4,13 +4,13 @@ import rdf from 'rdflib';
 import auth from 'solid-auth-client';
 import styles from './Home.module.css';
 import Breadcrumbs from '../../functional_components/Breadcrumbs/Breadcrumbs';
-// import Folders from '../../functional_components/Folders/Folders';
-// import Files from '../../functional_components/Files/Files';
 import FileUpload from '../../functional_components/FileUpload/FileUpload';
-import {ItemList} from '../../functional_components/ItemList';
+import { ItemList } from '../../functional_components/ItemList';
 import fileUtils from '../../utils/fileUtils';
-import {getBreadcrumbsFromUrl} from '../../utils/url';
-import {folder} from '../../assets/icons/externalIcons';
+import { getBreadcrumbsFromUrl } from '../../utils/url';
+import ACLController from 'your-acl';
+import FileCreation from '../../functional_components/FileCreation/FileCreation';
+import { folder } from '../../assets/icons/externalIcons';
 import fileIcon from '../../assets/icons/File.png';
 
 class Home extends React.Component {
@@ -23,11 +23,16 @@ class Home extends React.Component {
                   currPath: undefined,
                   file: undefined,
                   image: undefined,
+                  selectedItems: [],
               };
+
+        this.createFolder = this.createFolder.bind(this);
+        this.createFile = this.createFile.bind(this);
         this.followPath = this.followPath.bind(this);
         this.uploadFile = this.uploadFile.bind(this);
         this.loadFile = this.loadFile.bind(this);
         this.loadCurrentFolder = this.loadCurrentFolder.bind(this);
+        this.clearSelection = this.clearSelection.bind(this);
     }
 
     sortContainments(urls) {
@@ -37,11 +42,11 @@ class Home extends React.Component {
             if (url.value[url.value.length - 1] === '/') {
                 const urlFragments = url.value.split('/');
                 const folderUrl = urlFragments[urlFragments.length - 2];
-                folders.push(folderUrl);
+                folders.push(decodeURIComponent(folderUrl));
             } else {
                 const urlFragments = url.value.split('/');
                 const fileUrl = urlFragments[urlFragments.length - 1];
-                files.push(fileUrl);
+                files.push(decodeURIComponent(fileUrl));
             }
         });
         return [files, folders];
@@ -74,78 +79,127 @@ class Home extends React.Component {
                     breadcrumbs: newBreadcrumbs,
                     file: undefined,
                     image: undefined,
+                    selectedItems: [],
                 });
             }
         );
     }
 
     loadFile(url) {
-        const newBreadCrumbs = getBreadcrumbsFromUrl(url);
-
-        const contentType = fileUtils.getContentType(url);
-        if (contentType === 'image') {
+        if (this.state.selectedItems.includes(url) === false) {
+            const newSelection = this.state.selectedItems;
+            newSelection.push(url);
             this.setState({
-                file: url,
-                image: url,
-                currPath: url,
-                breadcrumbs: newBreadCrumbs,
+                selectedItems: newSelection,
             });
-            return;
-        }
+        } else {
+            const newBreadCrumbs = getBreadcrumbsFromUrl(url);
 
-        auth.fetch(url).then((response) => {
-            const reader = response.body.getReader();
-            let result = '';
-            reader.read().then(function processText({done, value}) {
-                if (done) {
-                    console.log(result);
-                    return result;
-                }
+            const contentType = fileUtils.getContentType(url);
+            if (contentType === 'image') {
+                this.setState({
+                    file: url,
+                    image: url,
+                    currPath: url,
+                    breadcrumbs: newBreadCrumbs,
+                    selectedItems: [],
+                });
+                return;
+            }
 
-                result += value;
-                return reader.read().then(processText);
-            });
-        });
-
-        const xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
+            auth.fetch(url).then((response) => {
+                response.text().then((text) => {
                     this.setState({
-                        file: xhr.response,
+                        file: text,
                         currPath: url,
                         breadcrumbs: newBreadCrumbs,
+                        selectedItems: [],
                     });
-                    return;
-                }
-            }
-        };
-
-        xhr.open('GET', url);
-        xhr.send();
+                });
+            });
+        }
     }
 
-    followPath(path, file) {
-        const newBreadcrumbs = getBreadcrumbsFromUrl(path);
-        this.loadCurrentFolder(path, newBreadcrumbs);
+    followPath(path) {
+        if (this.state.selectedItems.includes(path)) {
+            const newBreadcrumbs = getBreadcrumbsFromUrl(path);
+            this.loadCurrentFolder(path, newBreadcrumbs);
+        } else {
+            const newSelection = this.state.selectedItems
+            newSelection.push(path);
+            this.setState({
+                selectedItems: newSelection,
+            });
+        }
     }
 
     uploadFile(e) {
-        const webId = this.state.webId;
         const currPath = this.state.currPath;
         const filePath = e.target.files[0];
 
         fileUtils.uploadFile(filePath, currPath);
     }
 
+    clearSelection(e) {
+        if (e.target.nodeName !== 'IMG' && e.target.nodeName !== 'P') {
+            this.setState({
+                selectedItems: [],
+            });
+        }
+    }
+
+    createFolder() {
+        const folderAddress = window.prompt(
+            'Please enter the name for your new folder:',
+            'Untitled Folder'
+        );
+        const request = {
+            method: 'POST',
+            headers: {
+                slug: folderAddress,
+                link: '<http://www.w3.org/ns/ldp#BasicContainer>; rel="type"',
+                contentType: 'text-turtle',
+            },
+        };
+
+        auth.fetch(this.state.currPath, request).then(() => {
+            this.loadCurrentFolder(this.state.currPath, this.state.breadcrumbs);
+        });
+    }
+
+    createFile() {
+        const folderAddress = window.prompt(
+            'Please enter the name for your new file:',
+            'Untitled'
+        );
+        const request = {
+            method: 'POST',
+            headers: {
+                slug: folderAddress,
+                link: '<http://www.w3.org/ns/ldp#Resource>; rel="type"',
+                contentType: 'text-turtle',
+            },
+        };
+
+        auth.fetch(this.state.currPath, request).then(() => {
+            this.loadCurrentFolder(this.state.currPath, this.state.breadcrumbs);
+        });
+    }
+
     componentDidMount() {
+        const acl = new ACLController(
+            'https://ludwigschubert.solid.community/inbox/bejow'
+        );
+        acl.getAgents().then((agents) => {
+            console.log(agents);
+        });
         this.loadCurrentFolder(this.state.currPath, ['/']);
     }
 
     render() {
         console.log(this.state);
-        const {currPath, folders, files, breadcrumbs} = this.state;
-        const {webId} = this.props;
+        const { currPath, folders, files, breadcrumbs } = this.state;
+        const { webId } = this.props;
         const fileMarkup = this.state.file ? (
             <div className={styles.renderedFile}>
                 {this.state.image ? (
@@ -159,8 +213,7 @@ class Home extends React.Component {
         );
 
         return (
-            <div>
-                <div onClick={this.loadProfile}>test</div>
+            <div style={{ height: '100%' }} onClick={this.clearSelection}>
                 <Breadcrumbs
                     onClick={this.loadCurrentFolder}
                     breadcrumbs={breadcrumbs}
@@ -172,29 +225,23 @@ class Home extends React.Component {
                     ) : (
                         <div>
                             <ItemList
+                                selectedItems={this.state.selectedItems}
                                 items={folders}
                                 currPath={currPath}
                                 image={folder}
                                 onItemClick={this.followPath}
                             />
                             <ItemList
+                                selectedItems={this.state.selectedItems}
                                 isFile
                                 items={files}
                                 currPath={currPath}
                                 image={fileIcon}
                                 onItemClick={this.loadFile}
                             />
-                            {/* // <Folders
-                            //     folders={folders}
-                            //     currPath={currPath}
-                            //     onClick={this.followPath}
-                            // />
-                            // <Files
-                            //     files={files}
-                            //     currPath={currPath}
-                            //     onClick={this.loadFile}
-                            // /> */}
-                            <FileUpload onChange={this.uploadFile} />
+                            <FileCreation folder onClick={this.createFolder} />
+                            <FileCreation onClick={this.createFile} />
+                            <FileUpload onChange={this.uploadFile.bind(this)} />
                         </div>
                     )}
                 </div>
