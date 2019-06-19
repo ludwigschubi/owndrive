@@ -9,6 +9,8 @@ import Files from '../../functional_components/Files/Files';
 import FileUpload from '../../functional_components/FileUpload/FileUpload';
 import fileUtils from '../../utils/fileUtils';
 import { getBreadcrumbsFromUrl } from '../../utils/url';
+import ACLController from 'your-acl';
+import FileCreation from '../../functional_components/FileCreation/FileCreation';
 
 class Home extends React.Component {
     constructor(props) {
@@ -22,6 +24,8 @@ class Home extends React.Component {
                   file: undefined,
                   image: undefined,
               };
+
+        this.createFolder = this.createFolder.bind(this);
     }
 
     sortContainments(urls) {
@@ -88,35 +92,14 @@ class Home extends React.Component {
         }
 
         auth.fetch(url).then((response) => {
-            const reader = response.body.getReader();
-            let result = '';
-            reader.read().then(function processText({ done, value }) {
-                if (done) {
-                    console.log(result)
-                    return result;
-                }
-
-                result += value;
-                return reader.read().then(processText);
+            response.text().then((text) => {
+                this.setState({
+                    file: text,
+                    currPath: url,
+                    breadcrumbs: newBreadCrumbs,
+                });
             });
         });
-
-        const xhr = new XMLHttpRequest();
-        xhr.onreadystatechange = () => {
-            if (xhr.readyState === XMLHttpRequest.DONE) {
-                if (xhr.status === 200) {
-                    this.setState({
-                        file: xhr.response,
-                        currPath: url,
-                        breadcrumbs: newBreadCrumbs,
-                    });
-                    return;
-                }
-            }
-        };
-
-        xhr.open('GET', url);
-        xhr.send();
     }
 
     followPath(path, file) {
@@ -131,7 +114,32 @@ class Home extends React.Component {
         fileUtils.uploadFile(filePath, currPath);
     }
 
+    createFolder(){
+        const store = rdf.graph();
+        const updater = new rdf.UpdateManager(store);
+
+        const folderAddress = window.prompt("Please enter the name for your new folder:", "Untitled Folder");
+        const request = {
+            method: "POST",
+            headers: { slug: folderAddress, link: '<http://www.w3.org/ns/ldp#BasicContainer>; rel="type"'}
+        }
+
+        auth.fetch(this.state.currPath, request).then(() => {
+            this.loadCurrentFolder(this.state.currPath, this.state.breadcrumbs)
+        });
+    }
+
     componentDidMount() {
+        const acl = new ACLController("https://ludwigschubert.solid.community/inbox/bejow");
+        acl.getAgents().then((agents) => {
+            console.log(agents);
+        })
+        // acl.getAccessGroups().then((response) => {
+        //     console.log(response);
+        //     acl.getAgents().then((response) => {
+        //         console.log(response);
+        //     })
+        // });
         this.loadCurrentFolder(this.state.currPath, ['/']);
     }
 
@@ -170,6 +178,7 @@ class Home extends React.Component {
                                 currPath={this.state.currPath}
                                 onClick={this.loadFile.bind(this)}
                             />
+                            <FileCreation onClick={this.createFolder}/>
                             <FileUpload onChange={this.uploadFile.bind(this)} />
                         </div>
                     )}
