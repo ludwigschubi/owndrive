@@ -17,14 +17,14 @@ class Drive extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-                  breadcrumbs: undefined,
-                  currPath: undefined,
-                  file: undefined,
-                  image: undefined,
-                  selectedItems: [],
-                  folders: [],
-                  files: [],
-              };
+            breadcrumbs: undefined,
+            currPath: undefined,
+            file: undefined,
+            image: undefined,
+            selectedItems: [],
+            folders: undefined,
+            files: undefined,
+        };
 
         this.createFolder = this.createFolder.bind(this);
         this.createFile = this.createFile.bind(this);
@@ -124,14 +124,20 @@ class Drive extends React.Component {
         if (this.state.selectedItems.includes(path)) {
             const newBreadcrumbs = getBreadcrumbsFromUrl(path);
             this.loadCurrentFolder(path, newBreadcrumbs);
-            localStorage.setItem('appState', JSON.stringify(this.state));
         } else {
-            const newSelection = this.state.selectedItems
+            const newSelection = this.state.selectedItems;
             newSelection.push(path);
             this.setState({
                 selectedItems: newSelection,
             });
         }
+    }
+
+    deleteFile(item) {
+        auth.fetch(
+            item,
+            { method: 'DELETE' }
+        );
     }
 
     uploadFile(e) {
@@ -188,15 +194,16 @@ class Drive extends React.Component {
     }
 
     componentDidMount() {
-        if (!JSON.parse(localStorage.getItem('appState')).folders){
+        if (!JSON.parse(localStorage.getItem('appState')).folders) {
             this.loadCurrentFolder(this.state.currPath, ['/']);
-        } else {
-            console.log(localStorage.getItem('appState'));
-            this.setState(JSON.parse(localStorage.getItem('appState')))
+        } else {
+            console.log('Using cached state...');
+            this.setState(JSON.parse(localStorage.getItem('appState')));
         }
     }
 
-    componentWillUnmount(){
+    componentWillUnmount() {
+        console.log('Caching state...');
         localStorage.setItem('appState', JSON.stringify(this.state));
     }
 
