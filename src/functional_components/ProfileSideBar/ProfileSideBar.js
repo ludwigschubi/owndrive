@@ -33,7 +33,12 @@ export default function ProfileSideBar({isExpanded, toggleSidebar, user}) {
                     <div className={styles.values}>
                         {Array.isArray(user[key]) ? (
                             user[key].map((value, index) => (
-                                <div className={styles.value} key={index}>{value}</div>
+                                <div
+                                    className={styles.value}
+                                    key={value + index}
+                                >
+                                    {value}
+                                </div>
                             ))
                         ) : (
                             <div className={styles.value}>{user[key]}</div>

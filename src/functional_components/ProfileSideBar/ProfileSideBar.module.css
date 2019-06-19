@@ -2,6 +2,7 @@
     display: flex;
     top: 0;
     bottom: 0;
+    padding-bottom: 50px;
     width: 33vw;
     right: -33vw;
     position: fixed;
@@ -82,7 +83,7 @@
     cursor: pointer;
 }
 
-.active {
+.container.active {
     right: 0;
 }
 
@@ -112,4 +113,18 @@
 .addButton:hover {
     background-color: #0c89c6;
     color: white;
+}
+
+@media (max-width: 700px) {
+    .container {
+        width: 100vw;
+        right: -100vw;
+    }
+}
+
+@media (max-width: 1280px) and (min-width: 700px) {
+    .container {
+        width: 40vw;
+        right: -40vw;
+    }
 }
