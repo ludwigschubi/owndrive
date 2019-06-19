@@ -98,9 +98,8 @@ class App extends React.Component {
                             component={
                                 user
                                     ? () => (
-                                          <Home
+                                          <Drive
                                               webId={this.state.webId}
-                                              user={this.state.user}
                                           />
                                       )
                                     : LoginScreen
