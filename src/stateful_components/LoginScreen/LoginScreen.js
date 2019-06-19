@@ -1,5 +1,6 @@
 import React from 'react';
 import styles from './LoginScreen.module.css';
+import Container from 'react-bootstrap/Container';
 
 class LoginScreen extends React.Component {
     constructor(props) {
@@ -10,7 +11,11 @@ class LoginScreen extends React.Component {
     }
 
     render() {
-        return <p className={styles.text}> This is the LoginScreen </p>;
+        return (
+            <Container>
+                <p className={styles.text}> Please login for further steps </p>
+            </Container>
+        );
     }
 }
 

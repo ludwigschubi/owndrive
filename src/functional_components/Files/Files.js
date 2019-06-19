@@ -18,10 +18,12 @@ const Files = (props) => {
                           >
                               <div className={styles.iconContainer}>
                                   <img
+                                      alt="thumbnail"
                                       className={styles.thumbnail}
                                       src={props.currPath + file}
                                   />
                                   <img
+                                      alt="file icon"
                                       className={styles.fileIcon}
                                       src={icons.blank}
                                   />
@@ -37,7 +39,11 @@ const Files = (props) => {
                       key={'file' + index}
                       onClick={() => props.onClick(props.currPath + file)}
                   >
-                      <img className={styles.fileIcon} src={icons.blank} />
+                      <img
+                          alt="file icon"
+                          className={styles.fileIcon}
+                          src={icons.blank}
+                      />
                       <p>{file}</p>
                   </div>
               );

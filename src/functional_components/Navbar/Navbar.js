@@ -1,5 +1,5 @@
 import React from 'react';
-
+import NavLink from 'react-router-dom/NavLink';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Col from 'react-bootstrap/Col';
@@ -15,14 +15,21 @@ const Navigation = (props) => {
                         <Navbar.Brand href="/" className={styles.brand}>
                             SOLID FILES
                         </Navbar.Brand>
+                        <NavLink to="/home">HOME</NavLink>
                     </Col>
                     <Col xs="6" sm="6" md="6" lg="6">
                         <div className={styles.menuWrapper}>
-                            <img
-                                className={styles.profileIcon}
-                                src={props.profileImg}
-                            />
-                            {/* <div className={styles.profileIcon}>dummy</div> */}
+                            {props.picture ? (
+                                <div
+                                    className={styles.profileIcon}
+                                    style={{
+                                        backgroundImage:
+                                            'url(' + props.picture + ')',
+                                    }}
+                                />
+                            ) : (
+                                ''
+                            )}
                             <NavDropdown
                                 id="dropdown"
                                 alignRight

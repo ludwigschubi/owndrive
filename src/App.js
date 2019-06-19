@@ -1,19 +1,19 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
 import Navigation from './functional_components/Navbar';
 import Container from 'react-bootstrap/Container';
 import Home from './stateful_components/Home';
+import Drive from './stateful_components/Drive';
 import LoginScreen from './stateful_components/LoginScreen';
 import auth from 'solid-auth-client';
-import rdf from 'rdflib';
-const VCARD = new rdf.Namespace('http://www.w3.org/2006/vcard/ns#');
+import User from 'your-user';
 
 class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             webId: undefined,
-            profileImg: null,
+            user: undefined,
         };
     }
 
@@ -36,46 +36,25 @@ class App extends React.Component {
         });
     }
 
-    loadProfilePicture = () => {
-        const { webId } = this.state;
-        const store = rdf.graph();
-        const user = store.sym(webId);
-        const userProfile = user.doc();
-
-        // const picture = store.any(user, VCARD('hasPhoto'), null, userProfile);
-        const fetcher = new rdf.Fetcher(store);
-        fetcher.load(userProfile).then(
-            (response) => {
-                let picture = store.any(user, VCARD('hasPhoto'));
-                console.log('fetching profile picture success:', picture);
-                this.setState({ profileImg: picture ? picture.value : null });
-            },
-            (err) => {
-                console.log('fetching profile picture error:', err);
-                return null;
-            }
-        );
-    };
-
     componentDidMount() {
         auth.trackSession((session) => {
             if (!session) {
                 console.log('You are logged out');
             } else {
                 console.log('You are logged in, fetching data now');
-
-                this.setState(
-                    {
+                const currUser = new User(session.webId);
+                currUser.getProfile().then((profile) => {
+                    this.setState({
                         webId: session.webId,
-                    },
-                    () => this.loadProfilePicture()
-                );
+                        user: profile,
+                    });
+                });
             }
         });
     }
 
     render() {
-        const { webId, profileImg } = this.state;
+        const {webId, user} = this.state;
         return (
             <Container>
                 <BrowserRouter>
@@ -83,14 +62,44 @@ class App extends React.Component {
                         onLogout={this.logout.bind(this)}
                         onLogin={this.login.bind(this)}
                         webId={webId}
-                        profileImg={profileImg}
+                        picture={user ? user.picture : undefined}
                     />
                     <Switch>
                         <Route
                             path="/"
+                            exact
                             component={
-                                this.state.webId
-                                    ? () => <Home webId={this.state.webId} />
+                                user
+                                    ? () => (window.location.href = '/home')
+                                    : LoginScreen
+                            }
+                        />
+                        <Route
+                            path="/home"
+                            component={
+                                user
+                                    ? () => (
+                                          <Home
+                                              webId={this.state.webId}
+                                              user={this.state.user}
+                                          />
+                                      )
+                                    : LoginScreen
+                            }
+                        />
+                        <Route
+                            path="/chat"
+                            component={
+                                this.state.user
+                                    ? () => <Drive webId={this.state.webId} />
+                                    : LoginScreen
+                            }
+                        />
+                        <Route
+                            path="/drive"
+                            component={
+                                this.state.user
+                                    ? () => <Drive webId={this.state.webId} />
                                     : LoginScreen
                             }
                         />
