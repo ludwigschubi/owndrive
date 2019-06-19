@@ -4,11 +4,14 @@ import auth from 'solid-auth-client';
 import rdf from 'rdflib';
 import styles from './Home.module.css';
 import Breadcrumbs from '../../functional_components/Breadcrumbs/Breadcrumbs';
-import Folders from '../../functional_components/Folders/Folders';
-import Files from '../../functional_components/Files/Files';
+// import Folders from '../../functional_components/Folders/Folders';
+// import Files from '../../functional_components/Files/Files';
 import FileUpload from '../../functional_components/FileUpload/FileUpload';
+import {ItemList} from '../../functional_components/ItemList';
 import fileUtils from '../../utils/fileUtils';
 import {getBreadcrumbsFromUrl} from '../../utils/url';
+import {folder} from '../../assets/icons/externalIcons';
+import fileIcon from '../../assets/icons/File.png';
 
 class Home extends React.Component {
     constructor(props) {
@@ -21,6 +24,10 @@ class Home extends React.Component {
                   file: undefined,
                   image: undefined,
               };
+        this.followPath = this.followPath.bind(this);
+        this.uploadFile = this.uploadFile.bind(this);
+        this.loadFile = this.loadFile.bind(this);
+        this.loadCurrentFolder = this.loadCurrentFolder.bind(this);
     }
 
     sortContainments(urls) {
@@ -122,6 +129,9 @@ class Home extends React.Component {
     }
 
     render() {
+        console.log(this.state);
+        const {currPath, folders, files, breadcrumbs} = this.state;
+        const {webId} = this.props;
         const fileMarkup = this.state.file ? (
             <div className={styles.renderedFile}>
                 {this.state.image ? (
@@ -134,31 +144,43 @@ class Home extends React.Component {
             undefined
         );
 
-        console.log(this.state.webId);
         return (
             <div>
                 <div onClick={this.loadProfile}>test</div>
                 <Breadcrumbs
-                    onClick={this.loadCurrentFolder.bind(this)}
-                    breadcrumbs={this.state.breadcrumbs}
-                    webId={this.state.webId}
+                    onClick={this.loadCurrentFolder}
+                    breadcrumbs={breadcrumbs}
+                    webId={webId}
                 />
                 <div>
                     {fileMarkup ? (
                         fileMarkup
                     ) : (
                         <div>
-                            <Folders
-                                folders={this.state.folders}
-                                currPath={this.state.currPath}
-                                onClick={this.followPath.bind(this)}
+                            <ItemList
+                                items={folders}
+                                currPath={currPath}
+                                image={folder}
+                                onItemClick={this.followPath}
                             />
-                            <Files
-                                files={this.state.files}
-                                currPath={this.state.currPath}
-                                onClick={this.loadFile.bind(this)}
+                            <ItemList
+                                isFile
+                                items={files}
+                                currPath={currPath}
+                                image={fileIcon}
+                                onItemClick={this.loadFile}
                             />
-                            <FileUpload onChange={this.uploadFile.bind(this)} />
+                            {/* // <Folders
+                            //     folders={folders}
+                            //     currPath={currPath}
+                            //     onClick={this.followPath}
+                            // />
+                            // <Files
+                            //     files={files}
+                            //     currPath={currPath}
+                            //     onClick={this.loadFile}
+                            // /> */}
+                            <FileUpload onChange={this.uploadFile} />
                         </div>
                     )}
                 </div>

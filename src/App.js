@@ -37,7 +37,6 @@ class App extends React.Component {
     }
 
     loadProfilePicture = () => {
-        console.log('in loadProfilePicture');
         const { webId } = this.state;
         const store = rdf.graph();
         const user = store.sym(webId);

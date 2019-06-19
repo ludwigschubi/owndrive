@@ -7,7 +7,6 @@ import Row from 'react-bootstrap/Row';
 import styles from './Navbar.module.css';
 
 const Navigation = (props) => {
-    console.log(props.profileImg);
     return (
         <Navbar bg="light" expand="lg">
             <div style={{width: '100%'}}>

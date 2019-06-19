@@ -12,11 +12,13 @@ const Folders = (props) => {
                       }
                       key={'folder' + index}
                   >
-                      <img
-                          className={styles.folderIcon}
-                          src="https://proxy.duckduckgo.com/iu/?u=http%3A%2F%2Ficons.iconarchive.com%2Ficons%2Fdtafalonso%2Fyosemite-flat%2F512%2FFolder-icon.png&f=1"
-                      />
-                      <p>{folder}</p>
+                      <div className={styles.wrapper}>
+                          <img
+                              className={styles.folderIcon}
+                              src="https://proxy.duckduckgo.com/iu/?u=http%3A%2F%2Ficons.iconarchive.com%2Ficons%2Fdtafalonso%2Fyosemite-flat%2F512%2FFolder-icon.png&f=1"
+                          />
+                          <p>{folder}</p>
+                      </div>
                   </div>
               );
           })

@@ -8,17 +8,28 @@
 .folder {
     margin: 0 10px;
     cursor: pointer;
+    position: relative;
 }
 
 .folder:hover div {
     opacity: 0.6;
 }
 
-.folder:hover p {
+.wrapper {
+    position: absolute;
+}
+
+.folder:hover .wrapper {
+    opacity: 0.6;
+    width: 110%;
+    height: 110%;
+    font-size: 110%;
+}
+/* .folder:hover p {
     overflow: visible;
     font-size: 110%;
     transform: translateY(-100%);
-}
+} */
 
 .folder p {
     text-overflow: ellipsis;
