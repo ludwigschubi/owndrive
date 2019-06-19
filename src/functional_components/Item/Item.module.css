@@ -37,3 +37,21 @@
 .icon {
     width: 100%;
 }
+
+.contextMenu {
+    background-color: white;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    z-index: 1;
+    width: 130px;
+}
+
+.contextItem {
+    width: 100%;
+    padding: 5px 20px 5px 10px;
+    z-index: 3;
+}
+
+.contextItem:hover {
+    background-color: #0c89c6;
+}
