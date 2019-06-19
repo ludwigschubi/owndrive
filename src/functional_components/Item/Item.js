@@ -1,17 +1,32 @@
 import React from 'react';
 import styles from './Item.module.css';
-import {ContextMenuTrigger, ContextMenu, MenuItem} from 'react-contextmenu';
+import {Menu, Separator, Submenu, MenuProvider, Item} from 'react-contexify';
+import 'react-contexify/dist/ReactContexify.min.css';
 
 const MENU_TYPE = 'SIMPLE';
 
-const dummy = () => {
-    console.log('Replace me with something useful');
+const onClick = (event, props) => {
+    console.log('Replace me with something useful', event, props);
 };
 
-const Item = ({image, label, onClick, selectedItem}) => {
+const MyAwesomeMenu = () => (
+    <Menu id="test">
+        <Item onClick={onClick}>Lorem</Item>
+        <Item onClick={onClick}>Ipsum</Item>
+        <Separator />
+        <Item disabled>Dolor</Item>
+        <Separator />
+        <Submenu label="Foobar">
+            <Item onClick={onClick}>Foo</Item>
+            <Item onClick={onClick}>Bar</Item>
+        </Submenu>
+    </Menu>
+);
+
+const MyItem = ({image, label, onClick, selectedItem}) => {
     return (
         <div>
-            <ContextMenuTrigger id={MENU_TYPE}>
+            <MenuProvider id="test">
                 <div
                     className={styles.container}
                     style={selectedItem ? {opacity: 0.5} : undefined}
@@ -22,35 +37,28 @@ const Item = ({image, label, onClick, selectedItem}) => {
                         <p className={styles.label}>{label}</p>
                     </div>
                 </div>
-            </ContextMenuTrigger>
-            <ContextMenu id={MENU_TYPE} className={styles.contextMenu}>
-                <MenuItem data={{item: 'item 1'}}>
-                    <div
-                        onClick={() => console.log('test')}
-                        className={styles.contextItem}
-                    >
-                        Rename
-                    </div>
-                </MenuItem>
-                <MenuItem onClick={dummy} data={{item: 'item 2'}}>
+            </MenuProvider>
+            {MyAwesomeMenu()}
+            {/* <Menu id="test">
+                <ContextItem onClick={dummy}>
                     <div className={styles.contextItem}>Delete</div>
-                </MenuItem>
-                <MenuItem onClick={dummy} data={{item: 'item 3'}}>
+                </ContextItem>
+                <ContextItem onClick={dummy}>
                     <div className={styles.contextItem}>Info</div>
-                </MenuItem>
-                <MenuItem onClick={dummy} data={{item: 'item 4'}}>
+                </ContextItem>
+                <ContextItem onClick={dummy}>
                     <div className={styles.contextItem}>Access</div>
-                </MenuItem>
-                <MenuItem onClick={dummy} data={{item: 'item 5'}}>
+                </ContextItem>
+                <ContextItem onClick={dummy}>
                     <div className={styles.contextItem}>Rename</div>
-                </MenuItem>
-                <MenuItem divider />
-                <MenuItem onClick={dummy} data={{item: 'item 6'}}>
+                </ContextItem>
+                <Separator />
+                <ContextItem onClick={dummy}>
                     <div className={styles.contextItem}>Rename</div>
-                </MenuItem>
-            </ContextMenu>
+                </ContextItem>
+            </Menu> */}
         </div>
     );
 };
 
-export default Item;
+export default MyItem;
