@@ -210,6 +210,10 @@ class Drive extends React.Component {
         }
     }
 
+    deleteItem(item) {
+        fileUtils.deleteItem(item);
+    }
+
     componentWillUnmount() {
         console.log('Caching state...');
         localStorage.setItem('appState', JSON.stringify(this.state));
@@ -248,7 +252,9 @@ class Drive extends React.Component {
                                 currPath={currPath}
                                 image={folder}
                                 onItemClick={this.followPath}
-                                onDelete={fileUtils.deleteFile}
+                                onDelete={(item) => {
+                                    fileUtils.deleteItem(item);
+                                }}
                                 onAccess={fileUtils.changeAccess}
                                 onRename={fileUtils.renameFile}
                                 onInfo={fileUtils.getInfo}
@@ -260,6 +266,18 @@ class Drive extends React.Component {
                                 currPath={currPath}
                                 image={fileIcon}
                                 onItemClick={this.loadFile}
+                                onDelete={(item) => {
+                                    fileUtils.deleteItem(item);
+                                }}
+                                onAccess={(item) => {
+                                    fileUtils.changeAccess(item);
+                                }}
+                                onRename={(item) => {
+                                    fileUtils.renameFile(item);
+                                }}
+                                onInfo={(item) => {
+                                    fileUtils.onInfo(item);
+                                }}
                             />
                             <Buttons>
                                 onFileCreation={this.createFile}

@@ -1,8 +1,9 @@
 import React from 'react';
-import {Item} from '../Item';
+import { Item } from '../Item';
 import styles from './ItemList.module.css';
-import {File} from '../File';
+import { File } from '../File';
 import { tsPropertySignature } from '@babel/types';
+import fileutils from "../../utils/fileUtils";
 const ItemList = ({
     selectedItems,
     items,
@@ -31,6 +32,10 @@ const ItemList = ({
                       onClick={() =>
                           onItemClick(currPath + encodeURIComponent(item))
                       }
+                      onDelete={onDelete}
+                      onAccess={onAccess}
+                      onRename={onRename}
+                      onInfo={onInfo}
                       label={item}
                       currPath={currPath}
                   />
@@ -49,6 +54,9 @@ const ItemList = ({
                           onItemClick(currPath + encodeURIComponent(item) + '/')
                       }
                       onDelete={onDelete}
+                      onAccess={fileutils.changeAccess}
+                      onRename={fileutils.renameFile}
+                      onInfo={fileutils.getInfo}
                       currPath={currPath}
                       label={item}
                   />

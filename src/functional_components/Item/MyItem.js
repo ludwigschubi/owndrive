@@ -5,7 +5,7 @@ import 'react-contexify/dist/ReactContexify.min.css';
 
 const MENU_TYPE = 'SIMPLE';
 
-const MyItem = ({ image, label, onClick, onDelete, onAccess, onRename, onInfo, selectedItem }) => {
+const MyItem = ({ image, label, onClick, onDelete, onAccess, onRename, onInfo, selectedItem, currPath}) => {
     return (
         <div>
             <MenuProvider id={label + 'contextmenu'}>
