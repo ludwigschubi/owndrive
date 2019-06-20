@@ -5,14 +5,15 @@ import auth from 'solid-auth-client';
 import styles from './Drive.module.css';
 import Breadcrumbs from '../../functional_components/Breadcrumbs/Breadcrumbs';
 import FileUpload from '../../functional_components/FileUpload/FileUpload';
-import { ItemList } from '../../functional_components/ItemList';
+import {ItemList} from '../../functional_components/ItemList';
 import fileUtils from '../../utils/fileUtils';
-import { getBreadcrumbsFromUrl } from '../../utils/url';
+import {getBreadcrumbsFromUrl} from '../../utils/url';
 import ACLController from 'your-acl';
 import FileCreation from '../../functional_components/FileCreation/FileCreation';
 import folder from '../../assets/icons/Folder.png';
 import fileIcon from '../../assets/icons/File.png';
 import Buttons from '../../functional_components/Buttons/Buttons';
+import {InputWindow} from '../../functional_components/InputWindow';
 import Container from 'react-bootstrap/Container';
 
 class Drive extends React.Component {
@@ -25,6 +26,8 @@ class Drive extends React.Component {
             image: undefined,
             selectedItems: [],
             folders: undefined,
+            isCreateFolderVisible: false,
+            isCreateFileVisible: false,
             files: undefined,
         };
 
@@ -36,6 +39,10 @@ class Drive extends React.Component {
         this.loadFile = this.loadFile.bind(this);
         this.loadCurrentFolder = this.loadCurrentFolder.bind(this);
         this.clearSelection = this.clearSelection.bind(this);
+        this.openCreateFolderWindow = this.openCreateFolderWindow.bind(this);
+        this.closeCreateFolderWindow = this.closeCreateFolderWindow.bind(this);
+        this.openCreateFileWindow = this.openCreateFileWindow.bind(this);
+        this.closeCreateFileWindow = this.closeCreateFileWindow.bind(this);
     }
 
     sortContainments(urls) {
@@ -153,11 +160,7 @@ class Drive extends React.Component {
         }
     }
 
-    createFolder() {
-        const folderAddress = window.prompt(
-            'Please enter the name for your new folder:',
-            'Untitled Folder'
-        );
+    createFolder(folderAddress) {
         const request = {
             method: 'POST',
             headers: {
@@ -172,11 +175,7 @@ class Drive extends React.Component {
         });
     }
 
-    createFile() {
-        const folderAddress = window.prompt(
-            'Please enter the name for your new file:',
-            'Untitled'
-        );
+    createFile(folderAddress) {
         const request = {
             method: 'POST',
             headers: {
@@ -219,14 +218,45 @@ class Drive extends React.Component {
         this.loadCurrentFolder(this.state.currPath, this.state.breadcrumbs);
     }
 
+    closeCreateFolderWindow() {
+        this.setState({
+            isCreateFolderVisible: false,
+        });
+    }
+
+    openCreateFolderWindow() {
+        this.setState({
+            isCreateFolderVisible: true,
+        });
+    }
+
+    closeCreateFileWindow() {
+        this.setState({
+            isCreateFileVisible: false,
+        });
+    }
+
+    openCreateFileWindow() {
+        this.setState({
+            isCreateFileVisible: true,
+        });
+    }
+
     componentWillUnmount() {
         console.log('Caching state...');
         localStorage.setItem('appState', JSON.stringify(this.state));
     }
 
     render() {
-        const { currPath, folders, files, breadcrumbs } = this.state;
-        const { webId } = this.props;
+        const {
+            currPath,
+            folders,
+            files,
+            breadcrumbs,
+            isCreateFolderVisible,
+            isCreateFileVisible,
+        } = this.state;
+        const {webId} = this.props;
         const fileMarkup = this.state.file ? (
             <div className={styles.renderedFile}>
                 {this.state.image ? (
@@ -240,7 +270,7 @@ class Drive extends React.Component {
         );
 
         return (
-            <div style={{ height: '100%' }} onClick={this.clearSelection}>
+            <div style={{height: '100%'}} onClick={this.clearSelection}>
                 <Breadcrumbs
                     onClick={this.loadCurrentFolder}
                     breadcrumbs={breadcrumbs}
@@ -251,6 +281,28 @@ class Drive extends React.Component {
                         fileMarkup
                     ) : (
                         <div>
+                            <InputWindow
+                                windowName="Create Folder"
+                                info=""
+                                onSubmit={(value) => this.createFolder(value)}
+                                className={
+                                    isCreateFolderVisible
+                                        ? styles.visible
+                                        : styles.hidden
+                                }
+                                onClose={this.closeCreateFolderWindow}
+                            />
+                            <InputWindow
+                                windowName="Create File"
+                                info=""
+                                onSubmit={(value) => this.createFile(value)}
+                                className={
+                                    isCreateFileVisible
+                                        ? styles.visible
+                                        : styles.hidden
+                                }
+                                onClose={this.closeCreateFileWindow}
+                            />
                             <Container>
                                 <ItemList
                                     selectedItems={this.state.selectedItems}
@@ -292,8 +344,10 @@ class Drive extends React.Component {
                                     }}
                                 />
                                 <Buttons
-                                    onFileCreation={this.createFile}
-                                    onFolderCreation={this.createFolder}
+                                    onFileCreation={this.openCreateFileWindow}
+                                    onFolderCreation={
+                                        this.openCreateFolderWindow
+                                    }
                                     onFolderUpload={this.uploadFolder}
                                     onFileUpload={this.uploadFile}
                                 ></Buttons>
