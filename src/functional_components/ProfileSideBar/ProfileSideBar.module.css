@@ -6,7 +6,7 @@
     width: 33vw;
     right: -33vw;
     position: fixed;
-    background-color: #fafafa;
+    background-color: #f7f7f7;
     box-shadow: -1px 0 3px #0c89c6;
     transition: right 0.3s;
     flex-direction: column;
@@ -58,12 +58,25 @@
     right: 0;
 }
 
+.editIcon {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    box-shadow: 0 0 6px white;
+    background-color: white;
+}
+
 .profilePicture {
     width: 100px;
     height: 100px;
     background-size: cover;
     background-position: center;
     border-radius: 50%;
+    box-shadow: 0 0 4px black;
+    position: relative;
 }
 
 .addButton {
