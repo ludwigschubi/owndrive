@@ -8,6 +8,7 @@ import LoginScreen from './stateful_components/LoginScreen';
 import {ProfileSideBar} from './functional_components/ProfileSideBar';
 import auth from 'solid-auth-client';
 import User from 'your-user';
+import {ErrorBoundary} from './stateful_components/ErrorBoundary';
 
 class App extends React.Component {
     constructor(props) {
@@ -67,62 +68,66 @@ class App extends React.Component {
     render() {
         const {webId, user, isProfileExpanded} = this.state;
         return (
-            <Container style={{height: "100%"}}>
-                <BrowserRouter>
-                    <Navigation
-                        toggleSidebar={this.toggleSidebar}
-                        onLogout={this.logout}
-                        onLogin={this.login}
-                        webId={webId}
-                        picture={user ? user.picture : undefined}
-                    />
-                    {webId ? (
-                        <ProfileSideBar
-                            user={user}
+            <Container style={{height: '100%'}}>
+                <ErrorBoundary>
+                    <BrowserRouter>
+                        <Navigation
                             toggleSidebar={this.toggleSidebar}
-                            isExpanded={isProfileExpanded}
+                            onLogout={this.logout}
+                            onLogin={this.login}
+                            webId={webId}
+                            picture={user ? user.picture : undefined}
                         />
-                    ) : null}
-                    <Switch>
-                        <Route
-                            path="/"
-                            exact
-                            component={
-                                user
-                                    ? () => (window.location.href = '/home')
-                                    : LoginScreen
-                            }
-                        />
-                        <Route
-                            path="/home"
-                            component={
-                                user
-                                    ? () => (
-                                          <Drive
-                                              webId={this.state.webId}
-                                          />
-                                      )
-                                    : LoginScreen
-                            }
-                        />
-                        <Route
-                            path="/chat"
-                            component={
-                                this.state.user
-                                    ? () => <Drive webId={this.state.webId} />
-                                    : LoginScreen
-                            }
-                        />
-                        <Route
-                            path="/drive"
-                            component={
-                                this.state.user
-                                    ? () => <Drive webId={this.state.webId} />
-                                    : LoginScreen
-                            }
-                        />
-                    </Switch>
-                </BrowserRouter>
+                        {webId ? (
+                            <ProfileSideBar
+                                user={user}
+                                toggleSidebar={this.toggleSidebar}
+                                isExpanded={isProfileExpanded}
+                            />
+                        ) : null}
+                        <Switch>
+                            <Route
+                                path="/"
+                                exact
+                                component={
+                                    user
+                                        ? () => (window.location.href = '/home')
+                                        : LoginScreen
+                                }
+                            />
+                            <Route
+                                path="/home"
+                                component={
+                                    user
+                                        ? () => (
+                                              <Drive webId={this.state.webId} />
+                                          )
+                                        : LoginScreen
+                                }
+                            />
+                            <Route
+                                path="/chat"
+                                component={
+                                    this.state.user
+                                        ? () => (
+                                              <Drive webId={this.state.webId} />
+                                          )
+                                        : LoginScreen
+                                }
+                            />
+                            <Route
+                                path="/drive"
+                                component={
+                                    this.state.user
+                                        ? () => (
+                                              <Drive webId={this.state.webId} />
+                                          )
+                                        : LoginScreen
+                                }
+                            />
+                        </Switch>
+                    </BrowserRouter>
+                </ErrorBoundary>
             </Container>
         );
     }

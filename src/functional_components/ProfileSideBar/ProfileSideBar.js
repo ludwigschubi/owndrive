@@ -1,9 +1,11 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styles from './ProfileSideBar.module.css';
 import classNames from 'classnames';
 import editIcon from '../../assets/icons/edit.png';
 import closeIcon from '../../assets/icons/close.png';
+import {editProfile} from '../../utils/profileRDF';
 export default function ProfileSideBar({isExpanded, toggleSidebar, user}) {
+    const [isEditable, setEditable] = useState(false);
     return (
         <div
             className={classNames(styles.container, {
@@ -34,6 +36,7 @@ export default function ProfileSideBar({isExpanded, toggleSidebar, user}) {
                         {Array.isArray(user[key]) ? (
                             user[key].map((value, index) => (
                                 <div
+                                    title={value}
                                     className={styles.value}
                                     key={value + index}
                                 >
@@ -41,10 +44,16 @@ export default function ProfileSideBar({isExpanded, toggleSidebar, user}) {
                                 </div>
                             ))
                         ) : (
-                            <div className={styles.value}>{user[key]}</div>
+                            <div title={user[key]} className={styles.value}>
+                                {user[key]}
+                            </div>
                         )}
                     </div>
-                    <img className={styles.editIcon} src={editIcon} />
+                    <img
+                        className={styles.editIcon}
+                        src={editIcon}
+                        onClick={() => editProfile}
+                    />
                 </div>
             ))}
             <div className={styles.addButton}>add new category</div>
