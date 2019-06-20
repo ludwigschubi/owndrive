@@ -50,18 +50,6 @@ function uploadFolderOrFile(file, url) {
             });
     };
     reader.readAsArrayBuffer(file);
-
-    // // const fileType
-    // const request = {
-    //     method: 'POST',
-    //     headers: {
-    //         slug: folderName,
-    //         link: '<http://www.w3.org/ns/ldp#BasicContainer>; rel="type"',
-    //         contentType: 'text-turtle',
-    //     },
-    // };
-
-    // auth.fetch(url, request).then(() => {});
 }
 
 function uploadFile(filePath, currPath) {
@@ -89,8 +77,28 @@ function uploadFile(filePath, currPath) {
     reader.readAsArrayBuffer(filePath);
 }
 
+function deleteItem(item) {
+    console.log(item);
+}
+
+function changeAccess(item) {
+    console.log(item);
+}
+
+function getInfo(item) {
+    console.log(item);
+}
+
+function renameFile(item) {
+    console.log(item);
+}
+
 export default {
     uploadFile: uploadFile,
     getContentType: getContentType,
     uploadFolderOrFile: uploadFolderOrFile,
+    deleteItem: deleteItem,
+    changeAccess: changeAccess,
+    getInfo: getInfo,
+    renameFile: renameFile,
 };

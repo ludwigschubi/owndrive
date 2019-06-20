@@ -134,10 +134,6 @@ class Drive extends React.Component {
         }
     }
 
-    deleteFile(item) {
-        auth.fetch(item, { method: 'DELETE' });
-    }
-
     uploadFile(e) {
         const currPath = this.state.currPath;
         const filePath = e.target.files[0];
@@ -252,6 +248,10 @@ class Drive extends React.Component {
                                 currPath={currPath}
                                 image={folder}
                                 onItemClick={this.followPath}
+                                onDelete={fileUtils.deleteFile}
+                                onAccess={fileUtils.changeAccess}
+                                onRename={fileUtils.renameFile}
+                                onInfo={fileUtils.getInfo}
                             />
                             <ItemList
                                 selectedItems={this.state.selectedItems}

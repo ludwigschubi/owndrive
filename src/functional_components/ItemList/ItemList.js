@@ -2,6 +2,7 @@ import React from 'react';
 import {Item} from '../Item';
 import styles from './ItemList.module.css';
 import {File} from '../File';
+import { tsPropertySignature } from '@babel/types';
 const ItemList = ({
     selectedItems,
     items,
@@ -9,6 +10,10 @@ const ItemList = ({
     onItemClick,
     currPath,
     isFile = false,
+    onDelete,
+    onAccess,
+    onRename,
+    onInfo,
 }) => {
     const itemComponents = items
         ? items.map((item, index) => {
@@ -43,6 +48,7 @@ const ItemList = ({
                       onClick={() =>
                           onItemClick(currPath + encodeURIComponent(item) + '/')
                       }
+                      onDelete={onDelete}
                       currPath={currPath}
                       label={item}
                   />
