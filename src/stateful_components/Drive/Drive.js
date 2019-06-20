@@ -27,6 +27,7 @@ class Drive extends React.Component {
             selectedItems: [],
             folders: undefined,
             isCreateFolderVisible: false,
+            isCreateFileVisible: false,
             files: undefined,
         };
 
@@ -40,6 +41,8 @@ class Drive extends React.Component {
         this.clearSelection = this.clearSelection.bind(this);
         this.openCreateFolderWindow = this.openCreateFolderWindow.bind(this);
         this.closeCreateFolderWindow = this.closeCreateFolderWindow.bind(this);
+        this.openCreateFileWindow = this.openCreateFileWindow.bind(this);
+        this.closeCreateFileWindow = this.closeCreateFileWindow.bind(this);
     }
 
     sortContainments(urls) {
@@ -172,11 +175,7 @@ class Drive extends React.Component {
         });
     }
 
-    createFile() {
-        const folderAddress = window.prompt(
-            'Please enter the name for your new file:',
-            'Untitled'
-        );
+    createFile(folderAddress) {
         const request = {
             method: 'POST',
             headers: {
@@ -231,6 +230,18 @@ class Drive extends React.Component {
         });
     }
 
+    closeCreateFileWindow() {
+        this.setState({
+            isCreateFileVisible: false,
+        });
+    }
+
+    openCreateFileWindow() {
+        this.setState({
+            isCreateFileVisible: true,
+        });
+    }
+
     componentWillUnmount() {
         console.log('Caching state...');
         localStorage.setItem('appState', JSON.stringify(this.state));
@@ -243,6 +254,7 @@ class Drive extends React.Component {
             files,
             breadcrumbs,
             isCreateFolderVisible,
+            isCreateFileVisible,
         } = this.state;
         const {webId} = this.props;
         const fileMarkup = this.state.file ? (
@@ -279,6 +291,17 @@ class Drive extends React.Component {
                                         : styles.hidden
                                 }
                                 onClose={this.closeCreateFolderWindow}
+                            />
+                            <InputWindow
+                                windowName="Create File"
+                                info=""
+                                onSubmit={(value) => this.createFile(value)}
+                                className={
+                                    isCreateFileVisible
+                                        ? styles.visible
+                                        : styles.hidden
+                                }
+                                onClose={this.closeCreateFileWindow}
                             />
                             <Container>
                                 <ItemList
@@ -321,8 +344,10 @@ class Drive extends React.Component {
                                     }}
                                 />
                                 <Buttons
-                                    onFileCreation={this.createFile}
-                                    onFolderCreation={this.openCreateFolderWindow}
+                                    onFileCreation={this.openCreateFileWindow}
+                                    onFolderCreation={
+                                        this.openCreateFolderWindow
+                                    }
                                     onFolderUpload={this.uploadFolder}
                                     onFileUpload={this.uploadFile}
                                 ></Buttons>
