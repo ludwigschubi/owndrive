@@ -17,6 +17,7 @@
     width: 80px;
     bottom: 0;
     position: absolute;
+    display: none;
 }
 
 .icon:hover {
@@ -25,6 +26,9 @@
 }
 
 .toggleButton {
+    height: 80px;
+    width: 80px;
+    bottom: 0;
     z-index: 1;
     display: initial;
 }
