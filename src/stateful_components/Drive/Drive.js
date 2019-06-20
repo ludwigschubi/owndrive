@@ -13,8 +13,8 @@ import FileCreation from '../../functional_components/FileCreation/FileCreation'
 import folder from '../../assets/icons/Folder.png';
 import fileIcon from '../../assets/icons/File.png';
 import Buttons from '../../functional_components/Buttons/Buttons';
-import {Window} from '../../functional_components/Window';
 import {InputWindow} from '../../functional_components/InputWindow';
+import Container from 'react-bootstrap/Container';
 
 class Drive extends React.Component {
     constructor(props) {
@@ -34,6 +34,7 @@ class Drive extends React.Component {
         this.createFile = this.createFile.bind(this);
         this.followPath = this.followPath.bind(this);
         this.uploadFolder = this.uploadFolder.bind(this);
+        this.uploadFile = this.uploadFile.bind(this);
         this.loadFile = this.loadFile.bind(this);
         this.loadCurrentFolder = this.loadCurrentFolder.bind(this);
         this.clearSelection = this.clearSelection.bind(this);
@@ -143,7 +144,9 @@ class Drive extends React.Component {
         const currPath = this.state.currPath;
         const filePath = e.target.files[0];
 
-        fileUtils.uploadFile(filePath, currPath);
+        fileUtils.uploadFile(filePath, currPath).then(() => {
+            this.loadCurrentFolder(this.state.currPath, this.state.breadcrumbs);
+        });
     }
 
     clearSelection(e) {
@@ -190,18 +193,22 @@ class Drive extends React.Component {
 
     componentDidMount() {
         try {
-            if (!JSON.parse(localStorage.getItem('appState')).folders) {
+            if (!JSON.parse(localStorage.getItem('appState')).currPath) {
                 this.loadCurrentFolder(this.state.currPath, ['/']);
             } else {
                 console.log('Using cached state...');
-                this.setState(JSON.parse(localStorage.getItem('appState')));
+                this.loadCurrentFolder(
+                    JSON.parse(localStorage.getItem('appState')).currPath,
+                    JSON.parse(localStorage.getItem('appState')).breadcrumbs
+                );
             }
         } catch (e) {
             console.log(e);
         }
     }
 
-    uploadFolder(files) {
+    uploadFolder(e) {
+        const files = e.target.files;
         for (let file = 0; file < files.length; file++) {
             fileUtils.uploadFolderOrFile(
                 files[file],
@@ -209,10 +216,7 @@ class Drive extends React.Component {
                     encodeURIComponent(files[file].webkitRelativePath)
             );
         }
-    }
-
-    deleteItem(item) {
-        fileUtils.deleteItem(item);
+        this.loadCurrentFolder(this.state.currPath, this.state.breadcrumbs);
     }
 
     closeCreateFolderWindow() {
@@ -276,45 +280,53 @@ class Drive extends React.Component {
                                 }
                                 onClose={this.closeCreateFolderWindow}
                             />
-                            <ItemList
-                                selectedItems={this.state.selectedItems}
-                                items={folders}
-                                currPath={currPath}
-                                image={folder}
-                                onItemClick={this.followPath}
-                                onDelete={(item) => {
-                                    fileUtils.deleteItem(item);
-                                }}
-                                onAccess={fileUtils.changeAccess}
-                                onRename={fileUtils.renameFile}
-                                onInfo={fileUtils.getInfo}
-                            />
-                            <ItemList
-                                selectedItems={this.state.selectedItems}
-                                isFile
-                                items={files}
-                                currPath={currPath}
-                                image={fileIcon}
-                                onItemClick={this.loadFile}
-                                onDelete={(item) => {
-                                    fileUtils.deleteItem(item);
-                                }}
-                                onAccess={(item) => {
-                                    fileUtils.changeAccess(item);
-                                }}
-                                onRename={(item) => {
-                                    fileUtils.renameFile(item);
-                                }}
-                                onInfo={(item) => {
-                                    fileUtils.onInfo(item);
-                                }}
-                            />
-                            <Buttons
-                                onFileCreation={this.createFile}
-                                onFolderCreation={this.openCreateFolderWindow}
-                                onFolderUpload={this.uploadFolder}
-                                onFileUpload={this.uploadFile}
-                            ></Buttons>
+                            <Container>
+                                <ItemList
+                                    selectedItems={this.state.selectedItems}
+                                    items={folders}
+                                    currPath={currPath}
+                                    image={folder}
+                                    onItemClick={this.followPath}
+                                    onDelete={(item, folder) => {
+                                        fileUtils.deleteItem(item, folder);
+                                    }}
+                                    onAccess={(item) => {
+                                        fileUtils.changeAccess(item);
+                                    }}
+                                    onRename={(item) => {
+                                        fileUtils.renameItem(item);
+                                    }}
+                                    onInfo={(item) => {
+                                        fileUtils.getInfo(item);
+                                    }}
+                                />
+                                <ItemList
+                                    selectedItems={this.state.selectedItems}
+                                    isFile
+                                    items={files}
+                                    currPath={currPath}
+                                    image={fileIcon}
+                                    onItemClick={this.loadFile}
+                                    onDelete={(item) => {
+                                        fileUtils.deleteItem(item);
+                                    }}
+                                    onAccess={(item) => {
+                                        fileUtils.changeAccess(item);
+                                    }}
+                                    onRename={(item) => {
+                                        fileUtils.renameFile(item);
+                                    }}
+                                    onInfo={(item) => {
+                                        fileUtils.onInfo(item);
+                                    }}
+                                />
+                                <Buttons
+                                    onFileCreation={this.createFile}
+                                    onFolderCreation={this.openCreateFolderWindow}
+                                    onFolderUpload={this.uploadFolder}
+                                    onFileUpload={this.uploadFile}
+                                ></Buttons>
+                            </Container>
                         </div>
                     )}
                 </div>

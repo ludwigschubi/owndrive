@@ -1,6 +1,7 @@
 import rdf from 'rdflib';
 import auth from 'solid-auth-client';
 import { folder } from '../assets/icons/externalIcons';
+const ns = require('solid-namespace')(rdf);
 
 function getContentType(file) {
     const mimeTypes = {
@@ -63,7 +64,7 @@ function uploadFile(filePath, currPath) {
         const contentType = getContentType(filePath.name);
 
         const fileUrl = currPath + filename;
-        fetcher
+        return fetcher
             .webOperation('PUT', fileUrl, {
                 data: data,
                 contentType: contentType,
@@ -74,11 +75,65 @@ function uploadFile(filePath, currPath) {
                 }
             });
     };
-    reader.readAsArrayBuffer(filePath);
+    return new Promise(function(resolve, reject) {
+        reader.readAsArrayBuffer(filePath);
+    });
 }
 
-function deleteItem(item) {
-    console.log(item);
+function deleteItem(item, folder) {
+    if (!folder) {
+        console.log(item);
+        if (window.confirm('Do you really want to delete this file?')) {
+            auth.fetch(item, { method: 'DELETE' }).then((response) => {
+                console.log(response);
+            });
+        } else {
+            return undefined;
+        }
+    } else {
+        getFolderContents(item).then((results) => {
+            console.log(results);
+        });
+    }
+}
+
+function getFolderContents(folderUrl) {
+    const store = rdf.graph();
+    const fetcher = new rdf.Fetcher(store);
+
+    return fetcher
+        .load(folderUrl)
+        .then(() => {
+            const containments = store
+                .each(rdf.sym(folderUrl), ns.ldp('contains'), undefined)
+                .map((containment) => {
+                    const fileName = containment.value.split('/').pop();
+                    if (fileName) {
+                        const filePromise = new Promise(function(
+                            resolve,
+                            reject
+                        ) {
+                            resolve(folderUrl + '/' + fileName);
+                        });
+                        return filePromise;
+                    } else {
+                        const folderNameFragments = containment.value.split(
+                            '/'
+                        );
+                        const folderName =
+                            folderNameFragments[folderNameFragments.length - 2];
+                        return getFolderContents(
+                            folderUrl + '/' + folderName + '/'
+                        );
+                    }
+                    // return containment.value;
+                });
+            console.log(containments);
+            return Promise.all(containments);
+        })
+        .catch((err) => {
+            return undefined;
+        });
 }
 
 function changeAccess(item) {

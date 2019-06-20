@@ -13,7 +13,10 @@ export default function File({
     onInfo,
 }) {
     const imageTypes = ['ico', 'png', 'jpeg', 'jpg'];
-    const isImage = imageTypes.indexOf(label.split('.')[1]) > -1;
+    console.log(encodeURIComponent(label));
+    const labelFragments = encodeURIComponent(label).split('.')
+    const isImage = imageTypes.indexOf(labelFragments[labelFragments.length - 1]) > -1;
+    console.log(isImage);
     if (isImage) {
         return (
             <div>
@@ -27,38 +30,38 @@ export default function File({
                             <div className={styles.iconContainer}>
                                 <img
                                     className={styles.thumbnail}
-                                    src={currPath + label}
+                                    src={currPath + encodeURIComponent(label)}
                                 />
                                 <img className={styles.icon} src={image} />
                             </div>
-                            <p>{label}</p>
+                            <p className={styles.label}>{label}</p>
                         </div>
                     </div>
                     <Menu id={label + 'contextmenu'}>
                         <Item
                             onClick={() => {
-                                onDelete(label);
+                                onDelete(currPath + encodeURIComponent(label));
                             }}
                         >
                             <div className={styles.contextItem}>Delete</div>
                         </Item>
                         <Item
                             onClick={() => {
-                                onInfo(label);
+                                onInfo(currPath + encodeURIComponent(label));
                             }}
                         >
                             <div className={styles.contextItem}>Info</div>
                         </Item>
                         <Item
                             onClick={() => {
-                                onAccess(label);
+                                onAccess(currPath + encodeURIComponent(label));
                             }}
                         >
                             <div className={styles.contextItem}>Access</div>
                         </Item>
                         <Item
                             onClick={() => {
-                                onRename(label);
+                                onRename(currPath + encodeURIComponent(label));
                             }}
                         >
                             <div className={styles.contextItem}>Rename</div>
@@ -66,7 +69,7 @@ export default function File({
                         <Separator />
                         <Item
                             onClick={() => {
-                                onRename(label);
+                                onRename(currPath + encodeURIComponent(label));
                             }}
                         >
                             <div className={styles.contextItem}>Rename</div>
@@ -78,7 +81,7 @@ export default function File({
     } else {
         return (
             <div>
-                <MenuProvider id={label + 'contextmenu'}>
+                <MenuProvider id={label + 'contextmenu1'}>
                     <div
                         className={styles.container}
                         style={selectedItem ? {opacity: 0.5} : undefined}
@@ -89,31 +92,31 @@ export default function File({
                             <p className={styles.label}>{label}</p>
                         </div>
                     </div>
-                    <Menu id={label + 'contextmenu'}>
+                    <Menu id={label + 'contextmenu1'}>
                         <Item
                             onClick={() => {
-                                onDelete(label);
+                                onDelete(currPath + encodeURIComponent(label));
                             }}
                         >
                             <div className={styles.contextItem}>Delete</div>
                         </Item>
                         <Item
                             onClick={() => {
-                                onInfo(label);
+                                onInfo(currPath + encodeURIComponent(label));
                             }}
                         >
                             <div className={styles.contextItem}>Info</div>
                         </Item>
                         <Item
                             onClick={() => {
-                                onAccess(label);
+                                onAccess(currPath + encodeURIComponent(label));
                             }}
                         >
                             <div className={styles.contextItem}>Access</div>
                         </Item>
                         <Item
                             onClick={() => {
-                                onRename(label);
+                                onRename(currPath + encodeURIComponent(label));
                             }}
                         >
                             <div className={styles.contextItem}>Rename</div>
@@ -121,7 +124,7 @@ export default function File({
                         <Separator />
                         <Item
                             onClick={() => {
-                                onRename(label);
+                                onRename(currPath + encodeURIComponent(label));
                             }}
                         >
                             <div className={styles.contextItem}>Rename</div>

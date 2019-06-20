@@ -68,7 +68,7 @@ class App extends React.Component {
     render() {
         const {webId, user, isProfileExpanded} = this.state;
         return (
-            <Container style={{height: '100%'}}>
+            <div style={{height: '100%'}}>
                 <ErrorBoundary>
                     <BrowserRouter>
                         <Navigation
@@ -128,7 +128,7 @@ class App extends React.Component {
                         </Switch>
                     </BrowserRouter>
                 </ErrorBoundary>
-            </Container>
+            </div>
         );
     }
 }

@@ -28,13 +28,13 @@ const Buttons = (props) => {
                         [styles.expanded]: isExpanded,
                     })}
                     folder
-                    onClick={props.onFolderUpload}
+                    onChange={props.onFolderUpload}
                 />
                 <FileUpload
                     className={classNames(styles.icon, {
                         [styles.expanded]: isExpanded,
                     })}
-                    onClick={props.onFileUpload}
+                    onChange={props.onFileUpload}
                 />
                 <img
                     className={classNames(
