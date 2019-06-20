@@ -16,7 +16,6 @@
     height: 80px;
     width: 80px;
     bottom: 0;
-    transition: position 0.3s;
     position: absolute;
 }
 
@@ -27,11 +26,13 @@
 
 .toggleButton {
     z-index: 1;
+    display: initial;
 }
 
 .expanded {
     bottom: initial;
     position: initial;
+    display: initial;
 }
 
 @media (max-width: 380px) {

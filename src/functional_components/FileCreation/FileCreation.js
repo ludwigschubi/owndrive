@@ -7,7 +7,7 @@ const FileCreation = (props) => {
         <img
             src={folderIcon}
             className={props.className}
-            onClick={() => props.onClick()}
+            onClick={props.onClick}
             alt="file creation icon"
         />
     ) : (

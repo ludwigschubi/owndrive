@@ -6,6 +6,7 @@ import classNames from 'classnames';
 import toggleIcon from '../../assets/icons/dots_vert.png';
 const Buttons = (props) => {
     const [isExpanded, setExpanded] = useState(false);
+    console.log('folder crea', props.onFolderCreation);
     return (
         <div className={styles.buttonContainer}>
             <div className={styles.innerContainer}>
@@ -36,9 +37,12 @@ const Buttons = (props) => {
                     onClick={props.onFileUpload}
                 />
                 <img
-                    className={classNames(styles.icon, {
-                        [styles.expanded]: isExpanded,
-                    })}
+                    className={classNames(
+                        {
+                            [styles.expanded]: isExpanded,
+                        },
+                        styles.icon
+                    )}
                     src={toggleIcon}
                     onClick={() => setExpanded(!isExpanded)}
                 />
