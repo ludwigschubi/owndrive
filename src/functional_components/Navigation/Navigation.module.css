@@ -1,4 +1,4 @@
-.navbar {
+.navbar  {
     background-color: white;
 }
 
@@ -30,6 +30,10 @@
     align-items: center;
     justify-content: center;
     font-size: 0.6em; */
+}
+
+.profileIcon:hover {
+    box-shadow: 0 0 4px black;
 }
 
 @media (max-width: 380px) {
