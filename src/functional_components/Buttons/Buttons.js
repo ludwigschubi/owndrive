@@ -8,39 +8,41 @@ const Buttons = (props) => {
     const [isExpanded, setExpanded] = useState(false);
     return (
         <div className={styles.buttonContainer}>
-            <FileCreation
-                className={classNames(styles.icon, {
-                    [styles.expanded]: isExpanded,
-                })}
-                onClick={props.onFileCreation}
-            />
-            <FileCreation
-                className={classNames(styles.icon, {
-                    [styles.expanded]: isExpanded,
-                })}
-                folder
-                onClick={props.onFolderCreation}
-            />
-            <FileUpload
-                className={classNames(styles.icon, {
-                    [styles.expanded]: isExpanded,
-                })}
-                folder
-                onClick={props.onFolderUpload}
-            />
-            <FileUpload
-                className={classNames(styles.icon, {
-                    [styles.expanded]: isExpanded,
-                })}
-                onClick={props.onFileUpload}
-            />
-            <img
-                className={classNames(styles.icon, {
-                    [styles.expanded]: isExpanded,
-                })}
-                src={toggleIcon}
-                onClick={() => setExpanded(!isExpanded)}
-            />
+            <div className={styles.innerContainer}>
+                <FileCreation
+                    className={classNames(styles.icon, {
+                        [styles.expanded]: isExpanded,
+                    })}
+                    onClick={props.onFileCreation}
+                />
+                <FileCreation
+                    className={classNames(styles.icon, {
+                        [styles.expanded]: isExpanded,
+                    })}
+                    folder
+                    onClick={props.onFolderCreation}
+                />
+                <FileUpload
+                    className={classNames(styles.icon, {
+                        [styles.expanded]: isExpanded,
+                    })}
+                    folder
+                    onClick={props.onFolderUpload}
+                />
+                <FileUpload
+                    className={classNames(styles.icon, {
+                        [styles.expanded]: isExpanded,
+                    })}
+                    onClick={props.onFileUpload}
+                />
+                <img
+                    className={classNames(styles.icon, {
+                        [styles.expanded]: isExpanded,
+                    })}
+                    src={toggleIcon}
+                    onClick={() => setExpanded(!isExpanded)}
+                />
+            </div>
         </div>
     );
 };
