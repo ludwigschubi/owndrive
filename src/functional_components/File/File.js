@@ -13,8 +13,10 @@ export default function File({
     onInfo,
 }) {
     const imageTypes = ['ico', 'png', 'jpeg', 'jpg'];
-    const isImage = imageTypes.indexOf(label.split('.')[1]) > -1;
-    console.log(currPath + encodeURIComponent(label));
+    console.log(encodeURIComponent(label));
+    const labelFragments = encodeURIComponent(label).split('.')
+    const isImage = imageTypes.indexOf(labelFragments[labelFragments.length - 1]) > -1;
+    console.log(isImage);
     if (isImage) {
         return (
             <div>
@@ -32,7 +34,7 @@ export default function File({
                                 />
                                 <img className={styles.icon} src={image} />
                             </div>
-                            <p>{label}</p>
+                            <p className={styles.label}>{label}</p>
                         </div>
                     </div>
                     <Menu id={label + 'contextmenu'}>
