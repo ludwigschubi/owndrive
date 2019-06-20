@@ -12,11 +12,19 @@
     height: 80px;
     width: 80px;
     opacity: 0.7;
+    bottom: 0;
 }
 
 .icon:hover {
     cursor: pointer;
     opacity: 1;
+}
+
+.toggleButton {
+    z-index: 1;
+}
+
+.expanded {
 }
 
 @media (max-width: 380px) {

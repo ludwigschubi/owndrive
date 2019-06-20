@@ -1,27 +1,46 @@
-import React from 'react';
+import React, {useState} from 'react';
 import styles from './Buttons.module.css';
 import FileUpload from '../FileUpload';
-import FolderUpload from '../FileUpload';
 import FileCreation from '../FileCreation';
-
+import classNames from 'classnames';
+import toggleIcon from '../../assets/icons/dots_vert.png';
 const Buttons = (props) => {
+    const [isExpanded, setExpanded] = useState(false);
     return (
         <div className={styles.buttonContainer}>
             <FileCreation
-                className={styles.icon}
+                className={classNames(styles.icon, {
+                    [styles.expanded]: isExpanded,
+                })}
                 onClick={props.onFileCreation}
             />
             <FileCreation
-                className={styles.icon}
+                className={classNames(styles.icon, {
+                    [styles.expanded]: isExpanded,
+                })}
                 folder
                 onClick={props.onFolderCreation}
             />
             <FileUpload
-                className={styles.icon}
+                className={classNames(styles.icon, {
+                    [styles.expanded]: isExpanded,
+                })}
                 folder
                 onClick={props.onFolderUpload}
             />
-            <FileUpload className={styles.icon} onClick={props.onFileUpload} />
+            <FileUpload
+                className={classNames(styles.icon, {
+                    [styles.expanded]: isExpanded,
+                })}
+                onClick={props.onFileUpload}
+            />
+            <img
+                className={classNames(styles.icon, {
+                    [styles.expanded]: isExpanded,
+                })}
+                src={toggleIcon}
+                onClick={() => setExpanded(!isExpanded)}
+            />
         </div>
     );
 };
