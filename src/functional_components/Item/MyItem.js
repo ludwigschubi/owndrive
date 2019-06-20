@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './Item.module.css';
-import { Menu, Separator, Submenu, MenuProvider, Item } from 'react-contexify';
+import {Menu, Separator, MenuProvider, Item} from 'react-contexify';
 import 'react-contexify/dist/ReactContexify.min.css';
 
 const MENU_TYPE = 'SIMPLE';
@@ -11,7 +11,7 @@ const MyItem = ({ image, label, onClick, onDelete, onAccess, onRename, onInfo, s
             <MenuProvider id={label + 'contextmenu'}>
                 <div
                     className={styles.container}
-                    style={selectedItem ? { opacity: 0.5 } : undefined}
+                    style={selectedItem ? {opacity: 0.5} : undefined}
                     onClick={onClick}
                 >
                     <div className={styles.innerContainer}>

@@ -3,5 +3,4 @@
     color: blue;
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(75px, 1fr));
-    grid-column-gap: 15px;
 }
