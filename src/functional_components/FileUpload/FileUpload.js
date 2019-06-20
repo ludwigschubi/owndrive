@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from '../FileCreation/FileCreation.module.css';
 import fileIcon from './FileUpload.png';
 import folderIcon from './FolderUpload.png';
 
@@ -8,7 +7,7 @@ const FileUpload = (props) => {
         <label htmlFor="fileUpload">
             <img
                 src={props.folder ? folderIcon : fileIcon}
-                className={props.folder ? styles.icon : styles.icon}
+                className={props.className}
                 alt="file upload icon"
             />
             <input
@@ -22,7 +21,7 @@ const FileUpload = (props) => {
                 odirectory={props.folder ? 'true' : undefined}
                 directory={props.folder ? 'true' : undefined}
                 multiple={props.folder ? 'true' : undefined}
-                style={{ display: 'none' }}
+                style={{display: 'none'}}
                 id="fileUpload"
                 accept="*/*"
             />

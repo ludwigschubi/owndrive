@@ -7,10 +7,21 @@ import FileCreation from '../FileCreation';
 const Buttons = (props) => {
     return (
         <div className={styles.buttonContainer}>
-            <FileCreation onClick={props.onFileCreation} />
-            <FileCreation folder onClick={props.onFolderCreation} />
-            <FileUpload folder onClick={props.onFolderUpload} />
-            <FileUpload onClick={props.onFileUpload} />
+            <FileCreation
+                className={styles.icon}
+                onClick={props.onFileCreation}
+            />
+            <FileCreation
+                className={styles.icon}
+                folder
+                onClick={props.onFolderCreation}
+            />
+            <FileUpload
+                className={styles.icon}
+                folder
+                onClick={props.onFolderUpload}
+            />
+            <FileUpload className={styles.icon} onClick={props.onFileUpload} />
         </div>
     );
 };
