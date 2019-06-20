@@ -14,8 +14,9 @@ export default function File({
 }) {
     const imageTypes = ['ico', 'png', 'jpeg', 'jpg'];
     console.log(encodeURIComponent(label));
-    const labelFragments = encodeURIComponent(label).split('.')
-    const isImage = imageTypes.indexOf(labelFragments[labelFragments.length - 1]) > -1;
+    const labelFragments = encodeURIComponent(label).split('.');
+    const isImage =
+        imageTypes.indexOf(labelFragments[labelFragments.length - 1]) > -1;
     console.log(isImage);
     if (isImage) {
         return (
@@ -37,7 +38,10 @@ export default function File({
                             <p className={styles.label}>{label}</p>
                         </div>
                     </div>
-                    <Menu id={label + 'contextmenu'}>
+                    <Menu
+                        className={styles.contextMenu}
+                        id={label + 'contextmenu'}
+                    >
                         <Item
                             onClick={() => {
                                 onDelete(currPath + encodeURIComponent(label));
@@ -81,7 +85,10 @@ export default function File({
     } else {
         return (
             <div>
-                <MenuProvider id={label + 'contextmenu1'}>
+                <MenuProvider
+                    className={styles.contextMenu}
+                    id={label + 'contextmenu1'}
+                >
                     <div
                         className={styles.container}
                         style={selectedItem ? {opacity: 0.5} : undefined}

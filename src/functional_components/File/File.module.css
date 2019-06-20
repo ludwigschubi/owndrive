@@ -22,6 +22,10 @@
     transition: all 0.2s;
 }
 
+.contextMenu {
+    z-index: 2;
+}
+
 .container:hover .icon {
     opacity: 1;
 }
