@@ -1,4 +1,6 @@
 import rdf from 'rdflib';
+import auth from 'solid-auth-client';
+import { folder } from '../assets/icons/externalIcons';
 
 function getContentType(file) {
     const mimeTypes = {
@@ -21,6 +23,45 @@ function getContentType(file) {
     } else {
         return 'folder';
     }
+}
+
+function uploadFolderOrFile(file, url) {
+    const store = rdf.graph();
+    const fetcher = new rdf.Fetcher(store);
+
+    const fileNameFragments = file.name.split('/');
+    const fileName = fileNameFragments[fileNameFragments.length - 1];
+    const fileType = file.type ? file.type : 'text/plain';
+
+    const reader = new FileReader();
+    reader.onload = function() {
+        const data = this.result;
+        const filename = encodeURIComponent(fileName);
+
+        fetcher
+            .webOperation('PUT', url, {
+                data: data,
+                contentType: fileType,
+            })
+            .then((response) => {
+                if (response.status === 201) {
+                    console.log('Successfully uploaded!');
+                }
+            });
+    };
+    reader.readAsArrayBuffer(file);
+
+    // // const fileType
+    // const request = {
+    //     method: 'POST',
+    //     headers: {
+    //         slug: folderName,
+    //         link: '<http://www.w3.org/ns/ldp#BasicContainer>; rel="type"',
+    //         contentType: 'text-turtle',
+    //     },
+    // };
+
+    // auth.fetch(url, request).then(() => {});
 }
 
 function uploadFile(filePath, currPath) {
@@ -48,4 +89,8 @@ function uploadFile(filePath, currPath) {
     reader.readAsArrayBuffer(filePath);
 }
 
-export default { uploadFile: uploadFile, getContentType: getContentType };
+export default {
+    uploadFile: uploadFile,
+    getContentType: getContentType,
+    uploadFolderOrFile: uploadFolderOrFile,
+};

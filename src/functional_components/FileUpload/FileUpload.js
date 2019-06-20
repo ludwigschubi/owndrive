@@ -1,22 +1,27 @@
 import React from 'react';
-import styles from './FileUpload.module.css';
-import icon from './FileUpload.png';
+import styles from '../FileCreation/FileCreation.module.css';
+import fileIcon from './FileUpload.png';
+import folderIcon from './FolderUpload.png';
 
 const FileUpload = (props) => {
     return (
         <label htmlFor="fileUpload">
-            <img src={icon} className={styles.icon} alt="file upload icon" />
+            <img
+                src={props.folder ? folderIcon : fileIcon}
+                className={props.folder ? styles.icon : styles.icon}
+                alt="file upload icon"
+            />
             <input
                 type="file"
                 onChange={(e) => {
                     props.onChange(e.target.files);
                 }}
-                webkitdirectory="true"
-                mozdirectory="true"
-                msdirectory="true"
-                odirectory="true"
-                directory="true"
-                multiple
+                webkitdirectory={props.folder ? 'true' : undefined}
+                mozdirectory={props.folder ? 'true' : undefined}
+                msdirectory={props.folder ? 'true' : undefined}
+                odirectory={props.folder ? 'true' : undefined}
+                directory={props.folder ? 'true' : undefined}
+                multiple={props.folder ? 'true' : undefined}
                 style={{ display: 'none' }}
                 id="fileUpload"
                 accept="*/*"
