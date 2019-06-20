@@ -5,7 +5,7 @@ import ns from 'solid-namespace';
 export const editProfile = (key, value, prevValue) => {
     return auth.trackSession((session) => {
         if (!session) {
-            return undefinded;
+            return undefined;
         } else {
             const store = rdf.graph();
             const updater = new rdf.UpdateManager(store);
