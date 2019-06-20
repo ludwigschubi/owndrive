@@ -1,0 +1,44 @@
+.container {
+    z-index: 3;
+    position: fixed;
+    margin: auto;
+    top: 50%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    background-color: white;
+    padding: 0 20px 5px 20px;
+    box-shadow: 0 0 10px #0c89c6;
+    min-width: 300px;
+    border-radius: 5px;
+}
+
+.opacity {
+    z-index: 2;
+
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: black;
+    opacity: 0.5;
+}
+
+.close {
+    cursor: pointer;
+    padding: 10px 0 10px 10px;
+    width: 30px;
+    height: 40px;
+}
+
+.head {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+}
+
+.title {
+    font-size: 1.1em;
+    font-weight: 600;
+}
