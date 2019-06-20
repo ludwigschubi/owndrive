@@ -6,6 +6,7 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import styles from './Navigation.module.css';
 import Container from 'react-bootstrap/Container';
+import brand from '../../assets/icons/Mappe.png'
 
 const Navigation = ({ picture, webId, onLogin, onLogout, toggleSidebar }) => {
     return (
@@ -15,7 +16,7 @@ const Navigation = ({ picture, webId, onLogin, onLogout, toggleSidebar }) => {
                     <Row>
                         <Col xs="6" sm="6" md="6" lg="6">
                             <Navbar.Brand href="/" className={styles.brand}>
-                                YOUR FILES
+                                <img src={brand}/>
                             </Navbar.Brand>
                             {/* <NavLink to="/home">HOME</NavLink> */}
                         </Col>

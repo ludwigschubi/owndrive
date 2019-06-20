@@ -17,6 +17,11 @@
     font-size: 1.5em;
 }
 
+.brand img{
+    height: auto;
+    max-width: 70%;
+}
+
 .profileIcon {
     width: 60px;
     height: 60px;
