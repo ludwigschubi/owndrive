@@ -1,0 +1,9 @@
+.buttonContainer{
+        position: fixed;
+        display: flex;
+        bottom: 50px;
+        right: 50px;
+        flex-direction: column;
+        justify-content: flex-end;
+        opacity: .9;
+}

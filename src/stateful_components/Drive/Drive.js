@@ -10,8 +10,9 @@ import fileUtils from '../../utils/fileUtils';
 import { getBreadcrumbsFromUrl } from '../../utils/url';
 import ACLController from 'your-acl';
 import FileCreation from '../../functional_components/FileCreation/FileCreation';
-import { folder } from '../../assets/icons/externalIcons';
+import folder from '../../assets/icons/Folder.png';
 import fileIcon from '../../assets/icons/File.png';
+import Buttons from '../../functional_components/Buttons/Buttons';
 
 class Drive extends React.Component {
     constructor(props) {
@@ -29,7 +30,7 @@ class Drive extends React.Component {
         this.createFolder = this.createFolder.bind(this);
         this.createFile = this.createFile.bind(this);
         this.followPath = this.followPath.bind(this);
-        this.uploadFile = this.uploadFile.bind(this);
+        this.uploadFolder = this.uploadFolder.bind(this);
         this.loadFile = this.loadFile.bind(this);
         this.loadCurrentFolder = this.loadCurrentFolder.bind(this);
         this.clearSelection = this.clearSelection.bind(this);
@@ -203,8 +204,14 @@ class Drive extends React.Component {
         }
     }
 
-    selectFolder(files) {
-        console.log(files)
+    uploadFolder(files) {
+        for (let file = 0; file < files.length; file++) {
+            fileUtils.uploadFolderOrFile(
+                files[file],
+                this.state.currPath +
+                    encodeURIComponent(files[file].webkitRelativePath)
+            );
+        }
     }
 
     componentWillUnmount() {
@@ -254,9 +261,12 @@ class Drive extends React.Component {
                                 image={fileIcon}
                                 onItemClick={this.loadFile}
                             />
-                            <FileCreation folder onClick={this.createFolder} />
-                            <FileCreation onClick={this.createFile} />
-                            <FileUpload onChange={this.selectFolder} />
+                            <Buttons>
+                                onFileCreation={this.createFile}
+                                onFolderCreation={this.createFolder}
+                                onFolderUpload={this.uploadFolder}
+                                onFileUpload={this.uploadFile}
+                            </Buttons>
                         </div>
                     )}
                 </div>
