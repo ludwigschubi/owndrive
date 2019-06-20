@@ -44,43 +44,14 @@
     margin-bottom: 0;
 }
 
-.key {
-    width: 33%;
-    font-weight: 600;
-    color: #aaa;
-    text-align: right;
-    padding-right: 50px;
-    font-size: 1em;
-}
-
-.values {
-    width: 55%;
-    font-size: 1em;
-    color: #0c89c6;
-}
-
-.value {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 .section {
-    margin: 3px 0;
+    margin: 0 3px;
     width: 100%;
     padding: 0 40 0 20px;
     background-color: white;
     border-radius: 10px;
     padding: 20px 30px;
     display: flex;
-}
-
-.editIcon {
-    position: absolute;
-    right: 20px;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
 }
 
 .container.active {

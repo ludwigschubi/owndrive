@@ -4,6 +4,7 @@ import classNames from 'classnames';
 import editIcon from '../../assets/icons/edit.png';
 import closeIcon from '../../assets/icons/close.png';
 import {editProfile} from '../../utils/profileRDF';
+import {KeyValuePair} from '../KeyValuePair';
 export default function ProfileSideBar({isExpanded, toggleSidebar, user}) {
     const [isEditable, setEditable] = useState(false);
     return (
@@ -30,31 +31,11 @@ export default function ProfileSideBar({isExpanded, toggleSidebar, user}) {
                 </div>
             ) : null}
             {Object.keys(user).map((key, index) => (
-                <div className={styles.section} key={index}>
-                    <div className={styles.key}>{key}:</div>
-                    <div className={styles.values}>
-                        {Array.isArray(user[key]) ? (
-                            user[key].map((value, index) => (
-                                <div
-                                    title={value}
-                                    className={styles.value}
-                                    key={value + index}
-                                >
-                                    {value}
-                                </div>
-                            ))
-                        ) : (
-                            <div title={user[key]} className={styles.value}>
-                                {user[key]}
-                            </div>
-                        )}
-                    </div>
-                    <img
-                        className={styles.editIcon}
-                        src={editIcon}
-                        onClick={() => editProfile}
-                    />
-                </div>
+                <KeyValuePair
+                    key={key + index}
+                    keyVal={key}
+                    values={user[key]}
+                />
             ))}
             <div className={styles.addButton}>add new category</div>
         </div>
