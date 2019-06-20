@@ -1,17 +1,27 @@
 import React from 'react';
 import styles from './Item.module.css';
-import {Menu, Separator, MenuProvider, Item} from 'react-contexify';
+import { Menu, Separator, MenuProvider, Item } from 'react-contexify';
 import 'react-contexify/dist/ReactContexify.min.css';
 
 const MENU_TYPE = 'SIMPLE';
 
-const MyItem = ({ image, label, onClick, onDelete, onAccess, onRename, onInfo, selectedItem, currPath}) => {
+const MyItem = ({
+    image,
+    label,
+    onClick,
+    onDelete,
+    onAccess,
+    onRename,
+    onInfo,
+    selectedItem,
+    currPath,
+}) => {
     return (
         <div>
             <MenuProvider id={label + 'contextmenu'}>
                 <div
                     className={styles.container}
-                    style={selectedItem ? {opacity: 0.5} : undefined}
+                    style={selectedItem ? { opacity: 0.5 } : undefined}
                     onClick={onClick}
                 >
                     <div className={styles.innerContainer}>
@@ -22,28 +32,40 @@ const MyItem = ({ image, label, onClick, onDelete, onAccess, onRename, onInfo, s
                 <Menu id={label + 'contextmenu'}>
                     <Item
                         onClick={() => {
-                            onDelete(label);
+                            onDelete(
+                                currPath + encodeURIComponent(label),
+                                'folder'
+                            );
                         }}
                     >
                         <div className={styles.contextItem}>Delete</div>
                     </Item>
                     <Item
                         onClick={() => {
-                            onInfo(label);
+                            onInfo(
+                                currPath + encodeURIComponent(label),
+                                'folder'
+                            );
                         }}
                     >
                         <div className={styles.contextItem}>Info</div>
                     </Item>
                     <Item
                         onClick={() => {
-                            onAccess(label);
+                            onAccess(
+                                currPath + encodeURIComponent(label),
+                                'folder'
+                            );
                         }}
                     >
                         <div className={styles.contextItem}>Access</div>
                     </Item>
                     <Item
                         onClick={() => {
-                            onRename(label);
+                            onRename(
+                                currPath + encodeURIComponent(label),
+                                'folder'
+                            );
                         }}
                     >
                         <div className={styles.contextItem}>Rename</div>

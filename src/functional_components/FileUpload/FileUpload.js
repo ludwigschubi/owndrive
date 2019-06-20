@@ -4,7 +4,7 @@ import folderIcon from './FolderUpload.png';
 
 const FileUpload = (props) => {
     return (
-        <label htmlFor="fileUpload">
+        <label htmlFor={props.folder ? 'folderUpload' : 'fileUpload'}>
             <img
                 src={props.folder ? folderIcon : fileIcon}
                 className={props.className}
@@ -13,23 +13,19 @@ const FileUpload = (props) => {
             <input
                 type="file"
                 onChange={(e) => {
-                    props.onChange(e.target.files);
+                    console.log(props.onChange);
+                    props.onChange(e);
                 }}
                 webkitdirectory={props.folder ? 'true' : undefined}
                 mozdirectory={props.folder ? 'true' : undefined}
                 msdirectory={props.folder ? 'true' : undefined}
                 odirectory={props.folder ? 'true' : undefined}
                 directory={props.folder ? 'true' : undefined}
-                multiple={props.folder ? 'true' : undefined}
-                style={{display: 'none'}}
-                id="fileUpload"
+                multiple={props.folder ? true : false}
+                style={{ display: 'none' }}
+                id={props.folder ? 'folderUpload' : 'fileUpload'}
                 accept="*/*"
             />
-            {/* <input
-                // name="fileUpload"
-                type="file"
-                onChange={props.onChange}
-            /> */}
         </label>
     );
 };

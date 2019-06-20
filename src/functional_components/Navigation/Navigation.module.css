@@ -1,3 +1,7 @@
+.navbar {
+    background-color: white;
+}
+
 .dropdown a {
     padding: inherit 0;
     width: 10px;
