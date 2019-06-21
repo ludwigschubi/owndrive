@@ -13,10 +13,8 @@ export default function File({
     onInfo,
 }) {
     const imageTypes = ['ico', 'png', 'jpeg', 'jpg'];
-    console.log(encodeURIComponent(label));
     const labelFragments = encodeURIComponent(label).split('.')
     const isImage = imageTypes.indexOf(labelFragments[labelFragments.length - 1]) > -1;
-    console.log(isImage);
     if (isImage) {
         return (
             <div>

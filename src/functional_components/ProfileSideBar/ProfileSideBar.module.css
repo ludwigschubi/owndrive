@@ -6,8 +6,8 @@
     width: 33vw;
     right: -33vw;
     position: fixed;
-    background-color: #fafafa;
-    box-shadow: -1px 0 3px #0c89c6;
+    background-color:rgba(0, 0, 0, 0);
+    /* box-shadow: -1px 0 3px #0c89c6; */
     transition: right 0.3s;
     flex-direction: column;
     z-index: 2;

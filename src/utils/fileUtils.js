@@ -80,15 +80,17 @@ function uploadFile(filePath, currPath) {
     });
 }
 
-function deleteItem(item, folder) {
+function deleteItems(item, folder) {
     if (!folder) {
-        console.log(item);
-        if (window.confirm('Do you really want to delete this file?')) {
+        if (Array.isArray(item)) {
+            const itemDeletes = item.map((item) => {
+                return auth.fetch(item, { method: 'DELETE' });
+            });
+            return Promise.all(itemDeletes);
+        } else {
             auth.fetch(item, { method: 'DELETE' }).then((response) => {
                 console.log(response);
             });
-        } else {
-            return undefined;
         }
     } else {
         getFolderContents(item).then((results) => {
@@ -152,7 +154,7 @@ export default {
     uploadFile: uploadFile,
     getContentType: getContentType,
     uploadFolderOrFile: uploadFolderOrFile,
-    deleteItem: deleteItem,
+    deleteItems: deleteItems,
     changeAccess: changeAccess,
     getInfo: getInfo,
     renameFile: renameFile,

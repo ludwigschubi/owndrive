@@ -5,16 +5,17 @@ import auth from 'solid-auth-client';
 import styles from './Drive.module.css';
 import Breadcrumbs from '../../functional_components/Breadcrumbs/Breadcrumbs';
 import FileUpload from '../../functional_components/FileUpload/FileUpload';
-import {ItemList} from '../../functional_components/ItemList';
+import { ItemList } from '../../functional_components/ItemList';
 import fileUtils from '../../utils/fileUtils';
-import {getBreadcrumbsFromUrl} from '../../utils/url';
+import { getBreadcrumbsFromUrl } from '../../utils/url';
 import ACLController from 'your-acl';
 import FileCreation from '../../functional_components/FileCreation/FileCreation';
 import folder from '../../assets/icons/Folder.png';
 import fileIcon from '../../assets/icons/File.png';
 import Buttons from '../../functional_components/Buttons/Buttons';
-import {InputWindow} from '../../functional_components/InputWindow';
+import { InputWindow } from '../../functional_components/InputWindow';
 import Container from 'react-bootstrap/Container';
+import { ConsentWindow } from '../../functional_components/ConsentWindow';
 
 class Drive extends React.Component {
     constructor(props) {
@@ -27,6 +28,7 @@ class Drive extends React.Component {
             selectedItems: [],
             folders: undefined,
             isCreateFolderVisible: false,
+            isConsentWindowVisible: false,
             isCreateFileVisible: false,
             files: undefined,
         };
@@ -41,6 +43,8 @@ class Drive extends React.Component {
         this.clearSelection = this.clearSelection.bind(this);
         this.openCreateFolderWindow = this.openCreateFolderWindow.bind(this);
         this.closeCreateFolderWindow = this.closeCreateFolderWindow.bind(this);
+        this.openConsentWindow = this.openConsentWindow.bind(this);
+        this.closeConsentWindow = this.closeConsentWindow.bind(this);
         this.openCreateFileWindow = this.openCreateFileWindow.bind(this);
         this.closeCreateFileWindow = this.closeCreateFileWindow.bind(this);
     }
@@ -153,7 +157,11 @@ class Drive extends React.Component {
     }
 
     clearSelection(e) {
-        if (e.target.nodeName !== 'IMG' && e.target.nodeName !== 'P') {
+        if (
+            e.target.nodeName !== 'IMG' &&
+            e.target.nodeName !== 'P' &&
+            e.target.innerHTML !== 'Delete'
+        ) {
             this.setState({
                 selectedItems: [],
             });
@@ -230,6 +238,18 @@ class Drive extends React.Component {
         });
     }
 
+    closeConsentWindow() {
+        this.setState({
+            isConsentWindowVisible: false,
+        });
+    }
+
+    openConsentWindow() {
+        this.setState({
+            isConsentWindowVisible: true,
+        });
+    }
+
     closeCreateFileWindow() {
         this.setState({
             isCreateFileVisible: false,
@@ -255,8 +275,9 @@ class Drive extends React.Component {
             breadcrumbs,
             isCreateFolderVisible,
             isCreateFileVisible,
+            isConsentWindowVisible,
         } = this.state;
-        const {webId} = this.props;
+        const { webId } = this.props;
         const fileMarkup = this.state.file ? (
             <div className={styles.renderedFile}>
                 {this.state.image ? (
@@ -270,7 +291,7 @@ class Drive extends React.Component {
         );
 
         return (
-            <div style={{height: '100%'}} onClick={this.clearSelection}>
+            <div style={{ height: '100%' }} onClick={this.clearSelection}>
                 <Breadcrumbs
                     onClick={this.loadCurrentFolder}
                     breadcrumbs={breadcrumbs}
@@ -281,6 +302,26 @@ class Drive extends React.Component {
                         fileMarkup
                     ) : (
                         <div>
+                            <ConsentWindow
+                                windowName="Delete File?"
+                                selectedItems={this.state.selectedItems}
+                                info={
+                                    this.state.selectedItems.length > 1
+                                        ? 'Do you really want to delete these items?'
+                                        : 'Do you really want to delete this item?'
+                                }
+                                onSubmit={(selectedItems) =>
+                                    fileUtils.deleteItems(selectedItems).then(() => {
+                                        this.loadCurrentFolder(this.state.currPath, this.state.breadcrumbs);
+                                    })
+                                }
+                                className={
+                                    isConsentWindowVisible
+                                        ? styles.visible
+                                        : styles.hidden
+                                }
+                                onClose={this.closeConsentWindow}
+                            ></ConsentWindow>
                             <InputWindow
                                 windowName="Create Folder"
                                 info=""
@@ -311,6 +352,7 @@ class Drive extends React.Component {
                                     image={folder}
                                     onItemClick={this.followPath}
                                     onDelete={(item, folder) => {
+                                        this.openConsentWindow();
                                         fileUtils.deleteItem(item, folder);
                                     }}
                                     onAccess={(item) => {
@@ -331,7 +373,7 @@ class Drive extends React.Component {
                                     image={fileIcon}
                                     onItemClick={this.loadFile}
                                     onDelete={(item) => {
-                                        fileUtils.deleteItem(item);
+                                        this.openConsentWindow();
                                     }}
                                     onAccess={(item) => {
                                         fileUtils.changeAccess(item);

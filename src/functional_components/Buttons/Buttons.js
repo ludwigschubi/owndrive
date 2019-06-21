@@ -6,7 +6,6 @@ import classNames from 'classnames';
 import toggleIcon from '../../assets/icons/dots_vert.png';
 const Buttons = (props) => {
     const [isExpanded, setExpanded] = useState(false);
-    console.log('folder crea', props.onFolderCreation);
     return (
         <div className={styles.buttonContainer}>
             <div className={styles.innerContainer}>
