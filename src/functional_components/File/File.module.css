@@ -2,7 +2,7 @@
     cursor: pointer;
     position: relative;
     width: 100%;
-    height: 150px;
+    height: 130px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -22,24 +22,28 @@
     transition: all 0.2s;
 }
 
+.contextMenu {
+    z-index: 2;
+}
+
 .container:hover .icon {
     opacity: 1;
 }
 
 .container:hover .innerContainer {
-    width: 110%;
-    height: 110%;
+    width: 105%;
+    height: 105%;
 }
 
 .container:hover .label {
     overflow: visible;
-    font-size: 110%;
+    font-size: 105%;
 }
 
 .iconContainer {
     position: relative;
     display: inline;
-    max-width: 95%;
+    width: 100%;
 }
 
 .thumbnail {
@@ -57,5 +61,5 @@
     max-width: 80%;
     position: relative;
     left: 50%;
-    transform: translateX(-50%)
+    transform: translateX(-50%);
 }

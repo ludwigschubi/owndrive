@@ -40,7 +40,7 @@ const Buttons = (props) => {
                         {
                             [styles.expanded]: isExpanded,
                         },
-                        styles.icon
+                        styles.toggleButton
                     )}
                     src={toggleIcon}
                     onClick={() => setExpanded(!isExpanded)}

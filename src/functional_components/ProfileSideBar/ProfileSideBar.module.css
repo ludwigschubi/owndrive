@@ -58,12 +58,25 @@
     right: 0;
 }
 
+.editIcon {
+    position: absolute;
+    right: 10px;
+    bottom: 10px;
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    box-shadow: 0 0 6px white;
+    background-color: white;
+}
+
 .profilePicture {
     width: 100px;
     height: 100px;
     background-size: cover;
     background-position: center;
     border-radius: 50%;
+    box-shadow: 0 0 4px black;
+    position: relative;
 }
 
 .addButton {
