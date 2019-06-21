@@ -13,7 +13,6 @@ const FileUpload = (props) => {
             <input
                 type="file"
                 onChange={(e) => {
-                    console.log(props.onChange);
                     props.onChange(e);
                 }}
                 webkitdirectory={props.folder ? 'true' : undefined}

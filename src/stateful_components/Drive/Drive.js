@@ -135,6 +135,9 @@ class Drive extends React.Component {
     }
 
     followPath(path) {
+        fileUtils.getFolderTree(path).then((results) => {
+            console.log(results);
+        });
         if (this.state.selectedItems.includes(path)) {
             const newBreadcrumbs = getBreadcrumbsFromUrl(path);
             this.loadCurrentFolder(path, newBreadcrumbs);
@@ -217,13 +220,22 @@ class Drive extends React.Component {
     uploadFolder(e) {
         const files = e.target.files;
         for (let file = 0; file < files.length; file++) {
-            fileUtils.uploadFolderOrFile(
-                files[file],
-                this.state.currPath +
-                    encodeURIComponent(files[file].webkitRelativePath)
-            );
+            fileUtils
+                .uploadFolderOrFile(
+                    files[file],
+                    this.state.currPath +
+                        encodeURIComponent(files[file].webkitRelativePath)
+                )
+                .then((response) => {
+                    console.log(file, response);
+                    if (file === files.length - 1) {
+                        this.loadCurrentFolder(
+                            this.state.currPath,
+                            this.state.breadcrumbs
+                        );
+                    }
+                });
         }
-        this.loadCurrentFolder(this.state.currPath, this.state.breadcrumbs);
     }
 
     closeCreateFolderWindow() {
@@ -311,9 +323,7 @@ class Drive extends React.Component {
                                         : 'Do you really want to delete this item?'
                                 }
                                 onSubmit={(selectedItems) =>
-                                    fileUtils.deleteItems(selectedItems).then(() => {
-                                        this.loadCurrentFolder(this.state.currPath, this.state.breadcrumbs);
-                                    })
+                                    fileUtils.deleteItems(selectedItems)
                                 }
                                 className={
                                     isConsentWindowVisible
@@ -351,9 +361,8 @@ class Drive extends React.Component {
                                     currPath={currPath}
                                     image={folder}
                                     onItemClick={this.followPath}
-                                    onDelete={(item, folder) => {
+                                    onDelete={(item) => {
                                         this.openConsentWindow();
-                                        fileUtils.deleteItem(item, folder);
                                     }}
                                     onAccess={(item) => {
                                         fileUtils.changeAccess(item);

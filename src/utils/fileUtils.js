@@ -1,6 +1,8 @@
 import rdf from 'rdflib';
 import auth from 'solid-auth-client';
 import { folder } from '../assets/icons/externalIcons';
+import { isFlowDeclaration } from '@babel/types';
+import { promised } from 'q';
 const ns = require('solid-namespace')(rdf);
 
 function getContentType(file) {
@@ -34,23 +36,26 @@ function uploadFolderOrFile(file, url) {
     const fileName = fileNameFragments[fileNameFragments.length - 1];
     const fileType = file.type ? file.type : 'text/plain';
 
-    const reader = new FileReader();
-    reader.onload = function() {
-        const data = this.result;
-        const filename = encodeURIComponent(fileName);
+    return new Promise(function(resolve) {
+        const reader = new FileReader();
+        reader.onload = function() {
+            const data = this.result;
+            const filename = encodeURIComponent(fileName);
 
-        fetcher
-            .webOperation('PUT', url, {
-                data: data,
-                contentType: fileType,
-            })
-            .then((response) => {
-                if (response.status === 201) {
-                    console.log('Successfully uploaded!');
-                }
-            });
-    };
-    reader.readAsArrayBuffer(file);
+            fetcher
+                .webOperation('PUT', url, {
+                    data: data,
+                    contentType: fileType,
+                })
+                .then((response) => {
+                    if (response.status === 201) {
+                        console.log('Successfully uploaded!');
+                        resolve('Success');
+                    }
+                });
+        };
+        reader.readAsArrayBuffer(file);
+    });
 }
 
 function uploadFile(filePath, currPath) {
@@ -80,23 +85,112 @@ function uploadFile(filePath, currPath) {
     });
 }
 
-function deleteItems(item, folder) {
-    if (!folder) {
-        if (Array.isArray(item)) {
-            const itemDeletes = item.map((item) => {
-                return auth.fetch(item, { method: 'DELETE' });
-            });
-            return Promise.all(itemDeletes);
-        } else {
-            auth.fetch(item, { method: 'DELETE' }).then((response) => {
-                console.log(response);
-            });
-        }
+function isFolder(url) {
+    if (url[url.length - 1] === '/') {
+        return true;
     } else {
-        getFolderContents(item).then((results) => {
-            console.log(results);
-        });
+        return false;
     }
+}
+
+function getFolderUrl(folder) {
+    const folderFile = folder.split('/');
+    folderFile.pop();
+    const folderUrl = folderFile.join('/');
+    return folderUrl;
+}
+
+function deleteItems(items) {
+    let deletions = [];
+    if (Array.isArray(items)) {
+        items.forEach((item) => {
+            if (!isFolder(item)) {
+                deletions.push(auth.fetch(item, { method: 'DELETE' }));
+            } else {
+                return getFolderTree(item).then((results) => {
+                    console.log(results);
+                    return Promise.all(
+                        results.map((result, index) => {
+                            if (index !== results.length) {
+                                return auth.fetch(result, { method: 'DELETE' });
+                            }
+                        })
+                    ).then(() => {
+                        console.log(
+                            'Delete root folder',
+                            results[results.length - 1]
+                        );
+                        return auth
+                            .fetch(results[results.length - 1], {
+                                method: 'DELETE',
+                            })
+                            .then(() => {
+                                window.location.href = window.location.href;
+                            });
+                    });
+                });
+            }
+        });
+    } else {
+        deletions.push(auth.fetch(items, { method: 'DELETE' }));
+    }
+
+    return Promise.all(deletions);
+}
+
+function hasArray(fileList) {
+    for (let i = 0; i < fileList.length; i++) {
+        if (Array.isArray(fileList[i])) {
+            return true;
+        }
+    }
+    return false;
+}
+
+function getFolderTree(folderUrl) {
+    return getFolderContents(folderUrl)
+        .then((folder) => {
+            const fileList = [];
+            for (let i = 0; i < folder.length; i++) {
+                if (isFolder(folder[i])) {
+                    const subfolder = getFolderTree(folder[i]);
+                    fileList.push(Promise.resolve(subfolder));
+                } else {
+                    fileList.push(
+                        new Promise(function(resolve) {
+                            resolve(folder[i]);
+                        })
+                    );
+                }
+            }
+            const folderName = getFolderUrl(folderUrl);
+            fileList.push(
+                new Promise(function(resolve) {
+                    resolve(folderName);
+                })
+            );
+            return Promise.all(fileList);
+        })
+        .then(function(results) {
+            while (hasArray(results)) {
+                const nextResult = results.shift();
+                if (Array.isArray(nextResult)) {
+                    nextResult.forEach((result) => {
+                        results.push(result);
+                    });
+                } else {
+                    results.push(nextResult);
+                }
+            }
+            return results.sort(sortByDepth).reverse();
+        });
+}
+
+function sortByDepth(fileA, fileB) {
+    const depthA = fileA.split('/').length;
+    const depthB = fileB.split('/').length;
+
+    return depthA - depthB;
 }
 
 function getFolderContents(folderUrl) {
@@ -105,36 +199,17 @@ function getFolderContents(folderUrl) {
 
     return fetcher
         .load(folderUrl)
-        .then(() => {
+        .then(function() {
+            const urls = [];
             const containments = store
                 .each(rdf.sym(folderUrl), ns.ldp('contains'), undefined)
                 .map((containment) => {
-                    const fileName = containment.value.split('/').pop();
-                    if (fileName) {
-                        const filePromise = new Promise(function(
-                            resolve,
-                            reject
-                        ) {
-                            resolve(folderUrl + '/' + fileName);
-                        });
-                        return filePromise;
-                    } else {
-                        const folderNameFragments = containment.value.split(
-                            '/'
-                        );
-                        const folderName =
-                            folderNameFragments[folderNameFragments.length - 2];
-                        return getFolderContents(
-                            folderUrl + '/' + folderName + '/'
-                        );
-                    }
-                    // return containment.value;
+                    return containment.value;
                 });
-            console.log(containments);
-            return Promise.all(containments);
+            return containments;
         })
         .catch((err) => {
-            return undefined;
+            return [];
         });
 }
 
@@ -153,9 +228,12 @@ function renameFile(item) {
 export default {
     uploadFile: uploadFile,
     getContentType: getContentType,
+    getFolderContents: getFolderContents,
+    getFolderTree: getFolderTree,
     uploadFolderOrFile: uploadFolderOrFile,
     deleteItems: deleteItems,
     changeAccess: changeAccess,
     getInfo: getInfo,
     renameFile: renameFile,
+    hasArray: hasArray,
 };
