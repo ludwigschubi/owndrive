@@ -37,6 +37,7 @@ export default function ProfileSideBar({
                         {isHovered ? (
                             <img src={editIcon} className={styles.editIcon} />
                         ) : null}
+                        <p className={styles.pictureChange}>Click to Change</p>
                     </div>
                     <div>
                         <p className={styles.name}>{user.name}</p>
