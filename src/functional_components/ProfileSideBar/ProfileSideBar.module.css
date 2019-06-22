@@ -87,6 +87,8 @@
     color: #0c89c6;
     height: 50px;
     border: 1px solid #0c89c6;
+    border-right: 0px;
+    border-bottom: 0px;
     bottom: 1px;
     background-color: white;
     right: 1px;
