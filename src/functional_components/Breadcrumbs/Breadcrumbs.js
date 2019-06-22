@@ -1,6 +1,7 @@
 import React from 'react';
 import Breadcrumb from 'react-bootstrap/Breadcrumb';
 import Container from 'react-bootstrap/Container';
+import styles from './Breadcrumbs.module.css';
 
 const Breadcrumbs = (props) => {
     const breadcrumbMarkup = props.breadcrumbs
@@ -46,7 +47,7 @@ const Breadcrumbs = (props) => {
           })
         : undefined;
 
-    return <Container><Breadcrumb>{breadcrumbMarkup}</Breadcrumb></Container>;
+    return <Breadcrumb className={styles.container}><Container>{breadcrumbMarkup}</Container></Breadcrumb>;
 };
 
 export default Breadcrumbs;

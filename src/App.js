@@ -9,6 +9,7 @@ import {ProfileSideBar} from './functional_components/ProfileSideBar';
 import auth from 'solid-auth-client';
 import User from 'your-user';
 import {ErrorBoundary} from './stateful_components/ErrorBoundary';
+import {editProfile} from './utils/profileRDF';
 
 class App extends React.Component {
     constructor(props) {
@@ -83,6 +84,7 @@ class App extends React.Component {
                                 user={user}
                                 toggleSidebar={this.toggleSidebar}
                                 isExpanded={isProfileExpanded}
+                                onProfileUpdate={editProfile}
                             />
                         ) : null}
                         <Switch>

@@ -1,14 +1,21 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import styles from './ProfileSideBar.module.css';
 import classNames from 'classnames';
 import closeIcon from '../../assets/icons/close.png';
-import {KeyValuePair} from '../KeyValuePair';
+import { KeyValuePair } from '../KeyValuePair';
 import useHover from '../../hooks/useHover';
 import editIcon from '../../assets/icons/edit.png';
 
-export default function ProfileSideBar({isExpanded, toggleSidebar, user}) {
+export default function ProfileSideBar({
+    isExpanded,
+    toggleSidebar,
+    user,
+    onProfileUpdate,
+}) {
     const [isEditable, setEditable] = useState(false);
     const [hoverRef, isHovered] = useHover();
+    const [value, updateValue] = useState('');
+
     return (
         <div
             className={classNames(styles.container, {
@@ -25,7 +32,7 @@ export default function ProfileSideBar({isExpanded, toggleSidebar, user}) {
                     <div
                         ref={hoverRef}
                         className={styles.profilePicture}
-                        style={{backgroundImage: `url(${user.picture})`}}
+                        style={{ backgroundImage: `url(${user.picture})` }}
                     >
                         {isHovered ? (
                             <img src={editIcon} className={styles.editIcon} />
@@ -41,7 +48,10 @@ export default function ProfileSideBar({isExpanded, toggleSidebar, user}) {
                 <KeyValuePair
                     key={key + index}
                     keyVal={key}
+                    currentValues={value}
                     values={user[key]}
+                    onUpdate={onProfileUpdate}
+                    onEdit={updateValue}
                 />
             ))}
             <div className={styles.addButton}>add new category</div>

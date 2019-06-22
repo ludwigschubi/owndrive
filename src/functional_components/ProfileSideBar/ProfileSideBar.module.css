@@ -6,7 +6,7 @@
     width: 33vw;
     right: -33vw;
     position: fixed;
-    background-color:rgba(0, 0, 0, 0);
+    background-color:#f7f7f7;
     /* box-shadow: -1px 0 3px #0c89c6; */
     transition: right 0.3s;
     flex-direction: column;
@@ -49,7 +49,6 @@
     width: 100%;
     padding: 0 40 0 20px;
     background-color: white;
-    border-radius: 10px;
     padding: 20px 30px;
     display: flex;
 }

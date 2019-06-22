@@ -1,8 +1,18 @@
 import rdf from 'rdflib';
 import auth from 'solid-auth-client';
-import ns from 'solid-namespace';
+const ns = require('solid-namespace')(rdf);
 
-export const editProfile = (key, value, prevValue) => {
+export const editProfile = (key, value, prevValues) => {
+    console.log(value, prevValues);
+
+    let blankId;
+    let prevVal;
+    
+    if (Array.isArray(prevValues)) {
+        blankId = prevValues[1];
+        prevVal = prevValues[0];
+    }
+
     return auth.trackSession((session) => {
         if (!session) {
             return undefined;
@@ -21,15 +31,53 @@ export const editProfile = (key, value, prevValue) => {
                         ins.push(
                             rdf.st(
                                 rdf.sym(session.webId),
-                                ns.vcard('fn'),
-                                rdf.lit(value)
+                                ns.foaf('name'),
+                                rdf.lit(value),
+                                rdf.sym(session.webId).doc()
                             )
                         );
                         del.push(
                             rdf.st(
                                 rdf.sym(session.webId),
-                                ns.vcard('fn'),
-                                prevValue
+                                ns.foaf('name'),
+                                rdf.lit(prevValues),
+                                rdf.sym(session.webId).doc()
+                            )
+                        );
+                        break;
+                    case 'emails':
+                        ins.push(
+                            rdf.st(
+                                rdf.sym(blankId),
+                                ns.vcard('value'),
+                                rdf.sym('mailto:' + value),
+                                rdf.sym(session.webId).doc()
+                            )
+                        );
+                        del.push(
+                            rdf.st(
+                                rdf.sym(blankId),
+                                ns.vcard('value'),
+                                rdf.sym(prevVal),
+                                rdf.sym(session.webId).doc()
+                            )
+                        );
+                        break;
+                    case 'telephones':
+                        ins.push(
+                            rdf.st(
+                                rdf.sym(blankId),
+                                ns.vcard('value'),
+                                rdf.sym('tel:' + value),
+                                rdf.sym(session.webId).doc()
+                            )
+                        );
+                        del.push(
+                            rdf.st(
+                                rdf.sym(blankId),
+                                ns.vcard('value'),
+                                rdf.sym(prevVal),
+                                rdf.sym(session.webId).doc()
                             )
                         );
                         break;
@@ -37,31 +85,35 @@ export const editProfile = (key, value, prevValue) => {
                         ins.push(
                             rdf.st(
                                 rdf.sym(session.webId),
-                                ns.vcard('hasPicture'),
-                                rdf.lit(value)
+                                ns.vcard('hasPhoto'),
+                                rdf.sym(value),
+                                rdf.sym(session.webId).doc()
                             )
                         );
                         del.push(
                             rdf.st(
                                 rdf.sym(session.webId),
-                                ns.vcard('fn'),
-                                prevValue
+                                ns.vscard('hasPhoto'),
+                                rdf.sym(prevValues),
+                                rdf.sym(session.webId).doc()
                             )
                         );
                         break;
                     case 'emails':
                         ins.push(
                             rdf.st(
-                                rdf.sym(session.webId),
-                                ns.vcard('hasEmail'),
-                                rdf.lit(value)
+                                rdf.sym(blankId),
+                                ns.vcard('value'),
+                                rdf.sym('mailto:' + value[0]),
+                                rdf.sym(session.webId).doc()
                             )
                         );
                         del.push(
                             rdf.st(
-                                rdf.sym(session.webId),
-                                ns.vcard('fn'),
-                                prevValue
+                                rdf.sym(blankId),
+                                ns.vcard('value'),
+                                rdf.sym('mailto:' + prevVal),
+                                rdf.sym(session.webId).doc()
                             )
                         );
                         break;
@@ -70,14 +122,16 @@ export const editProfile = (key, value, prevValue) => {
                             rdf.st(
                                 rdf.sym(session.webId),
                                 ns.vcard('role'),
-                                rdf.lit(value)
+                                rdf.lit(value),
+                                rdf.sym(session.webId).doc()
                             )
                         );
                         del.push(
                             rdf.st(
                                 rdf.sym(session.webId),
-                                ns.vcard('fn'),
-                                prevValue
+                                ns.vcard('role'),
+                                rdf.lit(prevValues),
+                                rdf.sym(session.webId).doc()
                             )
                         );
                         break;
@@ -86,35 +140,41 @@ export const editProfile = (key, value, prevValue) => {
                             rdf.st(
                                 rdf.sym(session.webId),
                                 ns.vcard('note'),
-                                rdf.lit(value)
+                                rdf.lit(value),
+                                rdf.sym(session.webId).doc()
                             )
                         );
                         del.push(
                             rdf.st(
                                 rdf.sym(session.webId),
-                                ns.vcard('fn'),
-                                prevValue
+                                ns.vcard('note'),
+                                rdf.lit(prevValues),
+                                rdf.sym(session.webId).doc()
                             )
                         );
                         break;
                     case 'telephones':
                         ins.push(
                             rdf.st(
-                                rdf.sym(session.webId),
-                                ns.vcard('hasTelephone'),
-                                rdf.lit(value)
+                                rdf.sym(blankId),
+                                ns.vcard('value'),
+                                rdf.sym('tel:' + value[0]),
+                                rdf.sym(session.webId).doc()
                             )
                         );
                         del.push(
                             rdf.st(
-                                rdf.sym(session.webId),
-                                ns.vcard('fn'),
-                                prevValue
+                                rdf.sym(blankId),
+                                ns.vcard('value'),
+                                rdf.sym('tel:' + prevVal),
+                                rdf.sym(session.webId).doc()
                             )
                         );
                         break;
                 }
-                return updater.update(del, ins);
+                return updater.update(del, ins).then((response) => {
+                    return response;
+                });
             });
         }
     });

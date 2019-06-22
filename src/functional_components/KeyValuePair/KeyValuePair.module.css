@@ -1,52 +1,78 @@
 .key {
-    width: 33%;
+    width: 30%;
     font-weight: 600;
     color: #aaa;
     text-align: right;
     padding-right: 50px;
     font-size: 1em;
-    height: 40px;
+    height: 40px; 
 }
 
 .values {
     width: 55%;
+    height: auto;
     font-size: 1em;
     color: #0c89c6;
+    padding: 2% 0;
 }
 
 .value {
     white-space: nowrap;
     overflow: hidden;
-    text-overflow: ellipsis;
+    text-overflow: hidden;
+}
+
+.multiValue{
+    margin: 5% 0;
+}
+
+input::placeholder {
+    color: #0c89c6;
+}
+
+input:focus::placeholder {
+    color: #888;
+}
+
+input:focus {
+    border: none;
+    outline: none;
+    border-bottom: solid #0c89c6 2px;
+    color: #000;
+}
+
+input {
+    color: #0c89c6;
+    border: none;
+    outline: none;
 }
 
 .section {
-    margin: 3px 0;
+    margin: 1px 0;
     width: 100%;
-    padding: 0 40 0 20px;
+    height: 10%;
+    align-items: center;
     background-color: white;
-    border-radius: 10px;
-    padding: 20px 30px;
+    padding: 10px 25px;
     display: flex;
 }
 
-.editIcon {
+.editIcon{
+    display: none;
+}
+
+.editable{
+    display: show;
     position: absolute;
-    right: 20px;
-    width: 20px;
-    height: 20px;
+    /* bottom: 30%; */
+    right: 15px;
+    color: #5a3;
+    font-size: 2.5em;
     cursor: pointer;
 }
 
-.editable {
-    -moz-appearance: textfield;
-    -webkit-appearance: textfield;
-    background-color: white;
-    background-color: -moz-field;
-    border: 1px solid darkgray;
-    box-shadow: 1px 1px 1px 0 lightgray inset;
-    box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    -webkit-box-sizing: border-box;
-    padding: 0 3px;
+.complete{
+    font-size: .8em;
+    color: #aaa;
+    font-style: oblique;
 }
