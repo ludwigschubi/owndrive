@@ -10,7 +10,7 @@ export default function KeyValuePair({
     onEdit,
     currentValues,
 }) {
-    const [isEditable, setEditable] = useState(undefined);
+    const [isEditable, setEditable] = useState(false);
     const [isComplete, setComplete] = useState(undefined);
     const [row, setRow] = useState(0);
 
@@ -29,6 +29,7 @@ export default function KeyValuePair({
                                     .replace('mailto:', '')}
                                 onInput={(e) => {
                                     onEdit(e.target.value);
+                                    setComplete(false);
                                     setRow(index);
                                     setEditable(true);
                                 }}

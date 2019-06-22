@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import closeIcon from '../../assets/icons/close.png';
 import { KeyValuePair } from '../KeyValuePair';
 import useHover from '../../hooks/useHover';
-import editIcon from '../../assets/icons/edit.png';
+import editIcon from '../../assets/icons/editProfilePicture.png';
 
 export default function ProfileSideBar({
     isExpanded,
