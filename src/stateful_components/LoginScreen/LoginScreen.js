@@ -12,8 +12,9 @@ class LoginScreen extends React.Component {
 
     render() {
         return (
-            <Container>
-                <p className={styles.text}> Please login for further steps </p>
+            <Container className={styles.header}>
+                <p className={styles.slogan}> Because you deserve better. </p>
+                <p className={styles.mission}> For the love of great applications. </p>
             </Container>
         );
     }

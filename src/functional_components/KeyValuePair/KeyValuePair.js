@@ -9,6 +9,7 @@ export default function KeyValuePair({
     onUpdate,
     onEdit,
     currentValues,
+    webId,
 }) {
     const [isEditable, setEditable] = useState(false);
     const [isComplete, setComplete] = useState(undefined);
@@ -29,17 +30,12 @@ export default function KeyValuePair({
                                     .replace('mailto:', '')}
                                 onInput={(e) => {
                                     onEdit(e.target.value);
-                                    setComplete(false);
+                                    setComplete(undefined);
                                     setRow(index);
                                     setEditable(true);
                                 }}
                             />
                         ))}
-                        {isComplete ? (
-                            <p className={styles.complete}>Changes applied.</p>
-                        ) : (
-                            undefined
-                        )}
                     </div>
                 ) : (
                     <div>
@@ -49,15 +45,11 @@ export default function KeyValuePair({
                             placeholder={values}
                             onInput={(e) => {
                                 onEdit(e.target.value);
+                                setComplete(undefined);
                                 setEditable(true);
                             }}
                             disabled={keyVal === 'webId' ? true : false}
                         ></input>
-                        {isComplete ? (
-                            <p className={styles.complete}>Changes applied.</p>
-                        ) : (
-                            isComplete === false ? <p className={styles.complete}>Changes could not be applied.</p> : undefined
-                        )}
                     </div>
                 )}
             </div>
@@ -69,20 +61,28 @@ export default function KeyValuePair({
                 onClick={() => {
                     onUpdate(
                         keyVal,
-                        Array.isArray(values)
-                            ? [currentValues]
-                            : currentValues,
-                        Array.isArray(values) ? values[row] : values
-                    ).then(() => {
-                        setComplete(true);
-                        setEditable(!isEditable);
-                    }).catch((err) => {
-                        console.log(err);
-                    });
+                        Array.isArray(values) ? [currentValues] : currentValues,
+                        Array.isArray(values) ? values[row] : values,
+                        webId
+                    )
+                        .then(() => {
+                            setComplete(true);
+                            setEditable(!isEditable);
+                        })
+                        .catch((err) => {
+                            console.log(err);
+                        });
                 }}
             >
                 ✓
             </div>
+            {isComplete ? (
+                <p className={styles.complete}>Changes applied.</p>
+            ) : isComplete === false ? (
+                <p className={styles.complete}>Changes could not be applied.</p>
+            ) : (
+                undefined
+            )}
         </div>
     );
 }

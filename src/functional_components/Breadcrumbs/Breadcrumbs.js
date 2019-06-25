@@ -47,7 +47,13 @@ const Breadcrumbs = (props) => {
           })
         : undefined;
 
-    return <Breadcrumb className={styles.container}><Container>{breadcrumbMarkup}</Container></Breadcrumb>;
+    return (
+        <Container>
+            <Breadcrumb className={styles.container}>
+                {breadcrumbMarkup}
+            </Breadcrumb>
+        </Container>
+    );
 };
 
 export default Breadcrumbs;

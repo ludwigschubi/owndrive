@@ -6,7 +6,8 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import styles from './Navigation.module.css';
 import Container from 'react-bootstrap/Container';
-import brand from '../../assets/icons/Mappe.png'
+import brand from '../../assets/icons/Ellipse.png';
+import defaultIcon from '../../assets/icons/defaultUserPic.png';
 
 const Navigation = ({ picture, webId, onLogin, onLogout, toggleSidebar }) => {
     return (
@@ -16,31 +17,38 @@ const Navigation = ({ picture, webId, onLogin, onLogout, toggleSidebar }) => {
                     <Row>
                         <Col xs="6" sm="6" md="6" lg="6">
                             <Navbar.Brand href="/" className={styles.brand}>
-                                <img src={brand}/>
+                                <img src={brand} />
+                                <p>OWNDRIVE</p>
                             </Navbar.Brand>
                             {/* <NavLink to="/home">HOME</NavLink> */}
                         </Col>
                         <Col xs="6" sm="6" md="6" lg="6">
-                            <div className={styles.menuWrapper}>
-                                {picture ? (
-                                    <div
-                                        onClick={toggleSidebar}
-                                        className={styles.profileIcon}
-                                        style={{
-                                            backgroundImage:
-                                                'url(' + picture + ')',
-                                        }}
-                                    />
-                                ) : (
-                                    ''
-                                )}
-                                <NavDropdown
-                                    id="dropdown"
-                                    alignRight
-                                    className={[styles.dropdown, 'float-right']}
-                                >
-                                    {webId ? (
-                                        <div>
+                            {webId ? (
+                                <div className={styles.menuWrapper}>
+                                    {picture ? (
+                                        <div
+                                            onClick={toggleSidebar}
+                                            className={styles.profileIcon}
+                                            style={{
+                                                backgroundImage:
+                                                    'url(' + picture + ')',
+                                            }}
+                                        />
+                                    ) : (
+                                        <img
+                                            onClick={toggleSidebar}
+                                            className={styles.profileIcon}
+                                            src={defaultIcon}
+                                        />
+                                    )}
+                                    <NavDropdown
+                                        id="dropdown"
+                                        alignRight
+                                        className={[
+                                            styles.dropdown,
+                                            'float-right',
+                                        ]}
+                                    >
                                             <NavDropdown.Item href="home">
                                                 Home
                                             </NavDropdown.Item>
@@ -49,14 +57,20 @@ const Navigation = ({ picture, webId, onLogin, onLogout, toggleSidebar }) => {
                                             >
                                                 Logout
                                             </NavDropdown.Item>
-                                        </div>
-                                    ) : (
-                                        <NavDropdown.Item onClick={onLogin}>
-                                            Login
-                                        </NavDropdown.Item>
-                                    )}
-                                </NavDropdown>
-                            </div>
+                                    </NavDropdown>
+                                </div>
+                            ) : (
+                                <div className={styles.loginButton}>
+                                    <a
+                                        onClick={(e) => {
+                                            e.preventDefault();
+                                            onLogin();
+                                        }}
+                                    >
+                                        Login
+                                    </a>
+                                </div>
+                            )}
                         </Col>
                     </Row>
                 </div>

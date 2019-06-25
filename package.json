@@ -22,7 +22,7 @@
     "solid-auth-client": "^2.3.0",
     "solid-namespace": "^0.2.0",
     "your-acl": "^1.0.17",
-    "your-user": "^1.1.7"
+    "your-user": "^1.1.11"
   },
   "scripts": {
     "start": "react-scripts start",

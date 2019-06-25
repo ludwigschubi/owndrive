@@ -3,6 +3,7 @@
     font-weight: 600;
     color: #aaa;
     text-align: right;
+    padding: 2% 0;
     padding-right: 50px;
     font-size: 1em;
     height: 40px; 
@@ -17,6 +18,7 @@
 }
 
 .value {
+    background-color: #fff;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: hidden;
@@ -72,6 +74,8 @@ input {
 }
 
 .complete{
+    position: absolute;
+    right: 15px;
     font-size: .8em;
     color: #aaa;
     font-style: oblique;
