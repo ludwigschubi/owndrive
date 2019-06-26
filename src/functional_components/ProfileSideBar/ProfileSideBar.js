@@ -35,15 +35,15 @@ export default function ProfileSideBar({
                         className={styles.profilePicture}
                         style={{ backgroundImage: `url(${user.picture})` }}
                     >
+                        <input
+                            type="file"
+                            onChange={onPictureChange}
+                            style={{ display: 'none' }}
+                            id="pictureUpload"
+                            accept="*/*"
+                        />
                         {isHovered ? (
                             <label htmlFor="pictureUpload">
-                                <input
-                                    type="file"
-                                    onChange={onPictureChange}
-                                    style={{ display: 'none' }}
-                                    id="pictureUpload"
-                                    accept="*/*"
-                                />
                                 <img
                                     src={editIcon}
                                     className={styles.editIcon}
