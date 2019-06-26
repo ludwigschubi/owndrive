@@ -38,14 +38,9 @@ class App extends React.Component {
 
     logout() {
         auth.logout().then(() => {
-            this.setState(
-                {
-                    webId: undefined,
-                },
-                () => {
-                    window.location.href = '/';
-                }
-            );
+            this.setState({
+                webId: undefined,
+            });
         });
     }
 
@@ -127,7 +122,7 @@ class App extends React.Component {
                                 path="/"
                                 exact
                                 component={
-                                    user
+                                    webId
                                         ? () => (
                                               <Drive webId={this.state.webId} />
                                           )
@@ -137,7 +132,7 @@ class App extends React.Component {
                             <Route
                                 path="/home"
                                 component={
-                                    user
+                                    webId
                                         ? () => (
                                               <Drive webId={this.state.webId} />
                                           )
@@ -147,7 +142,7 @@ class App extends React.Component {
                             <Route
                                 path="/chat"
                                 component={
-                                    this.state.user
+                                    webId
                                         ? () => (
                                               <Drive webId={this.state.webId} />
                                           )
@@ -157,7 +152,7 @@ class App extends React.Component {
                             <Route
                                 path="/drive"
                                 component={
-                                    this.state.user
+                                    webId
                                         ? () => (
                                               <Drive webId={this.state.webId} />
                                           )

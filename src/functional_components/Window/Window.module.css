@@ -7,7 +7,6 @@
     transform: translateX(-50%) translateY(-50%);
     background-color: white;
     padding: 0 20px 5px 20px;
-    box-shadow: 0 0 10px #0c89c6;
     min-width: 300px;
     border-radius: 5px;
 }
