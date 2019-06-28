@@ -4,7 +4,7 @@ This application is supposed to be an alternative interface to the Solid Pod int
 
 Feel free to contribute.
 
-##Linter and Prettier
+## Linter and Prettier
 
 -   if you use vscode install Eslint & Prettier Package
 -   go to file -> preferences -> settings -> Search for formatOnSave and check the box
