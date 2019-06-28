@@ -2,14 +2,13 @@ import React from 'react';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Navigation from './functional_components/Navigation';
 import Container from 'react-bootstrap/Container';
-import Home from './stateful_components/Home';
 import Drive from './stateful_components/Drive';
 import LoginScreen from './stateful_components/LoginScreen';
 import { ProfileSideBar } from './functional_components/ProfileSideBar';
 import auth from 'solid-auth-client';
 import User from 'your-user';
 import { ErrorBoundary } from './stateful_components/ErrorBoundary';
-import { editProfile } from './utils/profileRDF';
+import NotificationsPage from './stateful_components/NotificationsPage/NotificationsPage';
 
 class App extends React.Component {
     constructor(props) {
@@ -136,17 +135,17 @@ class App extends React.Component {
                                         ? () => (
                                               <Drive webId={this.state.webId} />
                                           )
-                                        : LoginScreen
+                                        : undefined
                                 }
                             />
                             <Route
-                                path="/chat"
+                                path="/notifications"
                                 component={
                                     webId
                                         ? () => (
-                                              <Drive webId={this.state.webId} />
+                                              <NotificationsPage webId={this.state.webId} />
                                           )
-                                        : LoginScreen
+                                        : undefined
                                 }
                             />
                             <Route
@@ -156,7 +155,7 @@ class App extends React.Component {
                                         ? () => (
                                               <Drive webId={this.state.webId} />
                                           )
-                                        : LoginScreen
+                                        : undefined
                                 }
                             />
                         </Switch>
