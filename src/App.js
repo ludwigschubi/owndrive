@@ -1,15 +1,19 @@
 import React from 'react';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import {connect} from 'react-redux';
+
 import Navigation from './functional_components/Navigation';
 import Container from 'react-bootstrap/Container';
 import Home from './stateful_components/Home';
 import Drive from './stateful_components/Drive';
 import LoginScreen from './stateful_components/LoginScreen';
-import { ProfileSideBar } from './functional_components/ProfileSideBar';
+import {ProfileSideBar} from './functional_components/ProfileSideBar';
 import auth from 'solid-auth-client';
 import User from 'your-user';
-import { ErrorBoundary } from './stateful_components/ErrorBoundary';
-import { editProfile } from './utils/profileRDF';
+import {ErrorBoundary} from './stateful_components/ErrorBoundary';
+import {editProfile} from './utils/profileRDF';
+import {ContactScreen} from './functional_components/ContactScreen';
+import {login, fetchUser, setWebId} from './actions/UserActions';
 
 class App extends React.Component {
     constructor(props) {
@@ -63,26 +67,25 @@ class App extends React.Component {
     }
 
     componentDidMount() {
+        const {setWebId, fetchUser} = this.props;
         auth.trackSession((session) => {
             if (!session) {
-                console.log('You are logged out');
+                this.props.login();
             } else {
                 console.log('You are logged in, fetching data now');
-                const currUser = new User(session.webId);
-                currUser.getProfile().then((profile) => {
-                    this.setState({
-                        webId: session.webId,
-                        user: profile,
-                    });
-                });
+                setWebId(session.webId);
+                fetchUser(session.webId);
             }
         });
     }
 
     render() {
-        const { webId, user, isProfileExpanded } = this.state;
+        const {isProfileExpanded} = this.state;
+        const {webId, user} = this.props;
+        console.log(this.props);
+        console.log('render', webId, user);
         return (
-            <div style={{ height: '100%' }}>
+            <div style={{height: '100%'}}>
                 <ErrorBoundary>
                     <BrowserRouter>
                         <Navigation
@@ -92,18 +95,18 @@ class App extends React.Component {
                             webId={webId}
                             picture={user ? user.picture : undefined}
                         />
-                        {webId ? (
+                        {webId && user ? (
                             <ProfileSideBar
                                 user={user}
                                 toggleSidebar={this.toggleSidebar}
                                 isExpanded={isProfileExpanded}
                                 onProfileUpdate={this.onProfileUpdate}
                                 onPictureChange={(e) => {
-                                    const user = new User(this.state.webId);
+                                    const user = new User(webId);
                                     user.setProfilePicture(
                                         e,
-                                        this.state.webId,
-                                        this.state.user.picture
+                                        webId,
+                                        user.picture
                                     ).then(() => {
                                         user.getProfile().then((profile) => {
                                             console.log(
@@ -123,9 +126,7 @@ class App extends React.Component {
                                 exact
                                 component={
                                     webId
-                                        ? () => (
-                                              <Drive webId={this.state.webId} />
-                                          )
+                                        ? () => <Drive webId={webId} />
                                         : LoginScreen
                                 }
                             />
@@ -133,9 +134,7 @@ class App extends React.Component {
                                 path="/home"
                                 component={
                                     webId
-                                        ? () => (
-                                              <Drive webId={this.state.webId} />
-                                          )
+                                        ? () => <Drive webId={webId} />
                                         : LoginScreen
                                 }
                             />
@@ -143,9 +142,7 @@ class App extends React.Component {
                                 path="/chat"
                                 component={
                                     webId
-                                        ? () => (
-                                              <Drive webId={this.state.webId} />
-                                          )
+                                        ? () => <Drive webId={webId} />
                                         : LoginScreen
                                 }
                             />
@@ -153,9 +150,15 @@ class App extends React.Component {
                                 path="/drive"
                                 component={
                                     webId
-                                        ? () => (
-                                              <Drive webId={this.state.webId} />
-                                          )
+                                        ? () => <Drive webId={webId} />
+                                        : LoginScreen
+                                }
+                            />
+                            <Route
+                                path="/contacts"
+                                component={
+                                    webId
+                                        ? () => <ContactScreen webId={webId} />
                                         : LoginScreen
                                 }
                             />
@@ -167,4 +170,14 @@ class App extends React.Component {
     }
 }
 
-export default App;
+const mapStateToProps = (state) => {
+    return {
+        webId: state.app.webId,
+        user: state.app.user,
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    {login, fetchUser, setWebId}
+)(App);
