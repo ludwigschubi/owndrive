@@ -1,5 +1,5 @@
 import React from 'react';
-import {BrowserRouter, Route, Switch} from 'react-router-dom';
+import {BrowserRouter, Route, Switch, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
 
 import Navigation from './functional_components/Navigation';
@@ -14,6 +14,7 @@ import {ErrorBoundary} from './stateful_components/ErrorBoundary';
 import {editProfile} from './utils/profileRDF';
 import {ContactScreen} from './functional_components/ContactScreen';
 import {login, fetchUser, setWebId} from './actions/UserActions';
+import PrivateRoute from './functional_components/PrivateRoute';
 
 class App extends React.Component {
     constructor(props) {
@@ -67,103 +68,78 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        const {setWebId, fetchUser} = this.props;
-        auth.trackSession((session) => {
-            if (!session) {
-                this.props.login();
-            } else {
-                console.log('You are logged in, fetching data now');
-                setWebId(session.webId);
-                fetchUser(session.webId);
-            }
-        });
+        const {setWebId, fetchUser, login} = this.props;
+        login();
+        // auth.trackSession((session) => {
+        //     if (!session) {
+        //         this.props.login();
+        //     } else {
+        //         console.log('You are logged in, fetching data now');
+        //         setWebId(session.webId);
+        //         fetchUser(session.webId);
+        //     }
+        // });
     }
 
     render() {
         const {isProfileExpanded} = this.state;
-        const {webId, user} = this.props;
-        console.log(this.props);
-        console.log('render', webId, user);
+        const {webId, user, session} = this.props;
         return (
             <div style={{height: '100%'}}>
                 <ErrorBoundary>
-                    <BrowserRouter>
-                        <Navigation
+                    <Navigation
+                        toggleSidebar={this.toggleSidebar}
+                        onLogout={this.logout}
+                        onLogin={this.login}
+                        webId={webId}
+                        picture={user ? user.picture : undefined}
+                    />
+                    {webId && user ? (
+                        <ProfileSideBar
+                            user={user}
                             toggleSidebar={this.toggleSidebar}
-                            onLogout={this.logout}
-                            onLogin={this.login}
-                            webId={webId}
-                            picture={user ? user.picture : undefined}
-                        />
-                        {webId && user ? (
-                            <ProfileSideBar
-                                user={user}
-                                toggleSidebar={this.toggleSidebar}
-                                isExpanded={isProfileExpanded}
-                                onProfileUpdate={this.onProfileUpdate}
-                                onPictureChange={(e) => {
-                                    const user = new User(webId);
-                                    user.setProfilePicture(
-                                        e,
-                                        webId,
-                                        user.picture
-                                    ).then(() => {
-                                        user.getProfile().then((profile) => {
-                                            console.log(
-                                                'Loading updated Profile'
-                                            );
-                                            this.setState({
-                                                user: profile,
-                                            });
+                            isExpanded={isProfileExpanded}
+                            onProfileUpdate={this.onProfileUpdate}
+                            onPictureChange={(e) => {
+                                const user = new User(webId);
+                                user.setProfilePicture(
+                                    e,
+                                    webId,
+                                    user.picture
+                                ).then(() => {
+                                    user.getProfile().then((profile) => {
+                                        console.log('Loading updated Profile');
+                                        this.setState({
+                                            user: profile,
                                         });
                                     });
-                                }}
-                            />
-                        ) : null}
-                        <Switch>
-                            <Route
-                                path="/"
-                                exact
-                                component={
-                                    webId
-                                        ? () => <Drive webId={webId} />
-                                        : LoginScreen
-                                }
-                            />
-                            <Route
-                                path="/home"
-                                component={
-                                    webId
-                                        ? () => <Drive webId={webId} />
-                                        : LoginScreen
-                                }
-                            />
-                            <Route
-                                path="/chat"
-                                component={
-                                    webId
-                                        ? () => <Drive webId={webId} />
-                                        : LoginScreen
-                                }
-                            />
-                            <Route
-                                path="/drive"
-                                component={
-                                    webId
-                                        ? () => <Drive webId={webId} />
-                                        : LoginScreen
-                                }
-                            />
-                            <Route
-                                path="/contacts"
-                                component={
-                                    webId
-                                        ? () => <ContactScreen webId={webId} />
-                                        : LoginScreen
-                                }
-                            />
-                        </Switch>
-                    </BrowserRouter>
+                                });
+                            }}
+                        />
+                    ) : null}
+                    <Switch>
+                        <Route path="/" exact component={LoginScreen} />
+                        <PrivateRoute
+                            session={session}
+                            path="/home"
+                            component={<Drive webId={webId} />}
+                        />
+                        <PrivateRoute
+                            session={session}
+                            path="/chat"
+                            component={<Drive webId={webId} />}
+                        />
+                        <PrivateRoute
+                            session={session}
+                            path="/drive"
+                            component={<Drive webId={webId} />}
+                        />
+                        <PrivateRoute
+                            session={session}
+                            path="/contacts"
+                            component={<ContactScreen webId={webId} />}
+                        />
+                    </Switch>
                 </ErrorBoundary>
             </div>
         );
@@ -174,10 +150,13 @@ const mapStateToProps = (state) => {
     return {
         webId: state.app.webId,
         user: state.app.user,
+        session: state.app.session,
     };
 };
 
-export default connect(
-    mapStateToProps,
-    {login, fetchUser, setWebId}
-)(App);
+export default withRouter(
+    connect(
+        mapStateToProps,
+        {login, fetchUser, setWebId}
+    )(App)
+);

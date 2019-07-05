@@ -6,6 +6,9 @@ import {
     FETCH_USER_SUCCESS,
     FETCH_USER_FAIL,
     SET_WEBID,
+    FETCH_FRIENDS,
+    FETCH_FRIENDS_SUCCESS,
+    FETCH_FRIENDS_FAIL,
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -13,7 +16,22 @@ const INITIAL_STATE = {
     user: null,
     loadLogin: false,
     loadUser: false,
+    loadFriends: false,
     error: null,
+    contacts: null,
+    session: null,
+    currentPath: null,
+    currentFolder: null,
+    // [
+    //     {
+    //         name: 'testdata',
+    //         webId: 'https://bejow.solid.community/profile/card#me',
+    //     },
+    //     {
+    //         name: 'testdata2',
+    //         webId: 'https://bejow.solid.community/profile/card#me',
+    //     },
+    // ],
 };
 
 export default (state = INITIAL_STATE, action) => {
@@ -23,7 +41,12 @@ export default (state = INITIAL_STATE, action) => {
         case LOGIN:
             return {...state, loadLogin: true};
         case LOGIN_SUCCESS:
-            return {...state, loadLogin: false, webId: payload};
+            return {
+                ...state,
+                loadLogin: false,
+                webId: payload.webId,
+                session: payload,
+            };
         case LOGIN_FAIL:
             return {...state, loadLogin: false, error: payload};
         case FETCH_USER:
@@ -32,6 +55,12 @@ export default (state = INITIAL_STATE, action) => {
             return {...state, loadUser: false, user: payload};
         case FETCH_USER_FAIL:
             return {...state, loadUser: false, error: payload};
+        case FETCH_FRIENDS:
+            return {...state, loadFriends: true};
+        case FETCH_FRIENDS_SUCCESS:
+            return {...state, loadFriends: false, contacts: payload};
+        case FETCH_FRIENDS_FAIL:
+            return {...state, loadFriends: false, error: payload};
         case SET_WEBID:
             return {...state, webId: payload};
         default:

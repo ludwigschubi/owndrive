@@ -5,17 +5,17 @@ import auth from 'solid-auth-client';
 import styles from './Drive.module.css';
 import Breadcrumbs from '../../functional_components/Breadcrumbs/Breadcrumbs';
 import FileUpload from '../../functional_components/FileUpload/FileUpload';
-import { ItemList } from '../../functional_components/ItemList';
+import {ItemList} from '../../functional_components/ItemList';
 import fileUtils from '../../utils/fileUtils';
-import { getBreadcrumbsFromUrl } from '../../utils/url';
+import {getBreadcrumbsFromUrl} from '../../utils/url';
 import ACLController from 'your-acl';
 import FileCreation from '../../functional_components/FileCreation/FileCreation';
 import folder from '../../assets/icons/Folder.png';
 import fileIcon from '../../assets/icons/File.png';
 import Buttons from '../../functional_components/Buttons/Buttons';
-import { InputWindow } from '../../functional_components/InputWindow';
+import {InputWindow} from '../../functional_components/InputWindow';
 import Container from 'react-bootstrap/Container';
-import { ConsentWindow } from '../../functional_components/ConsentWindow';
+import {ConsentWindow} from '../../functional_components/ConsentWindow';
 
 class Drive extends React.Component {
     constructor(props) {
@@ -202,19 +202,19 @@ class Drive extends React.Component {
     }
 
     componentDidMount() {
-        try {
-            if (!JSON.parse(localStorage.getItem('appState')).currPath) {
-                this.loadCurrentFolder(this.state.currPath, ['/']);
-            } else {
-                console.log('Using cached state...');
-                this.loadCurrentFolder(
-                    JSON.parse(localStorage.getItem('appState')).currPath,
-                    JSON.parse(localStorage.getItem('appState')).breadcrumbs
-                );
-            }
-        } catch (e) {
-            console.log(e);
-        }
+        // try {
+        //     if (!JSON.parse(localStorage.getItem('appState')).currPath) {
+        //         this.loadCurrentFolder(this.state.currPath, ['/']);
+        //     } else {
+        //         console.log('Using cached state...');
+        //         this.loadCurrentFolder(
+        //             JSON.parse(localStorage.getItem('appState')).currPath,
+        //             JSON.parse(localStorage.getItem('appState')).breadcrumbs
+        //         );
+        //     }
+        // } catch (e) {
+        //     console.log(e);
+        // }
     }
 
     uploadFolder(e) {
@@ -275,8 +275,8 @@ class Drive extends React.Component {
     }
 
     componentWillUnmount() {
-        console.log('Caching state...');
-        localStorage.setItem('appState', JSON.stringify(this.state));
+        // console.log('Caching state...');
+        // localStorage.setItem('appState', JSON.stringify(this.state));
     }
 
     render() {
@@ -289,7 +289,7 @@ class Drive extends React.Component {
             isCreateFileVisible,
             isConsentWindowVisible,
         } = this.state;
-        const { webId } = this.props;
+        const {webId} = this.props;
         const fileMarkup = this.state.file ? (
             <div className={styles.renderedFile}>
                 {this.state.image ? (
@@ -303,7 +303,7 @@ class Drive extends React.Component {
         );
 
         return (
-            <div style={{ height: '100%' }} onClick={this.clearSelection}>
+            <div style={{height: '100%'}} onClick={this.clearSelection}>
                 <Breadcrumbs
                     onClick={this.loadCurrentFolder}
                     breadcrumbs={breadcrumbs}
