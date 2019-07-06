@@ -1,7 +1,7 @@
 import React from 'react';
 import {BrowserRouter, Route, Switch, withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-
+import {ClassicSpinner} from 'react-spinners-kit';
 import Navigation from './functional_components/Navigation';
 import Container from 'react-bootstrap/Container';
 import Home from './stateful_components/Home';
@@ -15,7 +15,7 @@ import {editProfile} from './utils/profileRDF';
 import {ContactScreen} from './functional_components/ContactScreen';
 import {login, fetchUser, setWebId} from './actions/UserActions';
 import PrivateRoute from './functional_components/PrivateRoute';
-
+import styles from './App.module.css';
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -84,65 +84,79 @@ class App extends React.Component {
     render() {
         const {isProfileExpanded} = this.state;
         const {webId, user, session} = this.props;
-        return (
-            <div style={{height: '100%'}}>
-                <ErrorBoundary>
-                    <Navigation
-                        toggleSidebar={this.toggleSidebar}
-                        onLogout={this.logout}
-                        onLogin={this.login}
-                        webId={webId}
-                        picture={user ? user.picture : undefined}
+        if (this.props.loadLogin || this.props.loadUser) {
+            return (
+                <div className={styles.spinner}>
+                    <ClassicSpinner
+                        size={100}
+                        color="#686769"
+                        loading={this.props.loadLogin || this.props.loadUser}
                     />
-                    {webId && user ? (
-                        <ProfileSideBar
-                            user={user}
+                </div>
+            );
+        } else {
+            return (
+                <div style={{height: '100%'}}>
+                    <ErrorBoundary>
+                        <Navigation
                             toggleSidebar={this.toggleSidebar}
-                            isExpanded={isProfileExpanded}
-                            onProfileUpdate={this.onProfileUpdate}
-                            onPictureChange={(e) => {
-                                const user = new User(webId);
-                                user.setProfilePicture(
-                                    e,
-                                    webId,
-                                    user.picture
-                                ).then(() => {
-                                    user.getProfile().then((profile) => {
-                                        console.log('Loading updated Profile');
-                                        this.setState({
-                                            user: profile,
+                            onLogout={this.logout}
+                            onLogin={this.login}
+                            webId={webId}
+                            picture={user ? user.picture : undefined}
+                        />
+                        {webId && user ? (
+                            <ProfileSideBar
+                                user={user}
+                                toggleSidebar={this.toggleSidebar}
+                                isExpanded={isProfileExpanded}
+                                onProfileUpdate={this.onProfileUpdate}
+                                onPictureChange={(e) => {
+                                    const user = new User(webId);
+                                    user.setProfilePicture(
+                                        e,
+                                        webId,
+                                        user.picture
+                                    ).then(() => {
+                                        user.getProfile().then((profile) => {
+                                            console.log(
+                                                'Loading updated Profile'
+                                            );
+                                            this.setState({
+                                                user: profile,
+                                            });
                                         });
                                     });
-                                });
-                            }}
-                        />
-                    ) : null}
-                    <Switch>
-                        <Route path="/" exact component={LoginScreen} />
-                        <PrivateRoute
-                            session={session}
-                            path="/home"
-                            component={<Drive webId={webId} />}
-                        />
-                        <PrivateRoute
-                            session={session}
-                            path="/chat"
-                            component={<Drive webId={webId} />}
-                        />
-                        <PrivateRoute
-                            session={session}
-                            path="/drive"
-                            component={<Drive webId={webId} />}
-                        />
-                        <PrivateRoute
-                            session={session}
-                            path="/contacts"
-                            component={<ContactScreen webId={webId} />}
-                        />
-                    </Switch>
-                </ErrorBoundary>
-            </div>
-        );
+                                }}
+                            />
+                        ) : null}
+                        <Switch>
+                            <Route path="/" exact component={LoginScreen} />
+                            <PrivateRoute
+                                session={session}
+                                path="/home"
+                                component={<Drive webId={webId} />}
+                            />
+                            <PrivateRoute
+                                session={session}
+                                path="/chat"
+                                component={<Drive webId={webId} />}
+                            />
+                            <PrivateRoute
+                                session={session}
+                                path="/drive"
+                                component={<Drive webId={webId} />}
+                            />
+                            <PrivateRoute
+                                session={session}
+                                path="/contacts"
+                                component={<ContactScreen webId={webId} />}
+                            />
+                        </Switch>
+                    </ErrorBoundary>
+                </div>
+            );
+        }
     }
 }
 
@@ -151,6 +165,8 @@ const mapStateToProps = (state) => {
         webId: state.app.webId,
         user: state.app.user,
         session: state.app.session,
+        loadLogin: state.app.loadLogin,
+        loadUser: state.app.loadUser,
     };
 };
 
