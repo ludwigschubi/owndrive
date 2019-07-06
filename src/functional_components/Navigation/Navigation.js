@@ -52,6 +52,9 @@ const Navigation = ({ picture, webId, onLogin, onLogout, toggleSidebar }) => {
                                             <NavDropdown.Item href="home">
                                                 Home
                                             </NavDropdown.Item>
+                                            <NavDropdown.Item href="notifications">
+                                                Notifications
+                                            </NavDropdown.Item>
                                             <NavDropdown.Item
                                                 onClick={onLogout}
                                             >

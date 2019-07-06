@@ -1,21 +1,18 @@
 import React from 'react';
-import ns from 'solid-namespace';
 import rdf from 'rdflib';
 import auth from 'solid-auth-client';
 import styles from './Drive.module.css';
 import Breadcrumbs from '../../functional_components/Breadcrumbs/Breadcrumbs';
-import FileUpload from '../../functional_components/FileUpload/FileUpload';
 import {ItemList} from '../../functional_components/ItemList';
 import fileUtils from '../../utils/fileUtils';
 import {getBreadcrumbsFromUrl} from '../../utils/url';
-import ACLController from 'your-acl';
-import FileCreation from '../../functional_components/FileCreation/FileCreation';
 import folder from '../../assets/icons/Folder.png';
 import fileIcon from '../../assets/icons/File.png';
 import Buttons from '../../functional_components/Buttons/Buttons';
 import {InputWindow} from '../../functional_components/InputWindow';
 import Container from 'react-bootstrap/Container';
 import {ConsentWindow} from '../../functional_components/ConsentWindow';
+const ns = require('solid-namespace')(rdf);
 
 class Drive extends React.Component {
     constructor(props) {
@@ -71,11 +68,14 @@ class Drive extends React.Component {
         const fetcher = new rdf.Fetcher(store);
 
         return fetcher.load(url).then((response) => {
+            console.log(response.responseText);
             const containments = store.each(
-                rdf.sym(url),
-                rdf.sym(ns().ldp('contains')),
+                rdf.sym('https://ludwigschubert.solid.community/'),
+                ns.ldp('contains'),
                 null
             );
+
+            console.log(store.each(rdf.sym(url), null));
             return this.sortContainments(containments);
         });
     }
@@ -177,7 +177,7 @@ class Drive extends React.Component {
             headers: {
                 slug: folderAddress,
                 link: '<http://www.w3.org/ns/ldp#BasicContainer>; rel="type"',
-                contentType: 'text-turtle',
+                contentType: 'text/turtle',
             },
         };
 
@@ -192,7 +192,7 @@ class Drive extends React.Component {
             headers: {
                 slug: folderAddress,
                 link: '<http://www.w3.org/ns/ldp#Resource>; rel="type"',
-                contentType: 'text-turtle',
+                contentType: 'text/turtle',
             },
         };
 
@@ -311,7 +311,7 @@ class Drive extends React.Component {
                 />
                 <div>
                     {fileMarkup ? (
-                        fileMarkup
+                        <Container>fileMarkup</Container>
                     ) : (
                         <div>
                             <ConsentWindow
@@ -342,6 +342,7 @@ class Drive extends React.Component {
                                         : styles.hidden
                                 }
                                 onClose={this.closeCreateFolderWindow}
+                                placeholder={'Untitled'}
                             />
                             <InputWindow
                                 windowName="Create File"
@@ -353,6 +354,7 @@ class Drive extends React.Component {
                                         : styles.hidden
                                 }
                                 onClose={this.closeCreateFileWindow}
+                                placeholder={'Untitled'}
                             />
                             <Container>
                                 <ItemList

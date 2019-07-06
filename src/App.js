@@ -4,18 +4,23 @@ import {connect} from 'react-redux';
 import {ClassicSpinner} from 'react-spinners-kit';
 import Navigation from './functional_components/Navigation';
 import Container from 'react-bootstrap/Container';
-import Home from './stateful_components/Home';
 import Drive from './stateful_components/Drive';
 import LoginScreen from './stateful_components/LoginScreen';
 import {ProfileSideBar} from './functional_components/ProfileSideBar';
 import auth from 'solid-auth-client';
 import User from 'your-user';
 import {ErrorBoundary} from './stateful_components/ErrorBoundary';
-import {editProfile} from './utils/profileRDF';
 import {ContactScreen} from './functional_components/ContactScreen';
-import {login, fetchUser, setWebId} from './actions/UserActions';
+import {
+    login,
+    fetchUser,
+    setWebId,
+    fetchFolderTree,
+} from './actions/UserActions';
 import PrivateRoute from './functional_components/PrivateRoute';
 import styles from './App.module.css';
+import NotificationsPage from './stateful_components/NotificationsPage';
+
 class App extends React.Component {
     constructor(props) {
         super(props);
@@ -68,8 +73,9 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        const {setWebId, fetchUser, login} = this.props;
+        const {login, session} = this.props;
         login();
+
         // auth.trackSession((session) => {
         //     if (!session) {
         //         this.props.login();
@@ -83,14 +89,14 @@ class App extends React.Component {
 
     render() {
         const {isProfileExpanded} = this.state;
-        const {webId, user, session} = this.props;
-        if (this.props.loadLogin || this.props.loadUser) {
+        const {webId, user, session, loadLogin, loadUser, loadFolderTree} = this.props;
+        if (loadLogin || loadUser || loadFolderTree) {
             return (
                 <div className={styles.spinner}>
                     <ClassicSpinner
                         size={100}
                         color="#686769"
-                        loading={this.props.loadLogin || this.props.loadUser}
+                        loading={loadLogin || loadUser || loadFolderTree}
                     />
                 </div>
             );
@@ -139,8 +145,8 @@ class App extends React.Component {
                             />
                             <PrivateRoute
                                 session={session}
-                                path="/chat"
-                                component={<Drive webId={webId} />}
+                                path="/notifications"
+                                component={<NotificationsPage />}
                             />
                             <PrivateRoute
                                 session={session}
@@ -167,12 +173,15 @@ const mapStateToProps = (state) => {
         session: state.app.session,
         loadLogin: state.app.loadLogin,
         loadUser: state.app.loadUser,
+        loadFolderTree: state.app.loadFolderTree,
+        session: state.app.session,
+        currentFolderTree: state.app.currentFolderTree,
     };
 };
 
 export default withRouter(
     connect(
         mapStateToProps,
-        {login, fetchUser, setWebId}
+        {login, fetchUser, setWebId, fetchFolderTree}
     )(App)
 );

@@ -10,6 +10,7 @@ export default function CreateWindow({
     onCancel,
     windowName,
     info,
+    placeholder,
 }) {
     const [value, setValue] = useState('');
     return (
@@ -19,6 +20,7 @@ export default function CreateWindow({
                 className={styles.input}
                 value={value}
                 onChange={(event) => setValue(event.target.value)}
+                placeholder={placeholder}
             ></input>
             <div className={styles.buttonBar}>
                 <div

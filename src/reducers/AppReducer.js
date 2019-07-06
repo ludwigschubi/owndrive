@@ -9,6 +9,9 @@ import {
     FETCH_FRIENDS,
     FETCH_FRIENDS_SUCCESS,
     FETCH_FRIENDS_FAIL,
+    FETCH_FOLDER_TREE,
+    FETCH_FOLDER_TREE_SUCCESS,
+    FETCH_FOLDER_TREE_FAIL,
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -17,11 +20,13 @@ const INITIAL_STATE = {
     loadLogin: false,
     loadUser: false,
     loadFriends: false,
+    loadFolderTree: false,
     error: null,
     contacts: null,
     session: null,
     currentPath: null,
     currentFolderTree: null,
+
     // [
     //     {
     //         name: 'testdata',
@@ -63,6 +68,12 @@ export default (state = INITIAL_STATE, action) => {
             return {...state, loadFriends: false, error: payload};
         case SET_WEBID:
             return {...state, webId: payload};
+        case FETCH_FOLDER_TREE:
+            return {...state, loadFolder: true};
+        case FETCH_FOLDER_TREE_SUCCESS:
+            return {...state, loadFolder: false, currentFolderTree: payload};
+        case FETCH_FOLDER_TREE_FAIL:
+            return {...state, loadFolder: false, error: payload};
         default:
             return state;
     }

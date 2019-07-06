@@ -9,12 +9,16 @@ import {
     FETCH_FRIENDS,
     FETCH_FRIENDS_FAIL,
     FETCH_FRIENDS_SUCCESS,
+    FETCH_FOLDER_TREE,
+    FETCH_FOLDER_TREE_SUCCESS,
+    FETCH_FOLDER_TREE_FAIL,
 } from './types';
 import rdf from 'rdflib';
 import ns from 'solid-namespace';
 import auth from 'solid-auth-client';
 import User from 'your-user';
 import {sortContainments} from '../utils/url';
+import fileUtils from '../utils/fileUtils';
 
 export const login = (username, password) => {
     return (dispatch) => {
@@ -29,6 +33,9 @@ export const login = (username, password) => {
                     dispatch({type: LOGIN_SUCCESS, payload: session});
                     dispatch({type: SET_WEBID, payload: session.webId});
                     dispatch(fetchUser(session.webId));
+                    dispatch(
+                        fetchFolderTree(session.webId.replace('card#me', ''))
+                    );
                 }
             })
             .catch((error) => {
@@ -73,15 +80,15 @@ export const fetchContacts = (yourUserObject) => {
 };
 
 export const fetchFolderTree = (url) => {
-    const store = rdf.graph();
-    const fetcher = new rdf.Fetcher(store);
-
-    return fetcher.load(url).then((response) => {
-        const containments = store.each(
-            rdf.sym(url),
-            rdf.sym(ns().ldp('contains')),
-            null
-        );
-        return sortContainments(containments);
-    });
+    return (dispatch) => {
+        dispatch({type: FETCH_FOLDER_TREE});
+        fileUtils
+            .getFolderTree(url)
+            .then((tree) => {
+                dispatch({type: FETCH_FOLDER_TREE_SUCCESS, payload: tree});
+            })
+            .catch((error) =>
+                dispatch({type: FETCH_FOLDER_TREE_FAIL, payload: error})
+            );
+    };
 };
