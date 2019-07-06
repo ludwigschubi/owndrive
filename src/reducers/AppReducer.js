@@ -12,6 +12,7 @@ import {
     FETCH_FOLDER_TREE,
     FETCH_FOLDER_TREE_SUCCESS,
     FETCH_FOLDER_TREE_FAIL,
+    SET_CURRENT_PATH,
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -68,6 +69,8 @@ export default (state = INITIAL_STATE, action) => {
             return {...state, loadFriends: false, error: payload};
         case SET_WEBID:
             return {...state, webId: payload};
+        case SET_CURRENT_PATH:
+            return {...state, currentPath: payload};
         case FETCH_FOLDER_TREE:
             return {...state, loadFolder: true};
         case FETCH_FOLDER_TREE_SUCCESS:

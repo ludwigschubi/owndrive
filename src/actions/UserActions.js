@@ -12,6 +12,7 @@ import {
     FETCH_FOLDER_TREE,
     FETCH_FOLDER_TREE_SUCCESS,
     FETCH_FOLDER_TREE_FAIL,
+    SET_CURRENT_PATH,
 } from './types';
 import rdf from 'rdflib';
 import ns from 'solid-namespace';
@@ -32,6 +33,13 @@ export const login = (username, password) => {
                 } else {
                     dispatch({type: LOGIN_SUCCESS, payload: session});
                     dispatch({type: SET_WEBID, payload: session.webId});
+                    dispatch({
+                        type: SET_CURRENT_PATH,
+                        payload: session.webId.replace(
+                            'profile/card#me',
+                            'public'
+                        ),
+                    });
                     dispatch(fetchUser(session.webId));
                     dispatch(
                         fetchFolderTree(

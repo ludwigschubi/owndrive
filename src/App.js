@@ -20,6 +20,7 @@ import {
 import PrivateRoute from './functional_components/PrivateRoute';
 import styles from './App.module.css';
 import NotificationsPage from './stateful_components/NotificationsPage';
+import {getCurrentDirectory} from './utils/url';
 
 class App extends React.Component {
     constructor(props) {
@@ -89,7 +90,19 @@ class App extends React.Component {
 
     render() {
         const {isProfileExpanded} = this.state;
-        const {webId, user, session, loadLogin, loadUser, loadFolderTree} = this.props;
+        const {
+            webId,
+            user,
+            session,
+            loadLogin,
+            loadUser,
+            loadFolderTree,
+            currentFolderTree,
+            currentPath,
+        } = this.props;
+        if (currentFolderTree) {
+            getCurrentDirectory(currentFolderTree, currentPath);
+        }
         if (loadLogin || loadUser || loadFolderTree) {
             return (
                 <div className={styles.spinner}>
@@ -176,6 +189,7 @@ const mapStateToProps = (state) => {
         loadFolderTree: state.app.loadFolderTree,
         session: state.app.session,
         currentFolderTree: state.app.currentFolderTree,
+        currentPath: state.app.currentPath,
     };
 };
 
