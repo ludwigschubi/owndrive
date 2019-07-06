@@ -72,7 +72,7 @@ export const fetchContacts = (yourUserObject) => {
     };
 };
 
-export const fetchFolder = (url) => {
+export const fetchFolderTree = (url) => {
     const store = rdf.graph();
     const fetcher = new rdf.Fetcher(store);
 

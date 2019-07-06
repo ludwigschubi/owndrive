@@ -12,9 +12,9 @@ export const FETCH_FRIENDS = 'fetch_friends';
 export const FETCH_FRIENDS_SUCCESS = 'fetch_friends_success';
 export const FETCH_FRIENDS_FAIL = 'fetch_friends_fail';
 
-export const FETCH_FOLDER = 'fetch_folder';
-export const FETCH_FOLDER_SUCCESS = 'fetch_folder_success';
-export const FETCH_FOLDER_FAIL = 'fetch_folder_fail';
+export const FETCH_FOLDER_TREE = 'fetch_folder_tree';
+export const FETCH_FOLDER_TREE_SUCCESS = 'fetch_folder_tree_success';
+export const FETCH_FOLDER_TREE_FAIL = 'fetch_folder_tree_fail';
 
 export const GET_SESSION = 'get_session';
 export const GET_SESSION_SUCCESS = 'get_session_success';

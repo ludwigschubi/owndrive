@@ -21,7 +21,7 @@ const INITIAL_STATE = {
     contacts: null,
     session: null,
     currentPath: null,
-    currentFolder: null,
+    currentFolderTree: null,
     // [
     //     {
     //         name: 'testdata',
