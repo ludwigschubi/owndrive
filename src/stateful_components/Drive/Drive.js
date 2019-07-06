@@ -72,12 +72,11 @@ class Drive extends React.Component {
 
         return fetcher.load(url).then(() => {
             const containments = store.each(
-                rdf.sym('https://ludwigschubert.solid.community/'),
+                rdf.sym(url),
                 ns.ldp('contains'),
                 null
             );
 
-            console.log(store.each(rdf.sym(url), null));
             return this.sortContainments(containments);
         });
     }
@@ -202,15 +201,10 @@ class Drive extends React.Component {
 
     componentDidMount() {
         try {
-            if (!JSON.parse(localStorage.getItem('appState')).currPath) {
-                this.loadCurrentFolder(this.state.currPath, ['/']);
-            } else {
-                console.log('Using cached state...');
-                this.loadCurrentFolder(
-                    JSON.parse(localStorage.getItem('appState')).currPath,
-                    JSON.parse(localStorage.getItem('appState')).breadcrumbs
-                );
-            }
+            this.loadCurrentFolder(
+                'https://' + this.props.webId.split('/')[2] + '/',
+                ['/']
+            );
         } catch (e) {
             console.log(e);
         }
@@ -279,10 +273,10 @@ class Drive extends React.Component {
     }
 
     render() {
-        if (this.state.currPath){
-            fileUtils.getFolderFiles(this.state.currPath + '/private/').then((results) => {
+        if (this.state.currPath) {
+            fileUtils.getFolderFiles(this.state.currPath).then((results) => {
                 console.log(results);
-            })
+            });
         }
 
         const {
@@ -294,6 +288,8 @@ class Drive extends React.Component {
             isCreateFileVisible,
             isConsentWindowVisible,
         } = this.state;
+
+        console.log(folders);
 
         const { webId } = this.props;
         const fileMarkup = this.state.file ? (
