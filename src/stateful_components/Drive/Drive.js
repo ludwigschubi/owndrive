@@ -70,8 +70,7 @@ class Drive extends React.Component {
         const store = rdf.graph();
         const fetcher = new rdf.Fetcher(store);
 
-        return fetcher.load(url).then((response) => {
-            console.log(response.responseText);
+        return fetcher.load(url).then(() => {
             const containments = store.each(
                 rdf.sym('https://ludwigschubert.solid.community/'),
                 ns.ldp('contains'),
@@ -138,9 +137,6 @@ class Drive extends React.Component {
     }
 
     followPath(path) {
-        fileUtils.getFolderTree(path).then((results) => {
-            console.log(results);
-        });
         if (this.state.selectedItems.includes(path)) {
             const newBreadcrumbs = getBreadcrumbsFromUrl(path);
             this.loadCurrentFolder(path, newBreadcrumbs);
@@ -283,6 +279,12 @@ class Drive extends React.Component {
     }
 
     render() {
+        if (this.state.currPath){
+            fileUtils.getFolderFiles(this.state.currPath + '/private/').then((results) => {
+                console.log(results);
+            })
+        }
+
         const {
             currPath,
             folders,
