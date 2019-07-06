@@ -153,8 +153,7 @@ function getFolderTree(folderUrl) {
             const fileList = [];
             for (let i = 0; i < folder.length; i++) {
                 if (isFolder(folder[i])) {
-                    const subfolder = getFolderTree(folder[i]);
-                    fileList.push(Promise.resolve(subfolder));
+                    fileList.push(Promise.resolve(getFolderTree(folder[i])));
                 } else {
                     fileList.push(
                         new Promise(function(resolve) {
@@ -163,10 +162,10 @@ function getFolderTree(folderUrl) {
                     );
                 }
             }
-            const folderName = getFolderUrl(folderUrl);
+
             fileList.push(
                 new Promise(function(resolve) {
-                    resolve(folderName);
+                    resolve(folderUrl);
                 })
             );
             return Promise.all(fileList);
@@ -191,6 +190,22 @@ function sortByDepth(fileA, fileB) {
     const depthB = fileB.split('/').length;
 
     return depthA - depthB;
+}
+
+function getFolderFiles(path) {
+    return getFolderTree(path).then((results) => {
+        const folderFiles = { folders: [], files: [] };
+        const folderDict = results.forEach((result) => {
+            const resultFragments = result.split('/');
+            console.log(resultFragments);
+            if (resultFragments[resultFragments.length - 1] == '') {
+                folderFiles['folders'].push(result);
+            } else {
+                folderFiles['files'].push(result);
+            }
+        });
+        return folderFiles;
+    });
 }
 
 function getFolderContents(folderUrl) {
@@ -236,4 +251,5 @@ export default {
     getInfo: getInfo,
     renameFile: renameFile,
     hasArray: hasArray,
+    getFolderFiles: getFolderFiles,
 };
