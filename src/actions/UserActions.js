@@ -34,7 +34,9 @@ export const login = (username, password) => {
                     dispatch({type: SET_WEBID, payload: session.webId});
                     dispatch(fetchUser(session.webId));
                     dispatch(
-                        fetchFolderTree(session.webId.replace('card#me', ''))
+                        fetchFolderTree(
+                            session.webId.replace('profile/card#me', 'public/')
+                        )
                     );
                 }
             })
@@ -83,7 +85,7 @@ export const fetchFolderTree = (url) => {
     return (dispatch) => {
         dispatch({type: FETCH_FOLDER_TREE});
         fileUtils
-            .getFolderTree(url)
+            .getFolderFiles(url)
             .then((tree) => {
                 dispatch({type: FETCH_FOLDER_TREE_SUCCESS, payload: tree});
             })

@@ -276,11 +276,11 @@ class Drive extends React.Component {
     }
 
     render() {
-        if (this.state.currPath){
-            fileUtils.getFolderFiles(this.state.currPath + '/private/').then((results) => {
-                console.log(results);
-            })
-        }
+        // if (this.state.currPath){
+        //     fileUtils.getFolderFiles(this.state.currPath + '/private/').then((results) => {
+        //         console.log(results);
+        //     })
+        // }
 
         const {
             currPath,
