@@ -8,6 +8,7 @@ export const FETCH_USER_FAIL = 'fetch_user_fail';
 
 export const SET_WEBID = 'set_webid';
 export const SET_CURRENT_PATH = 'set_current_path';
+export const SET_CURRENT_ITEMS = 'set_current_items';
 
 export const FETCH_FRIENDS = 'fetch_friends';
 export const FETCH_FRIENDS_SUCCESS = 'fetch_friends_success';

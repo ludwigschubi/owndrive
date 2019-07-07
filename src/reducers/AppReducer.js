@@ -13,6 +13,7 @@ import {
     FETCH_FOLDER_TREE_SUCCESS,
     FETCH_FOLDER_TREE_FAIL,
     SET_CURRENT_PATH,
+    SET_CURRENT_ITEMS,
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -26,6 +27,7 @@ const INITIAL_STATE = {
     contacts: null,
     session: null,
     currentPath: null,
+    currentItems: null,
     currentFolderTree: null,
 
     // [
@@ -71,6 +73,8 @@ export default (state = INITIAL_STATE, action) => {
             return {...state, webId: payload};
         case SET_CURRENT_PATH:
             return {...state, currentPath: payload};
+        case SET_CURRENT_ITEMS:
+            return {...state, currentItems: payload};
         case FETCH_FOLDER_TREE:
             return {...state, loadFolder: true};
         case FETCH_FOLDER_TREE_SUCCESS:

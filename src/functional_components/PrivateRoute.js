@@ -6,8 +6,8 @@ export default ({component: Component, session, ...rest}) => {
         <Route
             {...rest}
             render={(props) =>
-                session ? (
-                    <Component {...props} />
+                true ? (
+                    Component
                 ) : (
                     <Redirect
                         to={{pathname: '/', state: {from: props.location}}}

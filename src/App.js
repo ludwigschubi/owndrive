@@ -16,11 +16,11 @@ import {
     fetchUser,
     setWebId,
     fetchFolderTree,
+    getCurrentItems,
 } from './actions/UserActions';
 import PrivateRoute from './functional_components/PrivateRoute';
 import styles from './App.module.css';
 import NotificationsPage from './stateful_components/NotificationsPage';
-import {getCurrentDirectory} from './utils/url';
 
 class App extends React.Component {
     constructor(props) {
@@ -99,9 +99,10 @@ class App extends React.Component {
             loadFolderTree,
             currentFolderTree,
             currentPath,
+            getCurrentItems,
         } = this.props;
         if (currentFolderTree) {
-            getCurrentDirectory(currentFolderTree, currentPath);
+            getCurrentItems(currentFolderTree, currentPath);
         }
         if (loadLogin || loadUser || loadFolderTree) {
             return (
@@ -196,6 +197,6 @@ const mapStateToProps = (state) => {
 export default withRouter(
     connect(
         mapStateToProps,
-        {login, fetchUser, setWebId, fetchFolderTree}
+        {login, fetchUser, setWebId, fetchFolderTree, getCurrentItems}
     )(App)
 );

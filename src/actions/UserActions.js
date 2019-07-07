@@ -13,13 +13,15 @@ import {
     FETCH_FOLDER_TREE_SUCCESS,
     FETCH_FOLDER_TREE_FAIL,
     SET_CURRENT_PATH,
+    SET_CURRENT_ITEMS,
 } from './types';
 import rdf from 'rdflib';
 import ns from 'solid-namespace';
 import auth from 'solid-auth-client';
 import User from 'your-user';
-import {sortContainments} from '../utils/url';
+import {sortContainments, getCurrentDirectory} from '../utils/url';
 import fileUtils from '../utils/fileUtils';
+import {folder} from '../assets/icons/externalIcons';
 
 export const login = (username, password) => {
     return (dispatch) => {
@@ -57,6 +59,10 @@ export const login = (username, password) => {
 export const setWebId = (webId) => {
     return {type: SET_WEBID, payload: webId};
 };
+
+export const setCurrentPath = (newPath) => {
+    return {type: SET_CURRENT_PATH, payload: newPath}
+}
 
 export const fetchUser = (webId) => {
     return (dispatch) => {
@@ -100,5 +106,29 @@ export const fetchFolderTree = (url) => {
             .catch((error) =>
                 dispatch({type: FETCH_FOLDER_TREE_FAIL, payload: error})
             );
+    };
+};
+
+const convertFolderUrlToName = (folderUrl) => {
+    return folderUrl.split('/').splice(-2)[0];
+};
+
+const convertFileUrlToName = (fileUrl) => {
+    return fileUrl.split('/').splice(-1)[0];
+};
+
+export const getCurrentItems = (urlTree, currentPath) => {
+    return (dispatch) => {
+        const {folders, files} = getCurrentDirectory(urlTree, currentPath);
+        const folderNames = folders.map((folderUrl) => {
+            return convertFolderUrlToName(folderUrl);
+        });
+        const fileNames = files.map((fileUrl) => {
+            return convertFileUrlToName(fileUrl);
+        });
+        dispatch({
+            type: SET_CURRENT_ITEMS,
+            payload: {folders: folderNames, files: fileNames},
+        });
     };
 };
