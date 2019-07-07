@@ -163,6 +163,7 @@ function getFolderTree(folderUrl) {
                 }
             }
 
+            const folderName = getFolderUrl(folderUrl);
             fileList.push(
                 new Promise(function(resolve) {
                     resolve(folderUrl);
@@ -197,7 +198,6 @@ function getFolderFiles(path) {
         const folderFiles = { folders: [], files: [] };
         const folderDict = results.forEach((result) => {
             const resultFragments = result.split('/');
-            console.log(resultFragments);
             if (resultFragments[resultFragments.length - 1] == '') {
                 folderFiles['folders'].push(result);
             } else {

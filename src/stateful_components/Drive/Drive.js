@@ -71,12 +71,11 @@ class Drive extends React.Component {
 
         return fetcher.load(url).then(() => {
             const containments = store.each(
-                rdf.sym('https://ludwigschubert.solid.community/'),
+                rdf.sym(url),
                 ns.ldp('contains'),
                 null
             );
 
-            console.log(store.each(rdf.sym(url), null));
             return this.sortContainments(containments);
         });
     }

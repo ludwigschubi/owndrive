@@ -39,7 +39,7 @@ class App extends React.Component {
     async login() {
         const session = await auth.currentSession();
         if (!session) {
-            await auth.login('https://solid.community');
+            await auth.login(`https://owntech.de`);
         } else {
             this.setState({
                 webId: session.webId,
