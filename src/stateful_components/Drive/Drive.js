@@ -1,27 +1,26 @@
 import React from 'react';
 import rdf from 'rdflib';
 import auth from 'solid-auth-client';
+import {connect} from 'react-redux';
+import {withRouter} from 'react-router-dom';
 import styles from './Drive.module.css';
 import Breadcrumbs from '../../functional_components/Breadcrumbs/Breadcrumbs';
-import FileUpload from '../../functional_components/FileUpload/FileUpload';
-import { ItemList } from '../../functional_components/ItemList';
+import {ItemList} from '../../functional_components/ItemList';
 import fileUtils from '../../utils/fileUtils';
-import { getBreadcrumbsFromUrl } from '../../utils/url';
-import ACLController from 'your-acl';
-import FileCreation from '../../functional_components/FileCreation/FileCreation';
+import {getBreadcrumbsFromUrl} from '../../utils/url';
 import folder from '../../assets/icons/Folder.png';
 import fileIcon from '../../assets/icons/File.png';
 import Buttons from '../../functional_components/Buttons/Buttons';
-import { InputWindow } from '../../functional_components/InputWindow';
+import {InputWindow} from '../../functional_components/InputWindow';
 import Container from 'react-bootstrap/Container';
-import { ConsentWindow } from '../../functional_components/ConsentWindow';
+import {ConsentWindow} from '../../functional_components/ConsentWindow';
+import {getCurrentItems, setCurrentPath} from '../../actions/UserActions';
 const ns = require('solid-namespace')(rdf);
 
 class Drive extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            breadcrumbs: undefined,
             currPath: undefined,
             file: undefined,
             image: undefined,
@@ -137,8 +136,9 @@ class Drive extends React.Component {
 
     followPath(path) {
         if (this.state.selectedItems.includes(path)) {
-            const newBreadcrumbs = getBreadcrumbsFromUrl(path);
-            this.loadCurrentFolder(path, newBreadcrumbs);
+            this.props.setCurrentPath(path);
+            // const newBreadcrumbs = getBreadcrumbsFromUrl(path);
+            // this.loadCurrentFolder(path, newBreadcrumbs);
         } else {
             const newSelection = this.state.selectedItems;
             newSelection.push(path);
@@ -200,14 +200,23 @@ class Drive extends React.Component {
     }
 
     componentDidMount() {
-        try {
-            this.loadCurrentFolder(
-                'https://' + this.props.webId.split('/')[2] + '/',
-                ['/']
-            );
-        } catch (e) {
-            console.log(e);
+        const {getCurrentItems, currentPath, currentFolderTree} = this.props;
+        if (currentFolderTree && currentPath) {
+            getCurrentItems(currentFolderTree, currentPath);
         }
+        // try {
+        //     if (!JSON.parse(localStorage.getItem('appState')).currPath) {
+        //         this.loadCurrentFolder(this.state.currPath, ['/']);
+        //     } else {
+        //         console.log('Using cached state...');
+        //         this.loadCurrentFolder(
+        //             JSON.parse(localStorage.getItem('appState')).currPath,
+        //             JSON.parse(localStorage.getItem('appState')).breadcrumbs
+        //         );
+        //     }
+        // } catch (e) {
+        //     console.log(e);
+        // }
     }
 
     uploadFolder(e) {
@@ -268,30 +277,18 @@ class Drive extends React.Component {
     }
 
     componentWillUnmount() {
-        console.log('Caching state...');
-        localStorage.setItem('appState', JSON.stringify(this.state));
+        // console.log('Caching state...');
+        // localStorage.setItem('appState', JSON.stringify(this.state));
     }
 
     render() {
-        if (this.state.currPath) {
-            fileUtils.getFolderFiles(this.state.currPath).then((results) => {
-                console.log(results);
-            });
-        }
-
         const {
-            currPath,
-            folders,
-            files,
-            breadcrumbs,
             isCreateFolderVisible,
             isCreateFileVisible,
             isConsentWindowVisible,
         } = this.state;
-
-        console.log(folders);
-
-        const { webId } = this.props;
+        const {webId, currentItems, currentPath, setCurrentPath} = this.props;
+        console.log('currentPath', currentPath);
         const fileMarkup = this.state.file ? (
             <div className={styles.renderedFile}>
                 {this.state.image ? (
@@ -303,14 +300,19 @@ class Drive extends React.Component {
         ) : (
             undefined
         );
-
         return (
-            <div style={{ height: '100%' }} onClick={this.clearSelection}>
-                <Breadcrumbs
-                    onClick={this.loadCurrentFolder}
-                    breadcrumbs={breadcrumbs}
-                    webId={webId}
-                />
+            <div style={{height: '100%'}} onClick={this.clearSelection}>
+                {webId ? (
+                    <Breadcrumbs
+                        onClick={setCurrentPath}
+                        breadcrumbs={
+                            currentPath
+                                ? getBreadcrumbsFromUrl(currentPath)
+                                : null
+                        }
+                        webId={webId}
+                    />
+                ) : null}
                 <div>
                     {fileMarkup ? (
                         <Container>fileMarkup</Container>
@@ -358,55 +360,59 @@ class Drive extends React.Component {
                                 onClose={this.closeCreateFileWindow}
                                 placeholder={'Untitled'}
                             />
-                            <Container>
-                                <ItemList
-                                    selectedItems={this.state.selectedItems}
-                                    items={folders}
-                                    currPath={currPath}
-                                    image={folder}
-                                    onItemClick={this.followPath}
-                                    onDelete={(item) => {
-                                        this.openConsentWindow();
-                                    }}
-                                    onAccess={(item) => {
-                                        fileUtils.changeAccess(item);
-                                    }}
-                                    onRename={(item) => {
-                                        fileUtils.renameItem(item);
-                                    }}
-                                    onInfo={(item) => {
-                                        fileUtils.getInfo(item);
-                                    }}
-                                />
-                                <ItemList
-                                    selectedItems={this.state.selectedItems}
-                                    isFile
-                                    items={files}
-                                    currPath={currPath}
-                                    image={fileIcon}
-                                    onItemClick={this.loadFile}
-                                    onDelete={(item) => {
-                                        this.openConsentWindow();
-                                    }}
-                                    onAccess={(item) => {
-                                        fileUtils.changeAccess(item);
-                                    }}
-                                    onRename={(item) => {
-                                        fileUtils.renameFile(item);
-                                    }}
-                                    onInfo={(item) => {
-                                        fileUtils.onInfo(item);
-                                    }}
-                                />
-                                <Buttons
-                                    onFileCreation={this.openCreateFileWindow}
-                                    onFolderCreation={
-                                        this.openCreateFolderWindow
-                                    }
-                                    onFolderUpload={this.uploadFolder}
-                                    onFileUpload={this.uploadFile}
-                                ></Buttons>
-                            </Container>
+                            {currentItems ? (
+                                <Container>
+                                    <ItemList
+                                        selectedItems={this.state.selectedItems}
+                                        items={currentItems.folders}
+                                        currPath={currentPath}
+                                        image={folder}
+                                        onItemClick={this.followPath}
+                                        onDelete={(item) => {
+                                            this.openConsentWindow();
+                                        }}
+                                        onAccess={(item) => {
+                                            fileUtils.changeAccess(item);
+                                        }}
+                                        onRename={(item) => {
+                                            fileUtils.renameItem(item);
+                                        }}
+                                        onInfo={(item) => {
+                                            fileUtils.getInfo(item);
+                                        }}
+                                    />
+                                    <ItemList
+                                        selectedItems={this.state.selectedItems}
+                                        isFile
+                                        items={currentItems.files}
+                                        currPath={currentPath}
+                                        image={fileIcon}
+                                        onItemClick={this.loadFile}
+                                        onDelete={(item) => {
+                                            this.openConsentWindow();
+                                        }}
+                                        onAccess={(item) => {
+                                            fileUtils.changeAccess(item);
+                                        }}
+                                        onRename={(item) => {
+                                            fileUtils.renameFile(item);
+                                        }}
+                                        onInfo={(item) => {
+                                            fileUtils.onInfo(item);
+                                        }}
+                                    />
+                                    <Buttons
+                                        onFileCreation={
+                                            this.openCreateFileWindow
+                                        }
+                                        onFolderCreation={
+                                            this.openCreateFolderWindow
+                                        }
+                                        onFolderUpload={this.uploadFolder}
+                                        onFileUpload={this.uploadFile}
+                                    ></Buttons>
+                                </Container>
+                            ) : null}
                         </div>
                     )}
                 </div>
@@ -415,4 +421,17 @@ class Drive extends React.Component {
     }
 }
 
-export default Drive;
+const mapStateToProps = (state) => {
+    return {
+        currentItems: state.app.currentItems,
+        currentPath: state.app.currentPath,
+        currentFolderTree: state.app.currentFolderTree,
+    };
+};
+
+export default withRouter(
+    connect(
+        mapStateToProps,
+        {getCurrentItems, setCurrentPath}
+    )(Drive)
+);
