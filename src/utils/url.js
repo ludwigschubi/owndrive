@@ -1,10 +1,13 @@
 export const getBreadcrumbsFromUrl = (url) => {
     const breadcrumbs = url.replace('https://', '').split('/');
     breadcrumbs.shift();
-    const newBreadcrumbs = ['/'];
+    const newBreadcrumbs = [];
     breadcrumbs.forEach((breadcrumb) => {
-        newBreadcrumbs.push('/' + breadcrumb);
+        if (breadcrumb !== '') {
+            newBreadcrumbs.push('/' + breadcrumb);
+        }
     });
+    console.log(newBreadcrumbs);
     return newBreadcrumbs;
 };
 
@@ -68,5 +71,5 @@ export const getCurrentDirectory = (urlTree, currentWorkingDirectory) => {
         currentWorkingDirectory
     );
     const files = matchPathInUrlList(urlTree.files, currentWorkingDirectory);
-    return {folders, files};
+    return { folders, files };
 };
