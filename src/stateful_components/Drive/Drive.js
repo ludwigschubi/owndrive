@@ -1,20 +1,20 @@
 import React from 'react';
 import rdf from 'rdflib';
 import auth from 'solid-auth-client';
-import {connect} from 'react-redux';
-import {withRouter} from 'react-router-dom';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import styles from './Drive.module.css';
 import Breadcrumbs from '../../functional_components/Breadcrumbs/Breadcrumbs';
-import {ItemList} from '../../functional_components/ItemList';
+import { ItemList } from '../../functional_components/ItemList';
 import fileUtils from '../../utils/fileUtils';
-import {getBreadcrumbsFromUrl} from '../../utils/url';
+import { getBreadcrumbsFromUrl } from '../../utils/url';
 import folder from '../../assets/icons/Folder.png';
 import fileIcon from '../../assets/icons/File.png';
 import Buttons from '../../functional_components/Buttons/Buttons';
-import {InputWindow} from '../../functional_components/InputWindow';
+import { InputWindow } from '../../functional_components/InputWindow';
 import Container from 'react-bootstrap/Container';
-import {ConsentWindow} from '../../functional_components/ConsentWindow';
-import {getCurrentItems, setCurrentPath} from '../../actions/UserActions';
+import { ConsentWindow } from '../../functional_components/ConsentWindow';
+import { getCurrentItems, setCurrentPath } from '../../actions/UserActions';
 const ns = require('solid-namespace')(rdf);
 
 class Drive extends React.Component {
@@ -200,7 +200,7 @@ class Drive extends React.Component {
     }
 
     componentDidMount() {
-        const {getCurrentItems, currentPath, currentFolderTree} = this.props;
+        const { getCurrentItems, currentPath, currentFolderTree } = this.props;
         if (currentFolderTree && currentPath) {
             getCurrentItems(currentFolderTree, currentPath);
         }
@@ -287,7 +287,7 @@ class Drive extends React.Component {
             isCreateFileVisible,
             isConsentWindowVisible,
         } = this.state;
-        const {webId, currentItems, currentPath, setCurrentPath} = this.props;
+        const { webId, currentItems, currentPath, setCurrentPath } = this.props;
         console.log('currentPath', currentPath);
         const fileMarkup = this.state.file ? (
             <div className={styles.renderedFile}>
@@ -301,7 +301,7 @@ class Drive extends React.Component {
             undefined
         );
         return (
-            <div style={{height: '100%'}} onClick={this.clearSelection}>
+            <div style={{ height: '100%' }} onClick={this.clearSelection}>
                 {webId ? (
                     <Breadcrumbs
                         onClick={setCurrentPath}
@@ -432,6 +432,6 @@ const mapStateToProps = (state) => {
 export default withRouter(
     connect(
         mapStateToProps,
-        {getCurrentItems, setCurrentPath}
+        { getCurrentItems, setCurrentPath }
     )(Drive)
 );

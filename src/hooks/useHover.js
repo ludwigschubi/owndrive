@@ -1,4 +1,4 @@
-import {useRef, useState, useEffect} from 'react';
+import { useRef, useState, useEffect } from 'react';
 
 export default function useHover() {
     const [value, setValue] = useState(false);

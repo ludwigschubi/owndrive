@@ -5,7 +5,7 @@ import icon from './FolderUpload.png';
 const FolderUpload = (props) => {
     return (
         <label htmlFor="folderUpload">
-            <img src={icon} className={styles.icon} alt="file upload icon"/>
+            <img src={icon} className={styles.icon} alt="file upload icon" />
             <input
                 id="folderUpload"
                 // name="fileUpload"

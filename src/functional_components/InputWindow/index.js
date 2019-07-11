@@ -1,2 +1,1 @@
-export {default as InputWindow} from './InputWindow';
-
+export { default as InputWindow } from './InputWindow';

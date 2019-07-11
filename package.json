@@ -2,14 +2,6 @@
   "name": "solid-files",
   "version": "0.1.0",
   "private": true,
-  "precommit": "NODE_ENV=production lint-staged",
-  "lint-staged": {
-    "*.{js,jsx}": [
-      "pretty-quick --staged",
-      "eslint src/ --fix",
-      "git add"
-    ]
-  },
   "dependencies": {
     "classnames": "^2.2.6",
     "flare-react": "^1.0.2",
@@ -35,7 +27,21 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "jest",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "lint": "eslint src"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run test",
+      "pre-push": "npm run test"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{js,jsx}": [
+      "eslint",
+      "pretty-quick — staged",
+      "git add"
+    ]
   },
   "eslintConfig": {
     "extends": "react-app"

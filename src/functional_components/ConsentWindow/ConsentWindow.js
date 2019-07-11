@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Window} from '../Window';
+import React from 'react';
+import { Window } from '../Window';
 import styles from './ConsentWindow.module.css';
 import classNames from 'classnames';
 

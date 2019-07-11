@@ -14,7 +14,6 @@ export default function ProfileSideBar({
     onProfileUpdate,
     onPictureChange,
 }) {
-    const [isEditable, setEditable] = useState(false);
     const [hoverRef, isHovered] = useHover();
     const [value, updateValue] = useState('');
     return (

@@ -1,6 +1,4 @@
 import rdf from 'rdflib';
-import auth from 'solid-auth-client';
-import { resolve } from 'q';
 const ns = require('solid-namespace')(rdf);
 
 export const editProfile = (key, value, prevValues, webId) => {

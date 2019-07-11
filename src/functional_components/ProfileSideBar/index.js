@@ -1,1 +1,1 @@
-export {default as ProfileSideBar} from './ProfileSideBar';
+export { default as ProfileSideBar } from './ProfileSideBar';

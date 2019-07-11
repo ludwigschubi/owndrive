@@ -1,7 +1,7 @@
 import React from 'react';
-import {Route, Redirect} from 'react-router-dom';
+import { Route, Redirect } from 'react-router-dom';
 
-export default ({component: Component, session, ...rest}) => {
+export default ({ component: Component, session, ...rest }) => {
     return (
         <Route
             {...rest}
@@ -10,7 +10,7 @@ export default ({component: Component, session, ...rest}) => {
                     Component
                 ) : (
                     <Redirect
-                        to={{pathname: '/', state: {from: props.location}}}
+                        to={{ pathname: '/', state: { from: props.location } }}
                     />
                 )
             }

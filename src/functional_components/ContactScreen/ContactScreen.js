@@ -1,13 +1,11 @@
-import React, {useEffect} from 'react';
-import {connect} from 'react-redux';
-import User from 'your-user';
-import {fetchContacts} from '../../actions/UserActions';
+import React, { useEffect } from 'react';
+import { connect } from 'react-redux';
+import { fetchContacts } from '../../actions/UserActions';
 import auth from 'solid-auth-client';
 
 const ContactScreen = (props) => {
-    const {webId, contacts, fetchContacts} = props;
+    const { webId, contacts } = props;
     useEffect(() => {
-        const user = new User(webId);
         auth.trackSession((session) => {
             if (session) {
                 // fetchContacts(user);
@@ -33,5 +31,5 @@ const mapStateToProps = (state) => {
 
 export default connect(
     mapStateToProps,
-    {fetchContacts}
+    { fetchContacts }
 )(ContactScreen);

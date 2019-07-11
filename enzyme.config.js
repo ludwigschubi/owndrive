@@ -1,6 +1,3 @@
-    
-/* eslint-disable import/no-extraneous-dependencies */
-
 /** Used in jest.config.js */
 
 import { configure } from 'enzyme';

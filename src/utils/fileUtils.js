@@ -1,8 +1,5 @@
 import rdf from 'rdflib';
 import auth from 'solid-auth-client';
-import { folder } from '../assets/icons/externalIcons';
-import { isFlowDeclaration } from '@babel/types';
-import { promised } from 'q';
 const ns = require('solid-namespace')(rdf);
 
 function getContentType(file) {
@@ -32,15 +29,12 @@ function uploadFolderOrFile(file, url) {
     const store = rdf.graph();
     const fetcher = new rdf.Fetcher(store);
 
-    const fileNameFragments = file.name.split('/');
-    const fileName = fileNameFragments[fileNameFragments.length - 1];
     const fileType = file.type ? file.type : 'text/plain';
 
     return new Promise(function(resolve) {
         const reader = new FileReader();
         reader.onload = function() {
             const data = this.result;
-            const filename = encodeURIComponent(fileName);
 
             fetcher
                 .webOperation('PUT', url, {
@@ -101,7 +95,7 @@ function getFolderUrl(folder) {
 }
 
 function deleteItems(items) {
-    let deletions = [];
+    const deletions = [];
     if (Array.isArray(items)) {
         items.forEach((item) => {
             if (!isFolder(item)) {
@@ -163,7 +157,6 @@ function getFolderTree(folderUrl) {
                 }
             }
 
-            const folderName = getFolderUrl(folderUrl);
             fileList.push(
                 new Promise(function(resolve) {
                     resolve(folderUrl);
@@ -196,7 +189,7 @@ function sortByDepth(fileA, fileB) {
 function getFolderFiles(path) {
     return getFolderTree(path).then((results) => {
         const folderFiles = { folders: [], files: [] };
-        const folderDict = results.forEach((result) => {
+        results.forEach((result) => {
             const resultFragments = result.split('/');
             if (resultFragments[resultFragments.length - 1] == '') {
                 folderFiles['folders'].push(result);
@@ -215,7 +208,6 @@ function getFolderContents(folderUrl) {
     return fetcher
         .load(folderUrl)
         .then(function() {
-            const urls = [];
             const containments = store
                 .each(rdf.sym(folderUrl), ns.ldp('contains'), undefined)
                 .map((containment) => {
@@ -241,6 +233,7 @@ function renameFile(item) {
 }
 
 export default {
+    getFolderUrl: getFolderUrl,
     uploadFile: uploadFile,
     getContentType: getContentType,
     getFolderContents: getFolderContents,

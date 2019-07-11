@@ -43,11 +43,11 @@ const INITIAL_STATE = {
 };
 
 export default (state = INITIAL_STATE, action) => {
-    const {payload, type} = action;
+    const { payload, type } = action;
     console.log('App Reducer got action: ', type, '\nValue: ', payload);
     switch (type) {
         case LOGIN:
-            return {...state, loadLogin: true};
+            return { ...state, loadLogin: true };
         case LOGIN_SUCCESS:
             return {
                 ...state,
@@ -56,31 +56,31 @@ export default (state = INITIAL_STATE, action) => {
                 session: payload,
             };
         case LOGIN_FAIL:
-            return {...state, loadLogin: false, error: payload};
+            return { ...state, loadLogin: false, error: payload };
         case FETCH_USER:
-            return {...state, loadUser: true};
+            return { ...state, loadUser: true };
         case FETCH_USER_SUCCESS:
-            return {...state, loadUser: false, user: payload};
+            return { ...state, loadUser: false, user: payload };
         case FETCH_USER_FAIL:
-            return {...state, loadUser: false, error: payload};
+            return { ...state, loadUser: false, error: payload };
         case FETCH_FRIENDS:
-            return {...state, loadFriends: true};
+            return { ...state, loadFriends: true };
         case FETCH_FRIENDS_SUCCESS:
-            return {...state, loadFriends: false, contacts: payload};
+            return { ...state, loadFriends: false, contacts: payload };
         case FETCH_FRIENDS_FAIL:
-            return {...state, loadFriends: false, error: payload};
+            return { ...state, loadFriends: false, error: payload };
         case SET_WEBID:
-            return {...state, webId: payload};
+            return { ...state, webId: payload };
         case SET_CURRENT_PATH:
-            return {...state, currentPath: payload};
+            return { ...state, currentPath: payload };
         case SET_CURRENT_ITEMS:
-            return {...state, currentItems: payload};
+            return { ...state, currentItems: payload };
         case FETCH_FOLDER_TREE:
-            return {...state, loadFolder: true};
+            return { ...state, loadFolder: true };
         case FETCH_FOLDER_TREE_SUCCESS:
-            return {...state, loadFolder: false, currentFolderTree: payload};
+            return { ...state, loadFolder: false, currentFolderTree: payload };
         case FETCH_FOLDER_TREE_FAIL:
-            return {...state, loadFolder: false, error: payload};
+            return { ...state, loadFolder: false, error: payload };
         default:
             return state;
     }
