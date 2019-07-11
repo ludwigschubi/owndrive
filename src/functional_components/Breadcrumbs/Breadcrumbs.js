@@ -4,28 +4,26 @@ import Container from 'react-bootstrap/Container';
 import styles from './Breadcrumbs.module.css';
 
 const Breadcrumbs = (props) => {
+    console.log(props.breadcrumbs);
+    const root = 'https://' + props.webId.split('/')[2];
+    let currentUrl = root;
     const breadcrumbMarkup = props.breadcrumbs
         ? props.breadcrumbs.map((currentBreadcrumb, currentIndex) => {
-              if (currentIndex !== 0) {
-                  const breadcrumbsSoFar = [];
-                  props.breadcrumbs.forEach((breadcrumb, index) => {
-                      if (index <= currentIndex) {
-                          breadcrumbsSoFar.push(breadcrumb);
-                      }
-                  });
-                  const currentBreadcrumbs = breadcrumbsSoFar.join('');
-                  const root = 'https://' + props.webId.split('/')[2];
-
+              if (currentBreadcrumb !== '/') {
+                  currentUrl = currentUrl + currentBreadcrumb;
+                  const thisUrl = currentUrl.slice();
                   return (
                       <Breadcrumb.Item
                           key={currentIndex}
                           onClick={() => {
-                              props.onClick(
-                                  root + currentBreadcrumbs,
-                                  breadcrumbsSoFar
-                              );
+                              props.onClick(thisUrl);
                           }}
                       >
+                          {console.log(
+                              'current breadcrumb',
+                              currentUrl,
+                              currentBreadcrumb
+                          )}
                           {currentBreadcrumb.replace('/', '')}
                       </Breadcrumb.Item>
                   );
@@ -33,12 +31,7 @@ const Breadcrumbs = (props) => {
                   return (
                       <Breadcrumb.Item
                           key={0}
-                          onClick={() =>
-                              props.onClick(
-                                  'https://' + props.webId.split('/')[2] + '/',
-                                  ['/']
-                              )
-                          }
+                          onClick={() => props.onClick(root)}
                       >
                           Home
                       </Breadcrumb.Item>

@@ -166,7 +166,7 @@ function getFolderTree(folderUrl) {
             const folderName = getFolderUrl(folderUrl);
             fileList.push(
                 new Promise(function(resolve) {
-                    resolve(folderName);
+                    resolve(folderUrl);
                 })
             );
             return Promise.all(fileList);

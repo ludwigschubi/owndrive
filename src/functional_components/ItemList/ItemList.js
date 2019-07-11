@@ -1,9 +1,9 @@
 import React from 'react';
-import { Item } from '../Item';
+import {Item} from '../Item';
 import styles from './ItemList.module.css';
-import { File } from '../File';
-import { tsPropertySignature } from '@babel/types';
-import fileutils from "../../utils/fileUtils";
+import {File} from '../File';
+import {tsPropertySignature} from '@babel/types';
+import fileutils from '../../utils/fileUtils';
 const ItemList = ({
     selectedItems,
     items,
@@ -22,16 +22,19 @@ const ItemList = ({
                   <File
                       selectedItem={
                           selectedItems.includes(
-                              currPath + encodeURIComponent(item)
+                              currPath + '/' + encodeURIComponent(item)
                           )
                               ? true
                               : undefined
                       }
                       key={item + index}
                       image={image}
-                      onClick={() =>
-                          onItemClick(currPath + encodeURIComponent(item))
-                      }
+                      onClick={() => {
+                          console.log(currPath);
+                          onItemClick(
+                              currPath + '/' + encodeURIComponent(item)
+                          );
+                      }}
                       onDelete={onDelete}
                       onAccess={onAccess}
                       onRename={onRename}
@@ -51,7 +54,7 @@ const ItemList = ({
                       key={item + index}
                       image={image}
                       onClick={() =>
-                          onItemClick(currPath + encodeURIComponent(item) + '/')
+                          onItemClick(currPath + '/' + encodeURIComponent(item))
                       }
                       onDelete={onDelete}
                       onAccess={fileutils.changeAccess}
