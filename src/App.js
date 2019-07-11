@@ -27,7 +27,8 @@ class App extends React.Component {
     async login() {
         const session = await auth.currentSession();
         if (!session) {
-            await auth.login(`https://owntech.de`);
+            const idp = window.prompt('Please enter the domain of your identity provider', 'solid.community');
+            await auth.login(`https://${idp}`);
         } else {
             this.setState({
                 webId: session.webId,

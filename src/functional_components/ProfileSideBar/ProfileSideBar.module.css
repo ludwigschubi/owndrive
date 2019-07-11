@@ -69,26 +69,25 @@
 
 .editIcon {
     position: relative;
+    right: 100px;
     width: 100px;
     height: 100px;
-    z-index: 1;
     background: rgba(0, 0, 0, 0.5);
     border-radius: 50%;
     cursor: pointer;
-    box-shadow: 0 0 6px white;
 }
 
 .profilePicture {
+    position: relative;
     width: 100px;
     height: 100px;
     background-size: cover;
     background-position: center;
     border-radius: 50%;
-    position: relative;
 }
 
 .pictureChange {
-    padding-top: 100px;
+    position: absolute;
     width: 100px;
     color: #0c89c6;
     font-size: 0.6em;

@@ -44,7 +44,10 @@ export default function ProfileSideBar({
                                 accept="*/*"
                             />
                             {isHovered ? (
-                                <label htmlFor="pictureUpload">
+                                <label
+                                    htmlFor="pictureUpload"
+                                    style={{ height: 100, width: 100 }}
+                                >
                                     <img
                                         src={editIcon}
                                         className={styles.editIcon}
@@ -73,11 +76,11 @@ export default function ProfileSideBar({
                                 id="pictureUpload"
                                 accept="*/*"
                             />
-                            <p className={classNames(styles.pictureChange)}>
-                                Click to Change
-                            </p>
                             {isHovered ? (
-                                <label htmlFor="pictureUpload">
+                                <label
+                                    htmlFor="pictureUpload"
+                                    style={{ height: 100, width: 100 }}
+                                >
                                     <input
                                         type="file"
                                         onChange={onPictureChange}
@@ -91,7 +94,9 @@ export default function ProfileSideBar({
                                     />
                                 </label>
                             ) : (
-                                undefined
+                                <p className={classNames(styles.pictureChange)}>
+                                    Click to Change
+                                </p>
                             )}
                         </label>
                     )}
