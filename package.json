@@ -27,10 +27,15 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "test:watch": "react-scripts test --watchAll",
     "eject": "react-scripts eject",
-    "lint": "eslint src",
-    "pre-commit":"lint-staged && npm test -- --watchAll",
-    "pre-push": "lint-staged && npm test -- --watchAll"
+    "lint": "eslint src"
+  },
+  "husky": {
+    "hooks": {
+    "pre-commit":"set CI=true&&react-scripts test",
+      "pre-push": "lint-staged && npm test:watch -- --forceExit"
+    }
   },
   "lint-staged": {
     "linters": {
