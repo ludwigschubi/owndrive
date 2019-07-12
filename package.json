@@ -2,7 +2,6 @@
   "name": "solid-files",
   "version": "0.1.0",
   "private": true,
-  "pre-commit": "npm test && lint-staged",
 
   "dependencies": {
     "classnames": "^2.2.6",
@@ -31,8 +30,16 @@
     "eject": "react-scripts eject",
     "lint": "eslint src"
   },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm test && lint-staged"
+    }
+  },
   "lint-staged": {
-    "*.js": ["./node_modules/.bin/eslint — fix", "git add"]
+    "*.js": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "eslintConfig": {
     "extends": "react-app"
