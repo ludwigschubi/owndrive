@@ -10,7 +10,7 @@ export const getBreadcrumbsFromUrl = (url) => {
     }
     const breadcrumbs = url.replace('https://', '').split('/');
     breadcrumbs.shift();
-    const newBreadcrumbs = [];
+    const newBreadcrumbs = ['/'];
     breadcrumbs.forEach((breadcrumb) => {
         if (breadcrumb !== '') {
             newBreadcrumbs.push('/' + breadcrumb);

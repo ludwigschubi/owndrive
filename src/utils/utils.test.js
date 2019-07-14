@@ -8,7 +8,7 @@ describe('Testing util functions', () => {
 
         test('test getBreadcrumbsfromURL(url) should return Breadcrumbs as array', () => {
             expect(JSON.stringify(getBreadcrumbsFromUrl(url))).toBe(
-                JSON.stringify(['/newsticker', '/it'])
+                JSON.stringify(['/', '/newsticker', '/it'])
             );
         });
 

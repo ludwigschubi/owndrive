@@ -26,30 +26,30 @@ export const login = (username, password) => {
         auth.currentSession()
             .then((session) => {
                 if (!session) {
-                    auth.login('https://solid.community').then((value) =>
-                        console.log('value from, auth login', value)
+                    auth.login('https://owntech.de').then(
+                        (value) => console.log('value from, auth login', value)
+                        // setSessionInfo(session);
                     );
                 } else {
-                    dispatch({ type: LOGIN_SUCCESS, payload: session });
-                    dispatch({ type: SET_WEBID, payload: session.webId });
-                    dispatch({
-                        type: SET_CURRENT_PATH,
-                        payload: session.webId.replace(
-                            'profile/card#me',
-                            'public'
-                        ),
-                    });
-                    dispatch(fetchUser(session.webId));
-                    dispatch(
-                        fetchFolderTree(
-                            session.webId.replace('profile/card#me', 'public/')
-                        )
-                    );
+                    dispatch(setSessionInfo(session));
                 }
             })
             .catch((error) => {
                 dispatch({ type: LOGIN_FAIL, payload: error });
             });
+    };
+};
+
+const setSessionInfo = (session) => {
+    return (dispatch) => {
+        dispatch({ type: LOGIN_SUCCESS, payload: session });
+        dispatch({ type: SET_WEBID, payload: session.webId });
+        dispatch({
+            type: SET_CURRENT_PATH,
+            payload: session.webId.replace('profile/card#me', ''),
+        });
+        dispatch(fetchUser(session.webId));
+        dispatch(fetchFolderTree(session.webId.replace('profile/card#me', '')));
     };
 };
 

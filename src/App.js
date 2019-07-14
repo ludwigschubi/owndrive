@@ -9,13 +9,14 @@ import { ProfileSideBar } from './functional_components/ProfileSideBar';
 import auth from 'solid-auth-client';
 import User from 'your-user';
 import { ErrorBoundary } from './stateful_components/ErrorBoundary';
-import { ContactScreen } from './functional_components/ContactScreen';
+import { ContactSidebar } from './functional_components/ContactSidebar';
 import {
     login,
     fetchUser,
     setWebId,
     fetchFolderTree,
     getCurrentItems,
+    fetchContacts,
 } from './actions/UserActions';
 import PrivateRoute from './functional_components/PrivateRoute';
 import styles from './App.module.css';
@@ -79,7 +80,6 @@ class App extends React.Component {
     componentDidMount() {
         const { login } = this.props;
         login();
-
         // auth.trackSession((session) => {
         //     if (!session) {
         //         this.props.login();
@@ -173,7 +173,7 @@ class App extends React.Component {
                             <PrivateRoute
                                 session={session}
                                 path="/contacts"
-                                component={<ContactScreen webId={webId} />}
+                                component={<ContactSidebar webId={webId} />}
                             />
                         </Switch>
                     </ErrorBoundary>
@@ -200,6 +200,13 @@ const mapStateToProps = (state) => {
 export default withRouter(
     connect(
         mapStateToProps,
-        { login, fetchUser, setWebId, fetchFolderTree, getCurrentItems }
+        {
+            login,
+            fetchUser,
+            setWebId,
+            fetchFolderTree,
+            getCurrentItems,
+            fetchContacts,
+        }
     )(App)
 );

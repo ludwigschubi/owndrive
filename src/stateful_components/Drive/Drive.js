@@ -15,6 +15,7 @@ import { InputWindow } from '../../functional_components/InputWindow';
 import Container from 'react-bootstrap/Container';
 import { ConsentWindow } from '../../functional_components/ConsentWindow';
 import { getCurrentItems, setCurrentPath } from '../../actions/UserActions';
+import { ContactSidebar } from '../../functional_components/ContactSidebar';
 const ns = require('solid-namespace')(rdf);
 
 class Drive extends React.Component {
@@ -361,57 +362,64 @@ class Drive extends React.Component {
                                 placeholder={'Untitled'}
                             />
                             {currentItems ? (
-                                <Container>
-                                    <ItemList
-                                        selectedItems={this.state.selectedItems}
-                                        items={currentItems.folders}
-                                        currPath={currentPath}
-                                        image={folder}
-                                        onItemClick={this.followPath}
-                                        onDelete={(item) => {
-                                            this.openConsentWindow();
-                                        }}
-                                        onAccess={(item) => {
-                                            fileUtils.changeAccess(item);
-                                        }}
-                                        onRename={(item) => {
-                                            fileUtils.renameItem(item);
-                                        }}
-                                        onInfo={(item) => {
-                                            fileUtils.getInfo(item);
-                                        }}
-                                    />
-                                    <ItemList
-                                        selectedItems={this.state.selectedItems}
-                                        isFile
-                                        items={currentItems.files}
-                                        currPath={currentPath}
-                                        image={fileIcon}
-                                        onItemClick={this.loadFile}
-                                        onDelete={(item) => {
-                                            this.openConsentWindow();
-                                        }}
-                                        onAccess={(item) => {
-                                            fileUtils.changeAccess(item);
-                                        }}
-                                        onRename={(item) => {
-                                            fileUtils.renameFile(item);
-                                        }}
-                                        onInfo={(item) => {
-                                            fileUtils.onInfo(item);
-                                        }}
-                                    />
-                                    <Buttons
-                                        onFileCreation={
-                                            this.openCreateFileWindow
-                                        }
-                                        onFolderCreation={
-                                            this.openCreateFolderWindow
-                                        }
-                                        onFolderUpload={this.uploadFolder}
-                                        onFileUpload={this.uploadFile}
-                                    ></Buttons>
-                                </Container>
+                                <div>
+                                    <ContactSidebar />
+                                    <Container>
+                                        <ItemList
+                                            selectedItems={
+                                                this.state.selectedItems
+                                            }
+                                            items={currentItems.folders}
+                                            currPath={currentPath}
+                                            image={folder}
+                                            onItemClick={this.followPath}
+                                            onDelete={(item) => {
+                                                this.openConsentWindow();
+                                            }}
+                                            onAccess={(item) => {
+                                                fileUtils.changeAccess(item);
+                                            }}
+                                            onRename={(item) => {
+                                                fileUtils.renameItem(item);
+                                            }}
+                                            onInfo={(item) => {
+                                                fileUtils.getInfo(item);
+                                            }}
+                                        />
+                                        <ItemList
+                                            selectedItems={
+                                                this.state.selectedItems
+                                            }
+                                            isFile
+                                            items={currentItems.files}
+                                            currPath={currentPath}
+                                            image={fileIcon}
+                                            onItemClick={this.loadFile}
+                                            onDelete={(item) => {
+                                                this.openConsentWindow();
+                                            }}
+                                            onAccess={(item) => {
+                                                fileUtils.changeAccess(item);
+                                            }}
+                                            onRename={(item) => {
+                                                fileUtils.renameFile(item);
+                                            }}
+                                            onInfo={(item) => {
+                                                fileUtils.onInfo(item);
+                                            }}
+                                        />
+                                        <Buttons
+                                            onFileCreation={
+                                                this.openCreateFileWindow
+                                            }
+                                            onFolderCreation={
+                                                this.openCreateFolderWindow
+                                            }
+                                            onFolderUpload={this.uploadFolder}
+                                            onFileUpload={this.uploadFile}
+                                        ></Buttons>
+                                    </Container>
+                                </div>
                             ) : null}
                         </div>
                     )}
