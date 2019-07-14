@@ -3,8 +3,6 @@ import styles from './Item.module.css';
 import { Menu, Separator, MenuProvider, Item } from 'react-contexify';
 import 'react-contexify/dist/ReactContexify.min.css';
 
-const MENU_TYPE = 'SIMPLE';
-
 const MyItem = ({
     image,
     label,

@@ -1,7 +1,5 @@
 import React from 'react';
 import styles from './LoginScreen.module.css';
-import { FlareComponent } from 'flare-react';
-import animation from '../../assets/animations/owntechFloat60fps.flr';
 
 class LoginScreen extends React.Component {
     constructor(props) {
@@ -16,12 +14,6 @@ class LoginScreen extends React.Component {
             <div className={styles.container}>
                 <section className={styles.page}>
                     <div className={styles.floatAnimation}>
-                        <FlareComponent
-                            width={500}
-                            height={500}
-                            animationName="Untitled"
-                            file={animation}
-                        />
                         <p className={styles.slogan}>
                             Because the internet deserves better.
                         </p>{' '}

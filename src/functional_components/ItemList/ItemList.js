@@ -1,8 +1,7 @@
 import React from 'react';
-import {Item} from '../Item';
+import { Item } from '../Item';
 import styles from './ItemList.module.css';
-import {File} from '../File';
-import {tsPropertySignature} from '@babel/types';
+import { File } from '../File';
 import fileutils from '../../utils/fileUtils';
 const ItemList = ({
     selectedItems,

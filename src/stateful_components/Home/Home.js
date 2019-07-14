@@ -8,7 +8,6 @@ import FileUpload from '../../functional_components/FileUpload/FileUpload';
 import { ItemList } from '../../functional_components/ItemList';
 import fileUtils from '../../utils/fileUtils';
 import { getBreadcrumbsFromUrl } from '../../utils/url';
-import ACLController from 'your-acl';
 import FileCreation from '../../functional_components/FileCreation/FileCreation';
 import { folder } from '../../assets/icons/externalIcons';
 import fileIcon from '../../assets/icons/File.png';
@@ -125,7 +124,7 @@ class Home extends React.Component {
             const newBreadcrumbs = getBreadcrumbsFromUrl(path);
             this.loadCurrentFolder(path, newBreadcrumbs);
         } else {
-            const newSelection = this.state.selectedItems
+            const newSelection = this.state.selectedItems;
             newSelection.push(path);
             this.setState({
                 selectedItems: newSelection,

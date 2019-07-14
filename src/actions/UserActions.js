@@ -15,17 +15,14 @@ import {
     SET_CURRENT_PATH,
     SET_CURRENT_ITEMS,
 } from './types';
-import rdf from 'rdflib';
-import ns from 'solid-namespace';
 import auth from 'solid-auth-client';
 import User from 'your-user';
-import {sortContainments, getCurrentDirectory} from '../utils/url';
+import { getCurrentDirectory } from '../utils/url';
 import fileUtils from '../utils/fileUtils';
-import {folder} from '../assets/icons/externalIcons';
 
 export const login = (username, password) => {
     return (dispatch) => {
-        dispatch({type: LOGIN});
+        dispatch({ type: LOGIN });
         auth.currentSession()
             .then((session) => {
                 if (!session) {
@@ -33,8 +30,8 @@ export const login = (username, password) => {
                         console.log('value from, auth login', value)
                     );
                 } else {
-                    dispatch({type: LOGIN_SUCCESS, payload: session});
-                    dispatch({type: SET_WEBID, payload: session.webId});
+                    dispatch({ type: LOGIN_SUCCESS, payload: session });
+                    dispatch({ type: SET_WEBID, payload: session.webId });
                     dispatch({
                         type: SET_CURRENT_PATH,
                         payload: session.webId.replace(
@@ -51,31 +48,31 @@ export const login = (username, password) => {
                 }
             })
             .catch((error) => {
-                dispatch({type: LOGIN_FAIL, payload: error});
+                dispatch({ type: LOGIN_FAIL, payload: error });
             });
     };
 };
 
 export const setWebId = (webId) => {
-    return {type: SET_WEBID, payload: webId};
+    return { type: SET_WEBID, payload: webId };
 };
 
 export const setCurrentPath = (newPath) => {
-    return {type: SET_CURRENT_PATH, payload: newPath}
-}
+    return { type: SET_CURRENT_PATH, payload: newPath };
+};
 
 export const fetchUser = (webId) => {
     return (dispatch) => {
         console.log('in fetch user', webId);
-        dispatch({type: FETCH_USER});
+        dispatch({ type: FETCH_USER });
         const currUser = new User(webId);
         currUser
             .getProfile()
             .then((profile) => {
-                dispatch({type: FETCH_USER_SUCCESS, payload: profile});
+                dispatch({ type: FETCH_USER_SUCCESS, payload: profile });
             })
             .catch((error) =>
-                dispatch({type: FETCH_USER_FAIL, payload: error})
+                dispatch({ type: FETCH_USER_FAIL, payload: error })
             );
         console.log('finish');
     };
@@ -83,28 +80,28 @@ export const fetchUser = (webId) => {
 
 export const fetchContacts = (yourUserObject) => {
     return (dispatch) => {
-        dispatch({type: FETCH_FRIENDS});
+        dispatch({ type: FETCH_FRIENDS });
         yourUserObject
             .getFriends()
             .then((friends) => {
-                dispatch({type: FETCH_FRIENDS_SUCCESS, payload: friends});
+                dispatch({ type: FETCH_FRIENDS_SUCCESS, payload: friends });
             })
             .catch((error) => {
-                dispatch({type: FETCH_FRIENDS_FAIL, payload: error});
+                dispatch({ type: FETCH_FRIENDS_FAIL, payload: error });
             });
     };
 };
 
 export const fetchFolderTree = (url) => {
     return (dispatch) => {
-        dispatch({type: FETCH_FOLDER_TREE});
+        dispatch({ type: FETCH_FOLDER_TREE });
         fileUtils
             .getFolderFiles(url)
             .then((tree) => {
-                dispatch({type: FETCH_FOLDER_TREE_SUCCESS, payload: tree});
+                dispatch({ type: FETCH_FOLDER_TREE_SUCCESS, payload: tree });
             })
             .catch((error) =>
-                dispatch({type: FETCH_FOLDER_TREE_FAIL, payload: error})
+                dispatch({ type: FETCH_FOLDER_TREE_FAIL, payload: error })
             );
     };
 };
@@ -119,7 +116,7 @@ const convertFileUrlToName = (fileUrl) => {
 
 export const getCurrentItems = (urlTree, currentPath) => {
     return (dispatch) => {
-        const {folders, files} = getCurrentDirectory(urlTree, currentPath);
+        const { folders, files } = getCurrentDirectory(urlTree, currentPath);
         const folderNames = folders.map((folderUrl) => {
             return convertFolderUrlToName(folderUrl);
         });
@@ -128,7 +125,7 @@ export const getCurrentItems = (urlTree, currentPath) => {
         });
         dispatch({
             type: SET_CURRENT_ITEMS,
-            payload: {folders: folderNames, files: fileNames},
+            payload: { folders: folderNames, files: fileNames },
         });
     };
 };

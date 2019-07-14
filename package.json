@@ -2,14 +2,7 @@
   "name": "solid-files",
   "version": "0.1.0",
   "private": true,
-  "precommit": "NODE_ENV=production lint-staged",
-  "lint-staged": {
-    "*.{js,jsx}": [
-      "pretty-quick --staged",
-      "eslint src/ --fix",
-      "git add"
-    ]
-  },
+
   "dependencies": {
     "classnames": "^2.2.6",
     "flare-react": "^1.0.2",
@@ -34,7 +27,28 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "test:watch": "react-scripts test --watchAll",
+    "eject": "react-scripts eject",
+    "lint": "eslint src"
+  },
+  "husky": {
+    "hooks": {
+    "pre-commit":"set CI=true && react-scripts test && lint-staged",
+      "pre-push": "set CI=true && react-scripts test && lint-staged"
+    }
+  },
+  "lint-staged": {
+    "linters": {
+        "*/**/*.js": [
+            "prettier --write",
+            "eslint",
+            "git add"
+        ],
+        "*.{json,css}": [
+            "prettier --write",
+            "git add"
+        ]
+    }
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -52,6 +66,9 @@
     ]
   },
   "devDependencies": {
+    "enzyme": "^3.10.0",
+    "enzyme-adapter-react-16": "^1.14.0",
+    "enzyme-to-json": "^3.3.5",
     "eslint": "^5.16.0",
     "eslint-config-airbnb": "^17.1.0",
     "eslint-config-google": "^0.13.0",

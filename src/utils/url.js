@@ -1,10 +1,22 @@
 export const getBreadcrumbsFromUrl = (url) => {
+    // check if url is a valid url
+    if (
+        typeof url !== 'string' ||
+        !url.match(
+            /^(?:http(s)?:\/\/)?[\w.-]+(?:\.[\w\.-]+)+[\w\-\._~:/?#[\]@!\$&'\(\)\*\+,;=.]+$/
+        )
+    ) {
+        throw new Error('getBreadcrumbsFromUrl received an invalid url');
+    }
     const breadcrumbs = url.replace('https://', '').split('/');
     breadcrumbs.shift();
-    const newBreadcrumbs = ['/'];
+    const newBreadcrumbs = [];
     breadcrumbs.forEach((breadcrumb) => {
-        newBreadcrumbs.push('/' + breadcrumb);
+        if (breadcrumb !== '') {
+            newBreadcrumbs.push('/' + breadcrumb);
+        }
     });
+    console.log(newBreadcrumbs);
     return newBreadcrumbs;
 };
 
@@ -68,5 +80,5 @@ export const getCurrentDirectory = (urlTree, currentWorkingDirectory) => {
         currentWorkingDirectory
     );
     const files = matchPathInUrlList(urlTree.files, currentWorkingDirectory);
-    return {folders, files};
+    return { folders, files };
 };

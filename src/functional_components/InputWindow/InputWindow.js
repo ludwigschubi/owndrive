@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import {Window} from '../Window';
+import React, { useState } from 'react';
+import { Window } from '../Window';
 import styles from './InputWindow.module.css';
 import classNames from 'classnames';
 

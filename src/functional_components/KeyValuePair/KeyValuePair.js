@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import styles from './KeyValuePair.module.css';
 import classNames from 'classnames';
-import editIcon from '../../assets/icons/edit.png';
-import { arrayExpression } from '@babel/types';
 export default function KeyValuePair({
     keyVal,
     values,

@@ -1,2 +1,1 @@
-export {default as ConsentWindow} from './ConsentWindow';
-
+export { default as ConsentWindow } from './ConsentWindow';

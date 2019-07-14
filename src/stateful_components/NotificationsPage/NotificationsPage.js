@@ -60,13 +60,15 @@ class NotificationsPage extends React.Component {
     getNotificationContent(notification) {
         const store = rdf.graph();
         const fetcher = new rdf.Fetcher(store);
-
-        const PREQ = rdf.Namespace('https://a-solid-web.github.io/permission-ontology/permissionrequests.rdf#');
+        // eslint-disable-next-line
+        const preq = rdf.Namespace(
+            'https://a-solid-web.github.io/permission-ontology/permissionrequests.rdf#'
+        );
 
         return fetcher.load(notification).then(() => {
             const sender = store.any(
                 rdf.sym(notification),
-                PREQ('requestFrom')
+                preq('requestFrom')
             );
 
             if (!sender) {
@@ -75,37 +77,31 @@ class NotificationsPage extends React.Component {
 
             const requestType = store.any(
                 rdf.sym(notification),
-                PREQ('requestDataType')
+                preq('requestDataType')
             );
             const requestTypeValue = requestType.value.split('#')[1];
 
             const requestedRessource = store.any(
                 rdf.sym(notification),
-                PREQ('requests')
+                preq('requests')
             );
             const requestedRessourceValue = requestedRessource.value;
 
-            const created = store.any(
-                rdf.sym(notification),
-                PREQ('wasSentOn')
-            );
+            const created = store.any(rdf.sym(notification), preq('wasSentOn'));
             const createdValue = created ? created.value : '';
 
-            const expires = store.any(
-                rdf.sym(notification),
-                PREQ('expires')
-            );
+            const expires = store.any(rdf.sym(notification), preq('expires'));
             const expiresValue = expires ? expires.value : '';
 
             const requestStatus = store.any(
                 rdf.sym(notification),
-                PREQ('hasStatus')
+                preq('hasStatus')
             );
             const requestStatusValue = requestStatus ? requestStatus.value : '';
 
             const privacyRisk = store.any(
                 rdf.sym(notification),
-                PREQ('privacyRisklevel')
+                preq('privacyRisklevel')
             );
             const privacyRiskValue = privacyRisk
                 ? 'There is a ' + privacyRisk.value + ' privacy Risk'
@@ -113,7 +109,7 @@ class NotificationsPage extends React.Component {
 
             const financialRisk = store.any(
                 rdf.sym(notification),
-                PREQ('financialRisklevel')
+                preq('financialRisklevel')
             );
             const financialRiskValue = financialRisk
                 ? 'There is a ' + financialRisk.value + 'financial Risk'
@@ -121,7 +117,7 @@ class NotificationsPage extends React.Component {
 
             const legalRisk = store.any(
                 rdf.sym(notification),
-                PREQ('legalRisklevel')
+                preq('legalRisklevel')
             );
             const legalRiskValue = legalRisk
                 ? 'There is a ' + legalRisk.value + 'legal Risk'
@@ -129,7 +125,7 @@ class NotificationsPage extends React.Component {
 
             const requestIntent = store.any(
                 rdf.sym(notification),
-                PREQ('hasIntent')
+                preq('hasIntent')
             );
             const requestIntentValue = requestIntent
                 ? requestIntent.value.split('#')[1]
@@ -154,8 +150,8 @@ class NotificationsPage extends React.Component {
 
     componentDidMount() {
         this.fetchNotifications().then((results) => {
-            const notifications = results.map((notification) => {
-                const notificationContent = this.getNotificationContent(notification).then((content) => {
+            results.map((notification) => {
+                this.getNotificationContent(notification).then((content) => {
                     console.log(content);
                 });
             });
