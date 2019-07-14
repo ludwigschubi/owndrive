@@ -1,5 +1,4 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
 import Navbar from 'react-bootstrap/Navbar';
 import NavDropdown from 'react-bootstrap/NavDropdown';
 import Col from 'react-bootstrap/Col';
@@ -49,17 +48,15 @@ const Navigation = ({ picture, webId, onLogin, onLogout, toggleSidebar }) => {
                                             'float-right',
                                         ]}
                                     >
-                                            <NavDropdown.Item href="home">
-                                                Home
-                                            </NavDropdown.Item>
-                                            <NavDropdown.Item href="notifications">
-                                                Notifications
-                                            </NavDropdown.Item>
-                                            <NavDropdown.Item
-                                                onClick={onLogout}
-                                            >
-                                                Logout
-                                            </NavDropdown.Item>
+                                        <NavDropdown.Item href="home">
+                                            Home
+                                        </NavDropdown.Item>
+                                        <NavDropdown.Item href="notifications">
+                                            Notifications
+                                        </NavDropdown.Item>
+                                        <NavDropdown.Item onClick={onLogout}>
+                                            Logout
+                                        </NavDropdown.Item>
                                     </NavDropdown>
                                 </div>
                             ) : (

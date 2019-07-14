@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import styles from './Buttons.module.css';
 import FileUpload from '../FileUpload';
 import FileCreation from '../FileCreation';

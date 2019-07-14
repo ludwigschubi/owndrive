@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './File.module.css';
-import {Menu, Separator, MenuProvider, Item} from 'react-contexify';
+import { Menu, Separator, MenuProvider, Item } from 'react-contexify';
 export default function File({
     currPath,
     onClick,
@@ -13,15 +13,16 @@ export default function File({
     onInfo,
 }) {
     const imageTypes = ['ico', 'png', 'jpeg', 'jpg'];
-    const labelFragments = encodeURIComponent(label).split('.')
-    const isImage = imageTypes.indexOf(labelFragments[labelFragments.length - 1]) > -1;
+    const labelFragments = encodeURIComponent(label).split('.');
+    const isImage =
+        imageTypes.indexOf(labelFragments[labelFragments.length - 1]) > -1;
     if (isImage) {
         return (
             <div>
                 <MenuProvider id={label + 'contextmenu'}>
                     <div
                         className={styles.container}
-                        style={selectedItem ? {opacity: 0.5} : undefined}
+                        style={selectedItem ? { opacity: 0.5 } : undefined}
                         onClick={onClick}
                     >
                         <div className={styles.innerContainer}>
@@ -88,7 +89,7 @@ export default function File({
                 >
                     <div
                         className={styles.container}
-                        style={selectedItem ? {opacity: 0.5} : undefined}
+                        style={selectedItem ? { opacity: 0.5 } : undefined}
                         onClick={onClick}
                     >
                         <div className={styles.innerContainer}>

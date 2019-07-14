@@ -1,0 +1,20 @@
+.container {
+    width: 100%;
+    padding: 10px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.nameText {
+    flex-basis: 50%;
+    padding-left: 10px;
+}
+
+.image {
+    width: 100px;
+    height: 100px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 50%;
+}

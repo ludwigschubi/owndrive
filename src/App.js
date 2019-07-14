@@ -1,22 +1,22 @@
 import React from 'react';
-import {BrowserRouter, Route, Switch, withRouter} from 'react-router-dom';
-import {connect} from 'react-redux';
-import {ClassicSpinner} from 'react-spinners-kit';
+import { Route, Switch, withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+import { ClassicSpinner } from 'react-spinners-kit';
 import Navigation from './functional_components/Navigation';
-import Container from 'react-bootstrap/Container';
 import Drive from './stateful_components/Drive';
 import LoginScreen from './stateful_components/LoginScreen';
-import {ProfileSideBar} from './functional_components/ProfileSideBar';
+import { ProfileSideBar } from './functional_components/ProfileSideBar';
 import auth from 'solid-auth-client';
 import User from 'your-user';
-import {ErrorBoundary} from './stateful_components/ErrorBoundary';
-import {ContactScreen} from './functional_components/ContactScreen';
+import { ErrorBoundary } from './stateful_components/ErrorBoundary';
+import { ContactSidebar } from './functional_components/ContactSidebar';
 import {
     login,
     fetchUser,
     setWebId,
     fetchFolderTree,
     getCurrentItems,
+    fetchContacts,
 } from './actions/UserActions';
 import PrivateRoute from './functional_components/PrivateRoute';
 import styles from './App.module.css';
@@ -39,7 +39,10 @@ class App extends React.Component {
     async login() {
         const session = await auth.currentSession();
         if (!session) {
-            const idp = window.prompt('Please enter the domain of your identity provider', 'solid.community');
+            const idp = window.prompt(
+                'Please enter the domain of your identity provider',
+                'solid.community'
+            );
             await auth.login(`https://${idp}`);
         } else {
             this.setState({
@@ -75,9 +78,8 @@ class App extends React.Component {
     }
 
     componentDidMount() {
-        const {login, session} = this.props;
+        const { login } = this.props;
         login();
-
         // auth.trackSession((session) => {
         //     if (!session) {
         //         this.props.login();
@@ -90,7 +92,7 @@ class App extends React.Component {
     }
 
     render() {
-        const {isProfileExpanded} = this.state;
+        const { isProfileExpanded } = this.state;
         const {
             webId,
             user,
@@ -117,7 +119,7 @@ class App extends React.Component {
             );
         } else {
             return (
-                <div style={{height: '100%'}}>
+                <div style={{ height: '100%' }}>
                     <ErrorBoundary>
                         <Navigation
                             toggleSidebar={this.toggleSidebar}
@@ -171,7 +173,7 @@ class App extends React.Component {
                             <PrivateRoute
                                 session={session}
                                 path="/contacts"
-                                component={<ContactScreen webId={webId} />}
+                                component={<ContactSidebar webId={webId} />}
                             />
                         </Switch>
                     </ErrorBoundary>
@@ -198,6 +200,13 @@ const mapStateToProps = (state) => {
 export default withRouter(
     connect(
         mapStateToProps,
-        {login, fetchUser, setWebId, fetchFolderTree, getCurrentItems}
+        {
+            login,
+            fetchUser,
+            setWebId,
+            fetchFolderTree,
+            getCurrentItems,
+            fetchContacts,
+        }
     )(App)
 );

@@ -8,6 +8,12 @@ Feel free to contribute.
 
 -   if you use vscode install Eslint & Prettier Package
 -   go to file -> preferences -> settings -> Search for formatOnSave and check the box
+
+## Precommit- / Prepush- hook
+
+-   This Project runs all test and applyies all linter rules before commit or push
+-   If you have linter errors try `eslint "**/*.js` in terminal or remove the linter errors by hand
+
     ##TO-DO:
 
 -   Complete file-upload
