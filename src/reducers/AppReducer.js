@@ -16,6 +16,8 @@ import {
     FETCH_NOTIFICATIONS,
     FETCH_NOTIFICATIONS_SUCCESS,
     SET_SELECTION,
+    FETCH_NOTIFICATIONS,
+    FETCH_NOTIFICATIONS_SUCCESS,
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -35,6 +37,7 @@ const INITIAL_STATE = {
     currentFolderTree: null,
     notifications: null,
     selectedItems: [],
+    notifications: null,
 
     // [
     //     {

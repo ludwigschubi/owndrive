@@ -15,8 +15,8 @@ import {
     SET_CURRENT_PATH,
     FETCH_NOTIFICATIONS,
     FETCH_NOTIFICATIONS_SUCCESS,
-    SET_SELECTION,
     FETCH_NOTIFICATIONS_FAILURE,
+    SET_SELECTION,
     SEND_NOTIFICATION,
     SEND_NOTIFICATION_SUCCESS,
     SEND_NOTIFICATION_FAILURE,
@@ -177,5 +177,17 @@ export const sendNotification = (webId, notification) => {
 export const setSelection = (selection) => {
     return (dispatch) => {
         dispatch({ type: SET_SELECTION, payload: selection });
+    };
+};
+
+export const fetchNotifications = (webId) => {
+    return (dispatch) => {
+        dispatch({ type: FETCH_NOTIFICATIONS });
+        fileUtils.getNotificationFiles(webId).then((notifications) => {
+            dispatch({
+                type: FETCH_NOTIFICATIONS_SUCCESS,
+                payload: notifications,
+            });
+        });
     };
 };

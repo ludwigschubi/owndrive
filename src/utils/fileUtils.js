@@ -253,14 +253,8 @@ function getNotificationFiles(webId) {
 
     const store = rdf.graph();
     const fetcher = new rdf.Fetcher(store);
-    const as = new rdf.Namespace('https://www.w3.org/ns/activitystreams#');
-    fetcher
-        .load('https://ludwigschubert.owntech.de/inbox/Notif1564398405376.ttl')
-        .then((response) => {
-            console.log(response.responseText);
-        });
 
-    return fetcher.load(inboxAddress).then((response) => {
+    return fetcher.load(inboxAddress).then(() => {
         const containments = store
             .each(rdf.sym(inboxAddress), ns.ldp('contains'))
             .map((notification) => {
@@ -360,7 +354,15 @@ export default {
     renameFile: renameFile,
     hasArray: hasArray,
     getFolderFiles: getFolderFiles,
+<<<<<<< HEAD
     getNotificationFiles: getNotificationFiles,
     deleteRecursively: deleteRecursively,
     sendNotification: sendNotification,
+=======
+<<<<<<< HEAD
+    deleteRecursively: deleteRecursively,
+=======
+    getNotificationFiles: getNotificationFiles,
+>>>>>>> Fix merge conflicts of updated branch
+>>>>>>> Fix merge conflicts of updated branch
 };
