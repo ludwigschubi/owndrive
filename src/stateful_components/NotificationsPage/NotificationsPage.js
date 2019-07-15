@@ -11,53 +11,51 @@ class NotificationsPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            webId: props.webId,
-            notifications: props.notifications,
+            webId: props.webId, // anti pattern, da props.notification immer den global state beinhaltet und somit lokaler state hinfällig ist
+            notifications: props.notifications, // anti pattern, da props.notification immer den global state beinhaltet und somit lokaler state hinfällig ist
         };
-
-        this.fetchNotifications = this.fetchNotifications.bind(this);
     }
 
-    fetchNotifications() {
-        const webId = this.state.webId;
-        const inboxAddress = webId.replace('profile/card#me', 'inbox');
+    // fetchNotifications() {
+    //     const webId = this.state.webId;
+    //     const inboxAddress = webId.replace('profile/card#me', 'inbox');
 
-        const store = rdf.graph();
-        const fetcher = new rdf.Fetcher(store);
+    //     const store = rdf.graph();
+    //     const fetcher = new rdf.Fetcher(store);
 
-        return fetcher.load(inboxAddress).then(() => {
-            const containments = store
-                .each(rdf.sym(inboxAddress), ns.ldp('contains'))
-                .map((notification) => {
-                    const notificationAddress =
-                        inboxAddress +
-                        '/' +
-                        notification.value.split('/')[3].replace('inbox', '');
-                    return fetcher
-                        .load(notificationAddress)
-                        .then(() => {
-                            const notification = store.statementsMatching(
-                                rdf.sym(notificationAddress),
-                                ns.rdf('type'),
-                                ns.solid('Notification')
-                            )[0].subject.value;
-                            return notification;
-                        })
-                        .catch((err) => {
-                            return undefined;
-                        });
-                });
-            return Promise.all(containments).then((results) => {
-                const cleanResults = [];
-                results.forEach((result) => {
-                    if (result) {
-                        cleanResults.push(result);
-                    }
-                });
-                return cleanResults;
-            });
-        });
-    }
+    //     return fetcher.load(inboxAddress).then(() => {
+    //         const containments = store
+    //             .each(rdf.sym(inboxAddress), ns.ldp('contains'))
+    //             .map((notification) => {
+    //                 const notificationAddress =
+    //                     inboxAddress +
+    //                     '/' +
+    //                     notification.value.split('/')[3].replace('inbox', '');
+    //                 return fetcher
+    //                     .load(notificationAddress)
+    //                     .then(() => {
+    //                         const notification = store.statementsMatching(
+    //                             rdf.sym(notificationAddress),
+    //                             ns.rdf('type'),
+    //                             ns.solid('Notification')
+    //                         )[0].subject.value;
+    //                         return notification;
+    //                     })
+    //                     .catch((err) => {
+    //                         return undefined;
+    //                     });
+    //             });
+    //         return Promise.all(containments).then((results) => {
+    //             const cleanResults = [];
+    //             results.forEach((result) => {
+    //                 if (result) {
+    //                     cleanResults.push(result);
+    //                 }
+    //             });
+    //             return cleanResults;
+    //         });
+    //     });
+    // }
 
     getNotificationContent(notification) {
         const store = rdf.graph();
@@ -252,18 +250,21 @@ class NotificationsPage extends React.Component {
     }
 
     componentDidMount() {
-        const { fetchNotifications, webId } = this.props;
-        if (webId && fetchNotifications) {
-            console.log(webId, fetchNotifications);
-            fetchNotifications(webId).then((results) => {
-                results.map((notification) => {
-                    this.getNotificationContent(notification).then(
-                        (content) => {
-                            console.log(content);
-                        }
-                    );
-                });
-            });
+        const { fetchNotifications, webId, notifications } = this.props;
+        if (webId && !notifications) {
+            fetchNotifications(webId);
+            // .then kann man nur callen wenn ein promise von der Funktion zurück gegeben wird
+            // .then((results) => {
+            //     results.map((notification) => {
+            //         this.getNotificationContent(notification).then(
+            //             (content) => {
+            //                 console.log(content);
+            //             }
+            //         );
+            //     });
+            // });
+        } else if (notifications) {
+            this.getNotificationContent(notifications);
         }
     }
 
