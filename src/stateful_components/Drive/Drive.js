@@ -226,15 +226,15 @@ class Drive extends React.Component {
             fileUtils
                 .uploadFolderOrFile(
                     files[file],
-                    this.state.currPath +
+                    this.props.currentPath +
                         encodeURIComponent(files[file].webkitRelativePath)
                 )
                 .then((response) => {
                     console.log(file, response);
                     if (file === files.length - 1) {
                         this.loadCurrentFolder(
-                            this.state.currPath,
-                            this.state.breadcrumbs
+                            this.props.currentPath,
+                            getBreadcrumbsFromUrl(this.props.currentPath)
                         );
                     }
                 });
@@ -289,7 +289,6 @@ class Drive extends React.Component {
             isConsentWindowVisible,
         } = this.state;
         const { webId, currentItems, currentPath, setCurrentPath } = this.props;
-        console.log('currentPath', currentPath);
         const fileMarkup = this.state.file ? (
             <div className={styles.renderedFile}>
                 {this.state.image ? (

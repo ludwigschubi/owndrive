@@ -14,6 +14,8 @@ import {
     FETCH_FOLDER_TREE_FAIL,
     SET_CURRENT_PATH,
     SET_CURRENT_ITEMS,
+    FETCH_NOTIFICATIONS,
+    FETCH_NOTIFICATIONS_SUCCESS,
 } from './types';
 import auth from 'solid-auth-client';
 import User from 'your-user';
@@ -126,6 +128,18 @@ export const getCurrentItems = (urlTree, currentPath) => {
         dispatch({
             type: SET_CURRENT_ITEMS,
             payload: { folders: folderNames, files: fileNames },
+        });
+    };
+};
+
+export const fetchNotifications = (webId) => {
+    return (dispatch) => {
+        dispatch({ type: FETCH_NOTIFICATIONS });
+        fileUtils.getNotificationFiles(webId).then((notifications) => {
+            dispatch({
+                type: FETCH_NOTIFICATIONS_SUCCESS,
+                payload: notifications,
+            });
         });
     };
 };

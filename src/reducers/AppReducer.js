@@ -14,6 +14,8 @@ import {
     FETCH_FOLDER_TREE_FAIL,
     SET_CURRENT_PATH,
     SET_CURRENT_ITEMS,
+    FETCH_NOTIFICATIONS,
+    FETCH_NOTIFICATIONS_SUCCESS,
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -23,12 +25,14 @@ const INITIAL_STATE = {
     loadUser: false,
     loadFriends: false,
     loadFolderTree: false,
+    loadNotifications: false,
     error: null,
     contacts: null,
     session: null,
     currentPath: null,
     currentItems: null,
     currentFolderTree: null,
+    notifications: null,
 
     // [
     //     {
@@ -81,6 +85,17 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, loadFolder: false, currentFolderTree: payload };
         case FETCH_FOLDER_TREE_FAIL:
             return { ...state, loadFolder: false, error: payload };
+        case FETCH_NOTIFICATIONS:
+            return {
+                ...state,
+                loadNotifications: true,
+            };
+        case FETCH_NOTIFICATIONS_SUCCESS:
+            return {
+                ...state,
+                loadNotifications: false,
+                notifications: payload,
+            };
         default:
             return state;
     }

@@ -21,6 +21,7 @@ import {
 import PrivateRoute from './functional_components/PrivateRoute';
 import styles from './App.module.css';
 import NotificationsPage from './stateful_components/NotificationsPage';
+import LandingPage from './stateful_components/LandingPage/LandingPage';
 
 class App extends React.Component {
     constructor(props) {
@@ -154,7 +155,7 @@ class App extends React.Component {
                             />
                         ) : null}
                         <Switch>
-                            <Route path="/" exact component={LoginScreen} />
+                            <Route path="/" exact component={LandingPage} />
                             <PrivateRoute
                                 session={session}
                                 path="/home"
@@ -174,6 +175,11 @@ class App extends React.Component {
                                 session={session}
                                 path="/contacts"
                                 component={<ContactSidebar webId={webId} />}
+                            />
+                            <PrivateRoute
+                                session={session}
+                                path="/login"
+                                component={<LoginScreen webId={webId} />}
                             />
                         </Switch>
                     </ErrorBoundary>

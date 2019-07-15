@@ -220,6 +220,46 @@ function getFolderContents(folderUrl) {
         });
 }
 
+function getNotificationFiles(webId) {
+    const inboxAddress = webId.replace('profile/card#me', 'inbox');
+
+    const store = rdf.graph();
+    const fetcher = new rdf.Fetcher(store);
+
+    return fetcher.load(inboxAddress).then(() => {
+        const containments = store
+            .each(rdf.sym(inboxAddress), ns.ldp('contains'))
+            .map((notification) => {
+                const notificationAddress =
+                    inboxAddress +
+                    '/' +
+                    notification.value.split('/')[3].replace('inbox', '');
+                return fetcher
+                    .load(notificationAddress)
+                    .then(() => {
+                        const notification = store.statementsMatching(
+                            rdf.sym(notificationAddress),
+                            ns.rdf('type'),
+                            ns.solid('Notification')
+                        )[0].subject.value;
+                        return notification;
+                    })
+                    .catch((err) => {
+                        return undefined;
+                    });
+            });
+        return Promise.all(containments).then((results) => {
+            const cleanResults = [];
+            results.forEach((result) => {
+                if (result) {
+                    cleanResults.push(result);
+                }
+            });
+            return cleanResults;
+        });
+    });
+}
+
 function changeAccess(item) {
     console.log(item);
 }
@@ -245,4 +285,5 @@ export default {
     renameFile: renameFile,
     hasArray: hasArray,
     getFolderFiles: getFolderFiles,
+    getNotificationFiles: getNotificationFiles,
 };
