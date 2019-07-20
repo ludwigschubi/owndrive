@@ -5,7 +5,7 @@ import { Notification } from '../../functional_components/Notification';
 import Container from 'react-bootstrap/Container';
 import { connect } from 'react-redux';
 import { fetchNotifications } from '../../actions/UserActions';
-// const ns = require('solid-namespace')(rdf);
+const ns = require('solid-namespace')(rdf);
 
 class NotificationsPage extends React.Component {
     constructor(props) {
