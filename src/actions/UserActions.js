@@ -46,7 +46,7 @@ const setSessionInfo = (session) => {
         dispatch({ type: SET_WEBID, payload: session.webId });
         dispatch({
             type: SET_CURRENT_PATH,
-            payload: session.webId.replace('profile/card#me', ''),
+            payload: session.webId.replace('/profile/card#me', ''),
         });
         dispatch(fetchUser(session.webId));
         dispatch(fetchFolderTree(session.webId.replace('profile/card#me', '')));
