@@ -21,3 +21,5 @@ export const FETCH_FOLDER_TREE_FAIL = 'fetch_folder_tree_fail';
 export const GET_SESSION = 'get_session';
 export const GET_SESSION_SUCCESS = 'get_session_success';
 export const GET_SESSION_FAIL = 'get_session_fail';
+
+export const SET_SELECTION = 'set_selection';

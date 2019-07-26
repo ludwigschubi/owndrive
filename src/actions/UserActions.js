@@ -14,6 +14,7 @@ import {
     FETCH_FOLDER_TREE_FAIL,
     SET_CURRENT_PATH,
     SET_CURRENT_ITEMS,
+    SET_SELECTION,
 } from './types';
 import auth from 'solid-auth-client';
 import User from 'your-user';
@@ -58,7 +59,10 @@ export const setWebId = (webId) => {
 };
 
 export const setCurrentPath = (newPath) => {
-    return { type: SET_CURRENT_PATH, payload: newPath };
+    return (dispatch) => {
+        dispatch({ type: SET_CURRENT_PATH, payload: newPath });
+        dispatch({ type: SET_SELECTION, payload: [] });
+    };
 };
 
 export const fetchUser = (webId) => {
@@ -127,5 +131,11 @@ export const getCurrentItems = (urlTree, currentPath) => {
             type: SET_CURRENT_ITEMS,
             payload: { folders: folderNames, files: fileNames },
         });
+    };
+};
+
+export const setSelection = (selection) => {
+    return (dispatch) => {
+        dispatch({ type: SET_SELECTION, payload: selection });
     };
 };

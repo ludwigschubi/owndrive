@@ -14,6 +14,7 @@ import {
     FETCH_FOLDER_TREE_FAIL,
     SET_CURRENT_PATH,
     SET_CURRENT_ITEMS,
+    SET_SELECTION,
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -29,6 +30,7 @@ const INITIAL_STATE = {
     currentPath: null,
     currentItems: null,
     currentFolderTree: null,
+    selectedItems: [],
 
     // [
     //     {
@@ -72,9 +74,11 @@ export default (state = INITIAL_STATE, action) => {
         case SET_WEBID:
             return { ...state, webId: payload };
         case SET_CURRENT_PATH:
-            return { ...state, currentPath: payload };
+            return { ...state, currentPath: payload, selectedItem: [] };
         case SET_CURRENT_ITEMS:
             return { ...state, currentItems: payload };
+        case SET_SELECTION:
+            return { ...state, selectedItems: payload };
         case FETCH_FOLDER_TREE:
             return { ...state, loadFolder: true };
         case FETCH_FOLDER_TREE_SUCCESS:
