@@ -15,7 +15,7 @@ const Navigation = ({ picture, webId, onLogin, onLogout, toggleSidebar }) => {
                 <div style={{ width: '100%' }}>
                     <Row>
                         <Col xs="6" sm="6" md="6" lg="6">
-                            <Navbar.Brand href="/" className={styles.brand}>
+                            <Navbar.Brand href="/home" className={styles.brand}>
                                 <img src={brand} />
                                 <p>OWNDRIVE</p>
                             </Navbar.Brand>
