@@ -2,7 +2,6 @@
   "name": "solid-files",
   "version": "0.1.0",
   "private": true,
-
   "dependencies": {
     "classnames": "^2.2.6",
     "flare-react": "^1.0.2",
@@ -33,21 +32,21 @@
   },
   "husky": {
     "hooks": {
-    "pre-commit":"export CI=true && react-scripts test && lint-staged",
+      "pre-commit": "export CI=true && react-scripts test && lint-staged",
       "pre-push": "export CI=true && react-scripts test && lint-staged"
     }
   },
   "lint-staged": {
     "linters": {
-        "*/**/*.js": [
-            "prettier --write",
-            "eslint",
-            "git add"
-        ],
-        "*.{json,css}": [
-            "prettier --write",
-            "git add"
-        ]
+      "*/**/*.js": [
+        "prettier --write",
+        "eslint",
+        "git add"
+      ],
+      "*.{json,css}": [
+        "prettier --write",
+        "git add"
+      ]
     }
   },
   "eslintConfig": {

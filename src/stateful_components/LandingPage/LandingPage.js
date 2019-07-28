@@ -16,7 +16,10 @@ class LandingPage extends React.Component {
                     <div className={styles.floatAnimation}>
                         <p className={styles.slogan}>
                             Because the internet deserves better.
-                        </p>{' '}
+                        </p>
+                        <a className={styles.homeButton} href="/home">
+                            Get Home
+                        </a>
                     </div>
                 </section>
                 <section

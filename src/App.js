@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { ClassicSpinner } from 'react-spinners-kit';
 import Navigation from './functional_components/Navigation';
 import Drive from './stateful_components/Drive';
-import LoginScreen from './stateful_components/LoginScreen';
+import LandingPage from './stateful_components/LandingPage';
 import { ProfileSideBar } from './functional_components/ProfileSideBar';
 import auth from 'solid-auth-client';
 import User from 'your-user';
@@ -154,7 +154,7 @@ class App extends React.Component {
                             />
                         ) : null}
                         <Switch>
-                            <Route path="/" exact component={LoginScreen} />
+                            <Route path="/" exact component={LandingPage} />
                             <PrivateRoute
                                 session={session}
                                 path="/home"

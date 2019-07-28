@@ -20,8 +20,20 @@
     align-items: center;
 }
 
+.homeButton {
+    color: #22f;
+    border: solid #22f 1px;
+    border-radius: 5px;
+    padding: 5px;
+}
+
+.homeButton:hover {
+    text-decoration: none;
+    color: #22f;
+}
+
 .slogan {
-    padding-top: 500px; 
+    padding-top: 500px;
     max-width: 100%;
     text-align: center;
     font-size: 3em;
@@ -36,7 +48,7 @@
 }
 
 .mission {
-    padding-top: 60%; 
+    padding-top: 60%;
     max-width: 100%;
     text-align: center;
     font-size: 3em;
