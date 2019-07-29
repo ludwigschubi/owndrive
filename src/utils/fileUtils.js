@@ -179,6 +179,34 @@ function getFolderTree(folderUrl) {
         });
 }
 
+function deleteRecursively(url) {
+    const store = rdf.graph();
+    const fetcher = new rdf.Fetcher(store);
+    return new Promise(function(resolve, reject) {
+        fetcher.load(url).then(function(response) {
+            const promises = store
+                .each(rdf.sym(url), ns.ldp('contains'))
+                .map((file) => {
+                    if (
+                        store.holds(
+                            file,
+                            ns.rdf('type'),
+                            ns.ldp('BasicContainer')
+                        )
+                    ) {
+                        return deleteRecursively(file.uri);
+                    } else {
+                        return fetcher.webOperation('DELETE', file.uri);
+                    }
+                });
+            promises.push(fetcher.webOperation('DELETE', url));
+            Promise.all(promises).then((res) => {
+                resolve();
+            });
+        });
+    });
+}
+
 function sortByDepth(fileA, fileB) {
     const depthA = fileA.split('/').length;
     const depthB = fileB.split('/').length;
@@ -286,4 +314,5 @@ export default {
     hasArray: hasArray,
     getFolderFiles: getFolderFiles,
     getNotificationFiles: getNotificationFiles,
+    deleteRecursively: deleteRecursively,
 };

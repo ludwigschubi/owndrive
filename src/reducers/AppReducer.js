@@ -16,6 +16,7 @@ import {
     SET_CURRENT_ITEMS,
     FETCH_NOTIFICATIONS,
     FETCH_NOTIFICATIONS_SUCCESS,
+    SET_SELECTION,
 } from '../actions/types';
 
 const INITIAL_STATE = {
@@ -33,6 +34,7 @@ const INITIAL_STATE = {
     currentItems: null,
     currentFolderTree: null,
     notifications: null,
+    selectedItems: [],
 
     // [
     //     {
@@ -76,9 +78,11 @@ export default (state = INITIAL_STATE, action) => {
         case SET_WEBID:
             return { ...state, webId: payload };
         case SET_CURRENT_PATH:
-            return { ...state, currentPath: payload };
+            return { ...state, currentPath: payload, selectedItem: [] };
         case SET_CURRENT_ITEMS:
             return { ...state, currentItems: payload };
+        case SET_SELECTION:
+            return { ...state, selectedItems: payload };
         case FETCH_FOLDER_TREE:
             return { ...state, loadFolder: true };
         case FETCH_FOLDER_TREE_SUCCESS:

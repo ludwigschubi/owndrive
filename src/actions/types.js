@@ -24,3 +24,5 @@ export const GET_SESSION_FAIL = 'get_session_fail';
 
 export const FETCH_NOTIFICATIONS = 'fetch_notifications';
 export const FETCH_NOTIFICATIONS_SUCCESS = 'fetch_notifications_success';
+
+export const SET_SELECTION = 'set_selection';

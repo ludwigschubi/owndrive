@@ -14,7 +14,11 @@ import Buttons from '../../functional_components/Buttons/Buttons';
 import { InputWindow } from '../../functional_components/InputWindow';
 import Container from 'react-bootstrap/Container';
 import { ConsentWindow } from '../../functional_components/ConsentWindow';
-import { getCurrentItems, setCurrentPath } from '../../actions/UserActions';
+import {
+    getCurrentItems,
+    setCurrentPath,
+    setSelection,
+} from '../../actions/UserActions';
 import { ContactSidebar } from '../../functional_components/ContactSidebar';
 const ns = require('solid-namespace')(rdf);
 
@@ -101,12 +105,10 @@ class Drive extends React.Component {
     }
 
     loadFile(url) {
-        if (this.state.selectedItems.includes(url) === false) {
-            const newSelection = this.state.selectedItems;
+        if (this.props.selectedItems.includes(url) === false) {
+            const newSelection = this.props.selectedItems;
             newSelection.push(url);
-            this.setState({
-                selectedItems: newSelection,
-            });
+            setSelection(newSelection);
         } else {
             const newBreadCrumbs = getBreadcrumbsFromUrl(url);
 
@@ -136,16 +138,14 @@ class Drive extends React.Component {
     }
 
     followPath(path) {
-        if (this.state.selectedItems.includes(path)) {
+        if (this.props.selectedItems.includes(path)) {
             this.props.setCurrentPath(path);
             // const newBreadcrumbs = getBreadcrumbsFromUrl(path);
             // this.loadCurrentFolder(path, newBreadcrumbs);
         } else {
-            const newSelection = this.state.selectedItems;
+            const newSelection = this.props.selectedItems;
             newSelection.push(path);
-            this.setState({
-                selectedItems: newSelection,
-            });
+            setSelection(newSelection);
         }
     }
 
@@ -287,6 +287,7 @@ class Drive extends React.Component {
             isCreateFolderVisible,
             isCreateFileVisible,
             isConsentWindowVisible,
+            selectedItems,
         } = this.state;
         const { webId, currentItems, currentPath, setCurrentPath } = this.props;
         const fileMarkup = this.state.file ? (
@@ -320,15 +321,18 @@ class Drive extends React.Component {
                         <div>
                             <ConsentWindow
                                 windowName="Delete File?"
-                                selectedItems={this.state.selectedItems}
+                                selectedItems={selectedItems}
                                 info={
-                                    this.state.selectedItems.length > 1
+                                    selectedItems.length > 1
                                         ? 'Do you really want to delete these items?'
                                         : 'Do you really want to delete this item?'
                                 }
-                                onSubmit={(selectedItems) =>
-                                    fileUtils.deleteItems(selectedItems)
-                                }
+                                onSubmit={(selectedItems) => {
+                                    selectedItems.forEach((item) => {
+                                        fileUtils.deleteRecursively(item);
+                                    });
+                                    // fileUtils.deleteItems(selectedItems);
+                                }}
                                 className={
                                     isConsentWindowVisible
                                         ? styles.visible
@@ -365,9 +369,7 @@ class Drive extends React.Component {
                                     <ContactSidebar />
                                     <Container>
                                         <ItemList
-                                            selectedItems={
-                                                this.state.selectedItems
-                                            }
+                                            selectedItems={selectedItems}
                                             items={currentItems.folders}
                                             currPath={currentPath}
                                             image={folder}
@@ -386,9 +388,7 @@ class Drive extends React.Component {
                                             }}
                                         />
                                         <ItemList
-                                            selectedItems={
-                                                this.state.selectedItems
-                                            }
+                                            selectedItems={selectedItems}
                                             isFile
                                             items={currentItems.files}
                                             currPath={currentPath}
@@ -433,12 +433,13 @@ const mapStateToProps = (state) => {
         currentItems: state.app.currentItems,
         currentPath: state.app.currentPath,
         currentFolderTree: state.app.currentFolderTree,
+        selectedItems: state.app.selectedItems,
     };
 };
 
 export default withRouter(
     connect(
         mapStateToProps,
-        { getCurrentItems, setCurrentPath }
+        { getCurrentItems, setCurrentPath, setSelection }
     )(Drive)
 );

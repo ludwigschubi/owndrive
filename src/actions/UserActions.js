@@ -16,6 +16,7 @@ import {
     SET_CURRENT_ITEMS,
     FETCH_NOTIFICATIONS,
     FETCH_NOTIFICATIONS_SUCCESS,
+    SET_SELECTION,
 } from './types';
 import auth from 'solid-auth-client';
 import User from 'your-user';
@@ -50,7 +51,7 @@ const setSessionInfo = (session) => {
         dispatch({ type: SET_WEBID, payload: session.webId });
         dispatch({
             type: SET_CURRENT_PATH,
-            payload: session.webId.replace('profile/card#me', ''),
+            payload: session.webId.replace('/profile/card#me', ''),
         });
         dispatch(fetchUser(session.webId));
         dispatch(fetchFolderTree(session.webId.replace('profile/card#me', '')));
@@ -62,7 +63,10 @@ export const setWebId = (webId) => {
 };
 
 export const setCurrentPath = (newPath) => {
-    return { type: SET_CURRENT_PATH, payload: newPath };
+    return (dispatch) => {
+        dispatch({ type: SET_CURRENT_PATH, payload: newPath });
+        dispatch({ type: SET_SELECTION, payload: [] });
+    };
 };
 
 export const fetchUser = (webId) => {
@@ -143,5 +147,11 @@ export const fetchNotifications = (webId) => {
                 payload: notifications,
             });
         });
+    };
+};
+
+export const setSelection = (selection) => {
+    return (dispatch) => {
+        dispatch({ type: SET_SELECTION, payload: selection });
     };
 };

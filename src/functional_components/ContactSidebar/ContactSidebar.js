@@ -13,13 +13,8 @@ const ContactScreen = (props) => {
         });
     });
 
-    console.log('löalalalal', contacts);
-    return (
-        <div>
-            {webId}
-            {contacts ? <div>No contacts</div> : null}
-        </div>
-    );
+    console.log('löalalalal', contacts, webId);
+    return <div>{contacts ? <div>No contacts</div> : null}</div>;
 };
 
 const mapStateToProps = (state) => {
