@@ -254,10 +254,13 @@ function getNotificationFiles(webId) {
     const store = rdf.graph();
     const fetcher = new rdf.Fetcher(store);
 
-    return fetcher.load(inboxAddress).then(() => {
+    return fetcher.load(inboxAddress).then((response) => {
+        console.log(response.responseText);
+        console.log(store.each(rdf.sym(inboxAddress), ns.ldp('contains')));
         const containments = store
             .each(rdf.sym(inboxAddress), ns.ldp('contains'))
             .map((notification) => {
+                console.log(notification);
                 const notificationAddress =
                     inboxAddress +
                     '/' +

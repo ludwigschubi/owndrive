@@ -142,6 +142,7 @@ export const fetchNotifications = (webId) => {
     return (dispatch) => {
         dispatch({ type: FETCH_NOTIFICATIONS });
         fileUtils.getNotificationFiles(webId).then((notifications) => {
+            console.log(notifications);
             dispatch({
                 type: FETCH_NOTIFICATIONS_SUCCESS,
                 payload: notifications,
