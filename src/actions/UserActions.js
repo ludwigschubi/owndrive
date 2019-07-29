@@ -28,7 +28,9 @@ export const login = (username, password) => {
         auth.currentSession()
             .then((session) => {
                 if (!session) {
-                    auth.login('https://owntech.de').then(
+                    auth.popupLogin(
+                        'https://owntech.de/common/popup.html'
+                    ).then(
                         (value) => console.log('value from, auth login', value)
                         // setSessionInfo(session);
                     );
