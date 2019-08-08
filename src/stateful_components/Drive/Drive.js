@@ -141,6 +141,7 @@ class Drive extends React.Component {
 
     followPath(path) {
         if (this.props.selectedItems.includes(path)) {
+            console.log(path);
             this.props.setCurrentPath(path);
             // const newBreadcrumbs = getBreadcrumbsFromUrl(path);
             // this.loadCurrentFolder(path, newBreadcrumbs);
@@ -148,6 +149,9 @@ class Drive extends React.Component {
             const newSelection = this.props.selectedItems;
             newSelection.push(path);
             setSelection(newSelection);
+            this.setState({
+                selectedItems: newSelection,
+            });
         }
     }
 

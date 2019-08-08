@@ -51,14 +51,8 @@ const setSessionInfo = (session) => {
     return (dispatch) => {
         dispatch({ type: LOGIN_SUCCESS, payload: session });
         dispatch({ type: SET_WEBID, payload: session.webId });
-        dispatch({
-            type: SET_CURRENT_PATH,
-            payload: session.webId.replace('/profile/card#me', ''),
-        });
+        dispatch(setCurrentPath(session.webId.replace('profile/card#me', '')));
         dispatch(fetchUser(session.webId));
-        dispatch(
-            fetchCurrentItems(session.webId.replace('profile/card#me', ''))
-        );
     };
 };
 
@@ -70,6 +64,7 @@ export const setCurrentPath = (newPath) => {
     return (dispatch) => {
         dispatch({ type: SET_CURRENT_PATH, payload: newPath });
         dispatch({ type: SET_SELECTION, payload: [] });
+        dispatch(fetchCurrentItems(newPath));
     };
 };
 
@@ -118,13 +113,13 @@ export const fetchCurrentItems = (url) => {
         fileUtils
             .getFolderFiles(url)
             .then((items) => {
+                console.log(items);
                 const fileNames = items.files.map((file) => {
                     return convertFileUrlToName(file);
                 });
                 const folderNames = items.folders.map((folder) => {
                     return convertFolderUrlToName(folder);
                 });
-                console.log(items);
                 dispatch({
                     type: FETCH_CURRENT_ITEMS_SUCCESS,
                     payload: { files: fileNames, folders: folderNames },

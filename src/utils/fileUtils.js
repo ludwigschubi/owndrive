@@ -215,7 +215,7 @@ function sortByDepth(fileA, fileB) {
 }
 
 function getFolderFiles(path) {
-    return getFolderTree(path).then((results) => {
+    return getFolderContents(path).then((results) => {
         const folderFiles = { folders: [], files: [] };
         results.forEach((result) => {
             const resultFragments = result.split('/');
@@ -236,6 +236,9 @@ function getFolderContents(folderUrl) {
     return fetcher
         .load(folderUrl)
         .then(function() {
+            console.log(
+                store.each(rdf.sym(folderUrl), ns.ldp('contains'), undefined)
+            );
             const containments = store
                 .each(rdf.sym(folderUrl), ns.ldp('contains'), undefined)
                 .map((containment) => {

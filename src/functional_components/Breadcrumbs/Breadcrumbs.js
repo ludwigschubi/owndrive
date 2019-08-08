@@ -11,12 +11,11 @@ const Breadcrumbs = (props) => {
         ? props.breadcrumbs.map((currentBreadcrumb, currentIndex) => {
               if (currentBreadcrumb !== '/') {
                   currentUrl = currentUrl + currentBreadcrumb;
-                  const thisUrl = currentUrl.slice();
                   return (
                       <Breadcrumb.Item
                           key={currentIndex}
                           onClick={() => {
-                              props.onClick(thisUrl);
+                              props.onClick(currentUrl);
                           }}
                       >
                           {console.log(
@@ -31,7 +30,7 @@ const Breadcrumbs = (props) => {
                   return (
                       <Breadcrumb.Item
                           key={0}
-                          onClick={() => props.onClick(root)}
+                          onClick={() => props.onClick(root + '/')}
                       >
                           Home
                       </Breadcrumb.Item>

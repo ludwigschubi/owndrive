@@ -29,10 +29,7 @@ const ItemList = ({
                       key={item + index}
                       image={image}
                       onClick={() => {
-                          console.log(currPath);
-                          onItemClick(
-                              currPath + '/' + encodeURIComponent(item)
-                          );
+                          onItemClick(currPath + encodeURIComponent(item));
                       }}
                       onDelete={onDelete}
                       onAccess={onAccess}
@@ -53,7 +50,7 @@ const ItemList = ({
                       key={item + index}
                       image={image}
                       onClick={() =>
-                          onItemClick(currPath + '/' + encodeURIComponent(item))
+                          onItemClick(currPath + encodeURIComponent(item))
                       }
                       onDelete={onDelete}
                       onAccess={fileutils.changeAccess}
