@@ -12,8 +12,8 @@ class NotificationsPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            webId: props.webId,
-            notifications: props.notifications,
+            webId: props.webId, // anti pattern, da props.notification immer den global state beinhaltet und somit lokaler state hinfällig ist
+            notifications: props.notifications, // anti pattern, da props.notification immer den global state beinhaltet und somit lokaler state hinfällig ist
         };
     }
 
