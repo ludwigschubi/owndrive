@@ -1,13 +1,11 @@
 .container {
-    scroll-snap-type: y proximity;
+    height: 100%;
+    scroll-snap-type: y mandatory;
     overflow-y: scroll;
 }
 
 .container > section {
     scroll-snap-align: start;
-}
-
-.page {
     padding: 0 25%;
     height: calc(100vh);
     background-color: #fff;
@@ -21,7 +19,7 @@
 }
 
 .slogan {
-    padding-top: 500px; 
+    padding-top: 500px;
     max-width: 100%;
     text-align: center;
     font-size: 3em;
@@ -36,7 +34,7 @@
 }
 
 .mission {
-    padding-top: 60%; 
+    padding-top: 60%;
     max-width: 100%;
     text-align: center;
     font-size: 3em;

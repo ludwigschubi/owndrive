@@ -9,11 +9,10 @@ import {
     FETCH_FRIENDS,
     FETCH_FRIENDS_SUCCESS,
     FETCH_FRIENDS_FAIL,
-    FETCH_FOLDER_TREE,
-    FETCH_FOLDER_TREE_SUCCESS,
-    FETCH_FOLDER_TREE_FAIL,
+    FETCH_CURRENT_ITEMS,
+    FETCH_CURRENT_ITEMS_SUCCESS,
+    FETCH_CURRENT_ITEMS_FAIL,
     SET_CURRENT_PATH,
-    SET_CURRENT_ITEMS,
     FETCH_NOTIFICATIONS,
     FETCH_NOTIFICATIONS_SUCCESS,
     SET_SELECTION,
@@ -27,6 +26,7 @@ const INITIAL_STATE = {
     loadFriends: false,
     loadFolderTree: false,
     loadNotifications: false,
+    loadCurrentItems: false,
     error: null,
     contacts: null,
     session: null,
@@ -79,15 +79,13 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, webId: payload };
         case SET_CURRENT_PATH:
             return { ...state, currentPath: payload, selectedItem: [] };
-        case SET_CURRENT_ITEMS:
-            return { ...state, currentItems: payload };
         case SET_SELECTION:
             return { ...state, selectedItems: payload };
-        case FETCH_FOLDER_TREE:
+        case FETCH_CURRENT_ITEMS:
             return { ...state, loadFolder: true };
-        case FETCH_FOLDER_TREE_SUCCESS:
-            return { ...state, loadFolder: false, currentFolderTree: payload };
-        case FETCH_FOLDER_TREE_FAIL:
+        case FETCH_CURRENT_ITEMS_SUCCESS:
+            return { ...state, loadFolder: false, currentItems: payload };
+        case FETCH_CURRENT_ITEMS_FAIL:
             return { ...state, loadFolder: false, error: payload };
         case FETCH_NOTIFICATIONS:
             return {

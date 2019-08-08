@@ -31,6 +31,10 @@ class NotificationsPage extends React.Component {
     }
 
     render() {
+        const { notifications } = this.props;
+        if (notifications) {
+            console.log(notifications);
+        }
         return (
             <Container className={styles.container}>
                 <h3>Notifications</h3>

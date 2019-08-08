@@ -9,18 +9,20 @@ import {
     FETCH_FRIENDS,
     FETCH_FRIENDS_FAIL,
     FETCH_FRIENDS_SUCCESS,
-    FETCH_FOLDER_TREE,
-    FETCH_FOLDER_TREE_SUCCESS,
-    FETCH_FOLDER_TREE_FAIL,
+    FETCH_CURRENT_ITEMS,
+    FETCH_CURRENT_ITEMS_SUCCESS,
+    FETCH_CURRENT_ITEMS_FAIL,
     SET_CURRENT_PATH,
-    SET_CURRENT_ITEMS,
     FETCH_NOTIFICATIONS,
     FETCH_NOTIFICATIONS_SUCCESS,
     SET_SELECTION,
+    FETCH_NOTIFICATIONS_FAILURE,
+    SEND_NOTIFICATION,
+    SEND_NOTIFICATION_SUCCESS,
+    SEND_NOTIFICATION_FAILURE,
 } from './types';
 import auth from 'solid-auth-client';
 import User from 'your-user';
-import { getCurrentDirectory } from '../utils/url';
 import fileUtils from '../utils/fileUtils';
 
 export const login = (username, password) => {
@@ -54,7 +56,9 @@ const setSessionInfo = (session) => {
             payload: session.webId.replace('/profile/card#me', ''),
         });
         dispatch(fetchUser(session.webId));
-        dispatch(fetchFolderTree(session.webId.replace('profile/card#me', '')));
+        dispatch(
+            fetchCurrentItems(session.webId.replace('profile/card#me', ''))
+        );
     };
 };
 
@@ -100,20 +104,6 @@ export const fetchContacts = (yourUserObject) => {
     };
 };
 
-export const fetchFolderTree = (url) => {
-    return (dispatch) => {
-        dispatch({ type: FETCH_FOLDER_TREE });
-        fileUtils
-            .getFolderFiles(url)
-            .then((tree) => {
-                dispatch({ type: FETCH_FOLDER_TREE_SUCCESS, payload: tree });
-            })
-            .catch((error) =>
-                dispatch({ type: FETCH_FOLDER_TREE_FAIL, payload: error })
-            );
-    };
-};
-
 const convertFolderUrlToName = (folderUrl) => {
     return folderUrl.split('/').splice(-2)[0];
 };
@@ -122,32 +112,65 @@ const convertFileUrlToName = (fileUrl) => {
     return fileUrl.split('/').splice(-1)[0];
 };
 
-export const getCurrentItems = (urlTree, currentPath) => {
+export const fetchCurrentItems = (url) => {
     return (dispatch) => {
-        const { folders, files } = getCurrentDirectory(urlTree, currentPath);
-        const folderNames = folders.map((folderUrl) => {
-            return convertFolderUrlToName(folderUrl);
-        });
-        const fileNames = files.map((fileUrl) => {
-            return convertFileUrlToName(fileUrl);
-        });
-        dispatch({
-            type: SET_CURRENT_ITEMS,
-            payload: { folders: folderNames, files: fileNames },
-        });
+        dispatch({ type: FETCH_CURRENT_ITEMS });
+        fileUtils
+            .getFolderFiles(url)
+            .then((items) => {
+                const fileNames = items.files.map((file) => {
+                    return convertFileUrlToName(file);
+                });
+                const folderNames = items.folders.map((folder) => {
+                    return convertFolderUrlToName(folder);
+                });
+                console.log(items);
+                dispatch({
+                    type: FETCH_CURRENT_ITEMS_SUCCESS,
+                    payload: { files: fileNames, folders: folderNames },
+                });
+            })
+            .catch((error) =>
+                dispatch({ type: FETCH_CURRENT_ITEMS_FAIL, payload: error })
+            );
     };
 };
 
 export const fetchNotifications = (webId) => {
     return (dispatch) => {
         dispatch({ type: FETCH_NOTIFICATIONS });
-        fileUtils.getNotificationFiles(webId).then((notifications) => {
-            console.log(notifications);
-            dispatch({
-                type: FETCH_NOTIFICATIONS_SUCCESS,
-                payload: notifications,
+        fileUtils
+            .getNotificationFiles(webId)
+            .then((notifications) => {
+                dispatch({
+                    type: FETCH_NOTIFICATIONS_SUCCESS,
+                    payload: notifications,
+                });
+            })
+            .catch((err) => {
+                dispatch({
+                    type: FETCH_NOTIFICATIONS_FAILURE,
+                });
             });
-        });
+    };
+};
+
+export const sendNotification = (webId, notification) => {
+    return (dispatch) => {
+        dispatch({ type: SEND_NOTIFICATION });
+        fileUtils
+            .sendNotification(webId, notification)
+            .then(() => {
+                dispatch({
+                    type: SEND_NOTIFICATION_SUCCESS,
+                });
+            })
+            .catch((err) => {
+                dispatch({
+                    type: SEND_NOTIFICATION_FAILURE,
+                    payload: err,
+                });
+            });
     };
 };
 

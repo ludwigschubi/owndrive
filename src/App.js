@@ -14,8 +14,6 @@ import {
     login,
     fetchUser,
     setWebId,
-    fetchFolderTree,
-    getCurrentItems,
     fetchContacts,
 } from './actions/UserActions';
 import PrivateRoute from './functional_components/PrivateRoute';
@@ -94,33 +92,20 @@ class App extends React.Component {
 
     render() {
         const { isProfileExpanded } = this.state;
-        const {
-            webId,
-            user,
-            session,
-            loadLogin,
-            loadUser,
-            loadFolderTree,
-            currentFolderTree,
-            currentPath,
-            getCurrentItems,
-        } = this.props;
-        if (currentFolderTree) {
-            getCurrentItems(currentFolderTree, currentPath);
-        }
-        if (loadLogin || loadUser || loadFolderTree) {
+        const { webId, user, session, loadLogin, loadUser } = this.props;
+        if (loadLogin || loadUser) {
             return (
                 <div className={styles.spinner}>
                     <ClassicSpinner
                         size={100}
                         color="#686769"
-                        loading={loadLogin || loadUser || loadFolderTree}
+                        loading={loadLogin || loadUser}
                     />
                 </div>
             );
         } else {
             return (
-                <div style={{ height: '100%' }}>
+                <div style={{ height: '100%', overflowY: 'hidden' }}>
                     <ErrorBoundary>
                         <Navigation
                             toggleSidebar={this.toggleSidebar}
@@ -196,7 +181,6 @@ const mapStateToProps = (state) => {
         session: state.app.session,
         loadLogin: state.app.loadLogin,
         loadUser: state.app.loadUser,
-        loadFolderTree: state.app.loadFolderTree,
         session: state.app.session,
         currentFolderTree: state.app.currentFolderTree,
         currentPath: state.app.currentPath,
@@ -210,8 +194,6 @@ export default withRouter(
             login,
             fetchUser,
             setWebId,
-            fetchFolderTree,
-            getCurrentItems,
             fetchContacts,
         }
     )(App)
