@@ -300,7 +300,6 @@ class Drive extends React.Component {
             isConsentWindowVisible,
             selectedItems,
         } = this.state;
-<<<<<<< HEAD
 
         const {
             webId,
@@ -310,13 +309,6 @@ class Drive extends React.Component {
             loadCurrentItems,
         } = this.props;
 
-=======
-        const { webId, currentItems, currentPath, setCurrentPath } = this.props;
-<<<<<<< HEAD
-        console.log(selectedItems);
-=======
->>>>>>> Fix merge conflicts of updated branch
->>>>>>> Fix merge conflicts of updated branch
         const fileMarkup = this.state.file ? (
             <div className={styles.renderedFile}>
                 {this.state.image ? (

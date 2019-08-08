@@ -17,12 +17,9 @@ class LandingPage extends React.Component {
                         <p className={styles.slogan}>
                             Because the internet deserves better.
                         </p>
-<<<<<<< HEAD
-=======
                         <a className={styles.homeButton} href="/home">
                             Get Home
                         </a>
->>>>>>> Add home button to Landing Page
                     </div>
                 </section>
                 <section style={{ backgroundColor: '#333' }}>
