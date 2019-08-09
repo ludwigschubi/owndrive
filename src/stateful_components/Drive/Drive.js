@@ -156,7 +156,7 @@ class Drive extends React.Component {
     }
 
     uploadFile(e) {
-        const currPath = this.state.currPath;
+        const currPath = this.props.currentPath;
         const filePath = e.target.files[0];
 
         fileUtils.uploadFile(filePath, currPath).then(() => {
