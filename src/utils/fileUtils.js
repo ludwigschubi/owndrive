@@ -215,7 +215,7 @@ function sortByDepth(fileA, fileB) {
 }
 
 function getFolderFiles(path) {
-    return getFolderTree(path).then((results) => {
+    return getFolderContents(path).then((results) => {
         const folderFiles = { folders: [], files: [] };
         results.forEach((result) => {
             const resultFragments = result.split('/');
@@ -236,6 +236,9 @@ function getFolderContents(folderUrl) {
     return fetcher
         .load(folderUrl)
         .then(function() {
+            console.log(
+                store.each(rdf.sym(folderUrl), ns.ldp('contains'), undefined)
+            );
             const containments = store
                 .each(rdf.sym(folderUrl), ns.ldp('contains'), undefined)
                 .map((containment) => {
@@ -246,6 +249,93 @@ function getFolderContents(folderUrl) {
         .catch((err) => {
             return [];
         });
+}
+
+function getNotificationFiles(webId) {
+    const inboxAddress = webId.replace('profile/card#me', 'inbox');
+
+    const store = rdf.graph();
+    const fetcher = new rdf.Fetcher(store);
+    const as = new rdf.Namespace('https://www.w3.org/ns/activitystreams#');
+    fetcher
+        .load('https://ludwigschubert.owntech.de/inbox/Notif1564398405376.ttl')
+        .then((response) => {
+            console.log(response.responseText);
+        });
+
+    return fetcher.load(inboxAddress).then(() => {
+        const containments = store
+            .each(rdf.sym(inboxAddress), ns.ldp('contains'))
+            .map((notification) => {
+                const notificationAddress =
+                    inboxAddress +
+                    '/' +
+                    notification.value.split('/')[3].replace('inbox', '');
+                return fetcher
+                    .load(notificationAddress)
+                    .then((response) => {
+                        console.log(response);
+                        const notification =
+                            store.statementsMatching(
+                                rdf.sym(notificationAddress),
+                                ns.rdf('type'),
+                                ns.solid('Notification')
+                            )[0].subject.value ||
+                            store.statementsMatching(
+                                rdf.sym(notificationAddress),
+                                ns.rdf('type'),
+                                as('Announce')
+                            )[0].subject.value;
+                        return notification;
+                    })
+                    .catch((err) => {
+                        return undefined;
+                    });
+            });
+        return Promise.all(containments).then((results) => {
+            const cleanResults = [];
+            results.forEach((result) => {
+                if (result) {
+                    cleanResults.push(result);
+                }
+            });
+            return cleanResults;
+        });
+    });
+}
+
+function makeNotification(notification, notificationAddress) {
+    const { actor, object, target } = notification;
+    const store = rdf.graph();
+    const as = new rdf.Namespace('https://www.w3.org/ns/activitystreams#');
+
+    store.add(rdf.sym(notificationAddress), ns.rdf('type'), as('Announce'));
+    store.add(
+        rdf.sym(notificationAddress),
+        ns.rdf('type'),
+        ns.solid('Notification')
+    );
+    store.add(rdf.sym(notificationAddress), as('actor'), rdf.sym(actor));
+    store.add(rdf.sym(notificationAddress), as('object'), rdf.sym(object));
+    store.add(rdf.sym(notificationAddress), as('target'), rdf.sym(target));
+
+    return rdf.serialize(undefined, store, notificationAddress);
+}
+
+function sendNotification(notifParams) {
+    const inboxAddress = notifParams.target.replace('profile/card#me', 'inbox');
+    const notificationAddress = inboxAddress + `/Notif${Date.now()}`;
+    const notification = makeNotification(notifParams, notificationAddress);
+    const request = {
+        method: 'PUT',
+        headers: {
+            'content-type': 'text/turtle',
+            slug: notificationAddress.replace(inboxAddress + '/', ''),
+        },
+        body: notification,
+    };
+    console.log(request);
+    return auth.fetch(inboxAddress, request);
 }
 
 function changeAccess(item) {
@@ -274,4 +364,6 @@ export default {
     hasArray: hasArray,
     getFolderFiles: getFolderFiles,
     deleteRecursively: deleteRecursively,
+    getNotificationFiles: getNotificationFiles,
+    sendNotification: sendNotification,
 };

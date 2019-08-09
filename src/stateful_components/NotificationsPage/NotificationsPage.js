@@ -3,58 +3,31 @@ import rdf from 'rdflib';
 import styles from './NotificationsPage.module.css';
 import { Notification } from '../../functional_components/Notification';
 import Container from 'react-bootstrap/Container';
+import { connect } from 'react-redux';
+import { fetchNotifications } from '../../actions/UserActions';
+import fileUtils from '../../utils/fileUtils';
 const ns = require('solid-namespace')(rdf);
 
 class NotificationsPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            webId: props.webId,
-            notifications: undefined,
+            webId: props.webId, // anti pattern, da props.notification immer den global state beinhaltet und somit lokaler state hinfällig ist
+            notifications: props.notifications, // anti pattern, da props.notification immer den global state beinhaltet und somit lokaler state hinfällig ist
         };
-
-        this.fetchNotifications = this.fetchNotifications.bind(this);
     }
 
-    fetchNotifications() {
-        const webId = this.state.webId;
-        const inboxAddress = webId.replace('profile/card#me', 'inbox');
-
-        const store = rdf.graph();
-        const fetcher = new rdf.Fetcher(store);
-
-        return fetcher.load(inboxAddress).then(() => {
-            const containments = store
-                .each(rdf.sym(inboxAddress), ns.ldp('contains'))
-                .map((notification) => {
-                    const notificationAddress =
-                        inboxAddress +
-                        '/' +
-                        notification.value.split('/')[3].replace('inbox', '');
-                    return fetcher
-                        .load(notificationAddress)
-                        .then(() => {
-                            const notification = store.statementsMatching(
-                                rdf.sym(notificationAddress),
-                                ns.rdf('type'),
-                                ns.solid('Notification')
-                            )[0].subject.value;
-                            return notification;
-                        })
-                        .catch((err) => {
-                            return undefined;
-                        });
-                });
-            return Promise.all(containments).then((results) => {
-                const cleanResults = [];
-                results.forEach((result) => {
-                    if (result) {
-                        cleanResults.push(result);
-                    }
-                });
-                return cleanResults;
+    componentDidMount() {
+        console.log(ns.ldp('contains'));
+        const { notifications, webId } = this.props;
+        if (notifications) {
+            console.log(notifications);
+        } else if (webId) {
+            fileUtils.getNotificationFiles(webId).then((notifications) => {
+                console.log(notifications);
             });
-        });
+            fetchNotifications(webId);
+        }
     }
 
     getNotificationContent(notification) {
@@ -149,16 +122,26 @@ class NotificationsPage extends React.Component {
     }
 
     componentDidMount() {
-        this.fetchNotifications().then((results) => {
-            results.map((notification) => {
-                this.getNotificationContent(notification).then((content) => {
-                    console.log(content);
+        const { fetchNotifications, webId } = this.props;
+        if (webId && fetchNotifications) {
+            console.log(webId, fetchNotifications);
+            fetchNotifications(webId).then((results) => {
+                results.map((notification) => {
+                    this.getNotificationContent(notification).then(
+                        (content) => {
+                            console.log(content);
+                        }
+                    );
                 });
             });
-        });
+        }
     }
 
     render() {
+        const { notifications } = this.props;
+        if (notifications) {
+            console.log(notifications);
+        }
         return (
             <Container className={styles.container}>
                 <h3>Notifications</h3>
@@ -172,4 +155,15 @@ class NotificationsPage extends React.Component {
     }
 }
 
-export default NotificationsPage;
+const mapStateToProps = (state) => {
+    return {
+        webId: state.app.webId,
+        loadNotifications: state.app.loadNotifications,
+        notifications: state.app.notifications,
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    { fetchNotifications }
+)(NotificationsPage);

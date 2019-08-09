@@ -29,7 +29,7 @@ export default function File({
                             <div className={styles.iconContainer}>
                                 <img
                                     className={styles.thumbnail}
-                                    src={currPath + encodeURIComponent(label)}
+                                    src={currPath + label}
                                 />
                                 <img className={styles.icon} src={image} />
                             </div>
