@@ -19,7 +19,7 @@ import {
 import PrivateRoute from './functional_components/PrivateRoute';
 import styles from './App.module.css';
 import NotificationsPage from './stateful_components/NotificationsPage';
-import LoginScreen from './stateful_components/LoginScreen/LoginScreen';
+import LandingPage from './stateful_components/LandingPage';
 
 class App extends React.Component {
     constructor(props) {
