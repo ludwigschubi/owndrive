@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { ClassicSpinner } from 'react-spinners-kit';
 import Navigation from './functional_components/Navigation';
 import Drive from './stateful_components/Drive';
-import LandingPage from './stateful_components/LandingPage';
+import LoginScreen from './stateful_components/LoginScreen';
 import { ProfileSideBar } from './functional_components/ProfileSideBar';
 import auth from 'solid-auth-client';
 import User from 'your-user';
